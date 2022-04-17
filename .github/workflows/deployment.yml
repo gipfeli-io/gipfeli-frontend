@@ -9,7 +9,8 @@ jobs:
     name: Build and Deploy project
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: ${{secrets.GCP_REGION}}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACTS_REPOSITORY }}/${{ secrets.GCP_APP_NAME }}
+      ARTIFACT_REGISTRY: ${{secrets.GCP_REGION}}-docker.pkg.dev
+      IMAGE_NAME: $ARTIFACT_REGISTRY/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACTS_REPOSITORY }}/${{ secrets.GCP_APP_NAME }}
     permissions:
       contents: read
       id-token: write
@@ -25,7 +26,7 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT}}
 
       - name: Configure Docker
-        run: gcloud auth configure-docker ${{secrets.GCP_REGION}}-docker.pkg.dev
+        run: gcloud auth configure-docker $ARTIFACT_REGISTRY
 
       - name: Build container
         run: docker build . -t $IMAGE_NAME
