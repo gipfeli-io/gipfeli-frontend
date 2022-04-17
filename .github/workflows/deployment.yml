@@ -24,16 +24,14 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT}}
 
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
+
       - name: Build container
         run: docker build . -t $IMAGE_NAME
 
       - name: Push docker image
         run: docker push $IMAGE_NAME
 
-      - name: Deploy to cloud run
-        uses: google-github-actions/deploy-cloudrun@v0
-        with:
-          image: ${{ IMAGE_NAME }}
-          service: ${{ secrets.GCP_SERVICE_NAME }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          region: europe-west1
+      - name: Deploy docker image to cloud run
+        run: gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }} --image $IMAGE_NAME --quiet --platform managed --region europe-west1 --project ${{ secrets.GCP_PROJECT_ID }}
