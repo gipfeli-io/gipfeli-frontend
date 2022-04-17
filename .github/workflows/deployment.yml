@@ -8,8 +8,6 @@ jobs:
   deploy:
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
     permissions:
       contents: read
       id-token: write
@@ -27,7 +25,7 @@ jobs:
       - name: Deploy to cloud run
         uses: google-github-actions/deploy-cloudrun@v0
         with:
-          image: $IMAGE_NAME
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
           service: ${{ secrets.GCP_SERVICE_NAME }}
-          project: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
           region: europe-west1
