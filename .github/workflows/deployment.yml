@@ -25,7 +25,9 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT}}
 
       - name: Deploy to cloud run
-        uses: google-github-actions/deploy-cloudrun@v0
+        uses: oogle-github-actions/deploy-cloudrun@v0g
         with:
           image: $IMAGE_NAME
-          service: gipfeli-io-website-frontend-staging
+          service: ${{ secrets.GCP_SERVICE_NAME }}
+          project: ${{ secrets.GCP_PROJECT_ID }}
+          region: europe-west1
