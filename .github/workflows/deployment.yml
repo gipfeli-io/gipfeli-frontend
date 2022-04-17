@@ -28,7 +28,7 @@ jobs:
         run: gcloud auth configure-docker ${{secrets.GCP_REGION}}-docker.pkg.dev
 
       - name: Build container
-        run: docker build . -t $IMAGE_NAME
+        run: docker build . -t ${{secrets.GCP_REGION}}-docker.pkg.dev/$IMAGE_NAME
 
       - name: Push docker image
         run: docker push ${{secrets.GCP_REGION}}-docker.pkg.dev/$IMAGE_NAME
