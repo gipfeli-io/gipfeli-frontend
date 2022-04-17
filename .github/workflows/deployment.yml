@@ -9,7 +9,7 @@ jobs:
     name: Build and Deploy project
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+      IMAGE_NAME: ${{secrets.GCP_REGION}}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
     permissions:
       contents: read
       id-token: write
@@ -28,10 +28,10 @@ jobs:
         run: gcloud auth configure-docker ${{secrets.GCP_REGION}}-docker.pkg.dev
 
       - name: Build container
-        run: docker build . -t ${{secrets.GCP_REGION}}-docker.pkg.dev/$IMAGE_NAME
+        run: docker build . -t $IMAGE_NAME
 
       - name: Push docker image
-        run: docker push ${{secrets.GCP_REGION}}-docker.pkg.dev/$IMAGE_NAME
+        run: docker push $IMAGE_NAME
 
       - name: Deploy docker image to cloud run
         run: gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }} --image $IMAGE_NAME --quiet --platform managed --region ${{secrets.GCP_REGION}} --project ${{ secrets.GCP_PROJECT_ID }}
