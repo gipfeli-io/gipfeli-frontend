@@ -25,13 +25,13 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT}}
 
       - name: Configure Docker
-        run: gcloud auth configure-docker --quiet
+        run: gcloud auth configure-docker ${{secrets.GCP_REGION}}-docker.pkg.dev
 
       - name: Build container
         run: docker build . -t $IMAGE_NAME
 
       - name: Push docker image
-        run: docker push $IMAGE_NAME
+        run: docker push ${{secrets.GCP_REGION}}-docker.pkg.dev/$IMAGE_NAME
 
       - name: Deploy docker image to cloud run
-        run: gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }} --image $IMAGE_NAME --quiet --platform managed --region europe-west1 --project ${{ secrets.GCP_PROJECT_ID }}
+        run: gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }} --image $IMAGE_NAME --quiet --platform managed --region ${{secrets.GCP_REGION}} --project ${{ secrets.GCP_PROJECT_ID }}
