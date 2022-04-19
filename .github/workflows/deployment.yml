@@ -8,11 +8,6 @@ jobs:
   deploy:
     name: Build and Deploy project
     runs-on: ubuntu-latest
-    env:
-      ARTIFACT_REGISTRY_BASE_URL: ${{secrets.GCP_REGION}}-docker.pkg.dev
-      ARTIFACT_REGISTRY_REPOSITORY_URL: ${{ env.ARTIFACT_REGISTRY_BASE_URL }}/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_ARTIFACTS_REPOSITORY }}
-      IMAGE_TAG: ${{ github.sha }}
-      IMAGE_NAME: ${{ env.ARTIFACT_REGISTRY_REPOSITORY_URL }}/${{ secrets.GCP_APP_NAME }}:${{ env.IMAGE_TAG }}
     permissions:
       contents: read
       id-token: write
