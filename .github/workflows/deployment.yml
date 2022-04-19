@@ -18,6 +18,11 @@ jobs:
       id-token: write
 
     steps:
+      - name: Set environment variables
+        run: |
+          sed "" ./.github/variables.env >> $GITHUB_ENV
+        shell: bash
+
       - uses: actions/checkout@v3
 
       - id: auth
