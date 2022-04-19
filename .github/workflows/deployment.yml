@@ -8,16 +8,15 @@ jobs:
   deploy:
     name: Build and Deploy project
     runs-on: ubuntu-latest
+    env:
+      Container_BASE_URL: gcr.io
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}:${{ github.sha }}
     permissions:
       contents: read
       id-token: write
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: set environment variables
-        run: |
-          cat ./.github/variables.env >> $GITHUB_ENV
 
       - id: auth
         name: Authenticate to Gcloud Account
@@ -27,13 +26,13 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT}}
 
       - name: Configure Docker
-        run: gcloud auth configure-docker $ARTIFACT_REGISTRY_BASE_URL
+        run: gcloud auth configure-docker $CONTAINER_BASE_URL
 
       - name: Build container
-        run: docker build . -t $ARTIFACT_REGISTRY_BASE_URL/$IMAGE_NAME:$IMAGE_TAG
+        run: docker build . -t $IMAGE_NAME
 
       - name: Push docker image
-        run: docker push $ARTIFACT_REGISTRY_BASE_URL/$IMAGE_NAME:$IMAGE_TAG
+        run: docker push $IMAGE_NAME
 
       - name: Deploy docker image to cloud run
-        run: gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }} --image $ARTIFACT_REGISTRY_BASE_URL/$IMAGE_NAME:$IMAGE_TAG --quiet --platform managed --region ${{secrets.GCP_REGION}} --project ${{ secrets.GCP_PROJECT_ID }}
+        run: gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }} --image $IMAGE_NAME --quiet --platform managed --region ${{secrets.GCP_REGION}} --project ${{ secrets.GCP_PROJECT_ID }}
