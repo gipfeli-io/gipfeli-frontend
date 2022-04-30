@@ -1,20 +1,22 @@
-import type {AppProps} from 'next/app'
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import {CssBaseline} from '@mui/material';
-import {ThemeProvider} from '@mui/material/styles';
-import theme from '../themes/dark';
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
+import {CssBaseline} from '@mui/material'
+import {ThemeProvider} from '@mui/material/styles'
+import theme from '../themes/dark'
+import {AppPropsWithLayout} from '../types/layout'
 
 
-function MyApp({Component, pageProps}: AppProps) {
+function App({Component, pageProps}: AppPropsWithLayout) {
+    const getLayout = Component.getLayout ?? ((page) => page)
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
-            <Component {...pageProps} />
+            {getLayout(<Component {...pageProps} />)}
         </ThemeProvider>
     )
 }
 
-export default MyApp
+export default App

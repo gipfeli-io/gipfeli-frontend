@@ -1,12 +1,21 @@
-import Typography from '@mui/material/Typography'
-import type { NextPage } from 'next'
+import {NextPageWithLayout} from '../types/layout'
+import landingPage from '../layouts/landing-page'
+import Hero from '../components/landing-page/Hero'
+import Features from '../components/landing-page/Features'
+import {Container} from '@mui/material'
 
-const Home: NextPage = () => {
-  return (
-      <Typography variant="h1" component="div" gutterBottom>
-        Hello from MUI!
-      </Typography>
-  )
+const Home: NextPageWithLayout = () => {
+    return (
+        <>
+            <Hero/>
+            <Container maxWidth={'xl'}>
+                <Features/>
+            </Container>
+        </>
+
+    )
 }
+
+Home.getLayout = landingPage
 
 export default Home
