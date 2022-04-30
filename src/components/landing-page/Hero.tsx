@@ -1,7 +1,7 @@
 import {Box, Button, Container, Stack} from '@mui/material'
 import Typography from '@mui/material/Typography'
 
-export default function Hero() {
+function Hero() {
     return (
         <Box
             sx={{
@@ -15,7 +15,7 @@ export default function Hero() {
                     align='center'
                     gutterBottom
                 >
-                    You've arrived.
+                    You&apos;ve arrived.
                 </Typography>
                 <Typography variant='h5' align='center' color='text.secondary' paragraph>
                     Fellow hiker, you have arrived. <strong>gipfeli.io</strong> is the last hike documentation website you will ever need. So stop searching and join us!
@@ -33,3 +33,5 @@ export default function Hero() {
         </Box>
     )
 }
+
+export default Hero

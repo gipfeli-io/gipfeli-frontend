@@ -7,7 +7,6 @@ import {ThemeProvider} from '@mui/material/styles'
 import theme from '../themes/dark'
 import {AppPropsWithLayout} from '../types/layout'
 
-
 function App({Component, pageProps}: AppPropsWithLayout) {
     const getLayout = Component.getLayout ?? ((page) => page)
 

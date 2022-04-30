@@ -2,7 +2,6 @@ import {Card, CardContent, Grid} from '@mui/material'
 import Typography from '@mui/material/Typography'
 import Image from 'next/image'
 
-
 type Feature = {
     title: string
     description: string
@@ -27,7 +26,7 @@ const features: Array<Feature> = [
     }
 ]
 
-export default function Features() {
+function Features() {
     return (
         <Grid container spacing={4}>
             {features.map((feature) => (
@@ -37,7 +36,7 @@ export default function Features() {
                     >
                         <CardContent sx={{flexGrow: 1, textAlign: 'center'}}>
                             <Image alt={feature.title} src={feature.icon} width={200} height={200}/>
-                            <Typography gutterBottom variant="h5" component="h2">
+                            <Typography gutterBottom variant='h5' component='h2'>
                                 {feature.title}
                             </Typography>
                             <Typography>
@@ -50,3 +49,5 @@ export default function Features() {
         </Grid>
     )
 }
+
+export default Features

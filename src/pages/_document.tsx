@@ -1,10 +1,10 @@
 import {Head, Html, Main, NextScript} from 'next/document'
 
-export default function Document() {
+function Document() {
     return (
         <Html>
             <Head>
-                <meta name="viewport" content="initial-scale=1, width=device-width"/>
+                <meta name='viewport' content='initial-scale=1, width=device-width'/>
             </Head>
             <body>
             <Main/>
@@ -13,3 +13,5 @@ export default function Document() {
         </Html>
     )
 }
+
+export default Document
