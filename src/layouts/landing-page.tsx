@@ -2,6 +2,8 @@ import {ReactElement} from 'react'
 import {AppBar, Box, Button, Divider, IconButton, Stack, Toolbar} from '@mui/material'
 import Typography from '@mui/material/Typography'
 import LandscapeIcon from '@mui/icons-material/Landscape'
+import Copyright from '../components/shared/Copyright'
+import Link from 'next/link'
 
 function landingPage(page: ReactElement) {
     return (
@@ -20,28 +22,16 @@ function landingPage(page: ReactElement) {
                     </Typography>
                     <Stack spacing={2} direction={'row'}>
                         <Button variant={'contained'}>Join</Button>
-                        <Button variant={'outlined'}>Login</Button>
+                        <Link href={'/app/login'} passHref>
+                            <Button variant={'outlined'}>Login</Button>
+                        </Link>
                     </Stack>
                 </Toolbar>
             </AppBar>
 
             {page}
 
-            <Box sx={{p: 6}} component='footer'>
-                <Divider sx={{mb: 2}}/>
-                <Typography variant='h6' align='center' gutterBottom>
-                    {'Powered by gipfeli.io '}
-                    {new Date().getFullYear()}
-                </Typography>
-                <Typography
-                    variant='subtitle1'
-                    align='center'
-                    color='text.secondary'
-                    component='p'
-                >
-                    Made with ☕ and ❤ in Switzerland.
-                </Typography>
-            </Box>
+            <Copyright />
         </>
     )
 }
