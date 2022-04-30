@@ -4,17 +4,17 @@ import Box from '@mui/material/Box'
 
 function Copyright() {
     return (
-        <Box sx={{p: 6}} component="footer">
+        <Box sx={{p: 6}} component='footer'>
             <Divider sx={{mb: 2}}/>
-            <Typography variant="subtitle1" align="center" gutterBottom>
+            <Typography variant='subtitle1' align='center' gutterBottom>
                 {'Powered by gipfeli.io '}
                 {new Date().getFullYear()}
             </Typography>
             <Typography
-                variant="subtitle1"
-                align="center"
-                color="text.secondary"
-                component="p"
+                variant='subtitle1'
+                align='center'
+                color='text.secondary'
+                component='p'
             >
                 Made with ☕ and ❤ in Switzerland.
             </Typography>

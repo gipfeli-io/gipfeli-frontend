@@ -11,23 +11,23 @@ import Link from 'next/link'
 function authPage(page: ReactElement) {
     return (
         <>
-            <AppBar position="fixed" color="transparent" elevation={0}>
+            <AppBar position='fixed' color='transparent' elevation={0}>
                 <Toolbar>
                     <Link href={'/'} passHref>
                         <IconButton
-                            size="large"
-                            edge="start"
+                            size='large'
+                            edge='start'
                             sx={{mr: 2}}
                         >
                             <LandscapeIcon/>
                         </IconButton>
                     </Link>
-                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                    <Typography variant='h6' component='div' sx={{flexGrow: 1}}>
                         gipfeli.io
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Grid container component="main" sx={{height: '100vh'}}>
+            <Grid container component='main' sx={{height: '100vh'}}>
                 <Grid
                     item
                     xs={false}

@@ -23,46 +23,46 @@ const Login: NextPageWithLayout = () => {
             <Avatar sx={{m: 1, width: 80, height: 80}}>
                 <LockOutlinedIcon/>
             </Avatar>
-            <Typography component="h1" variant="h2">
+            <Typography component='h1' variant='h2'>
                 Sign in
             </Typography>
-            <Box component="form" sx={{mt: 1}} onSubmit={login}>
+            <Box component='form' sx={{mt: 1}} onSubmit={login}>
                 <TextField
-                    margin="normal"
+                    margin='normal'
                     required
                     fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
+                    id='email'
+                    label='Email Address'
+                    name='email'
+                    autoComplete='email'
                     autoFocus
                 />
                 <TextField
-                    margin="normal"
+                    margin='normal'
                     required
                     fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
+                    name='password'
+                    label='Password'
+                    type='password'
+                    id='password'
+                    autoComplete='current-password'
                 />
                 <Button
-                    type="submit"
+                    type='submit'
                     fullWidth
-                    variant="contained"
+                    variant='contained'
                     sx={{mt: 3, mb: 2}}
                 >
                     Sign In
                 </Button>
                 <Grid container>
                     <Grid item xs>
-                        <Link href="#">
+                        <Link href='#'>
                             Forgot password?
                         </Link>
                     </Grid>
                     <Grid item>
-                        <Link href="#">
+                        <Link href='#'>
                             {'Create a free account'}
                         </Link>
                     </Grid>
