@@ -10,6 +10,7 @@ import {AppProps} from 'next/app'
 
 function App({Component, pageProps: {session, ...pageProps}} : AppProps) {
 
+    // Todo: add a generic means to check if a user may access the page
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>

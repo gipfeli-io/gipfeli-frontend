@@ -10,9 +10,14 @@ import {FormEvent} from 'react'
 import {signIn} from 'next-auth/react'
 import {NextPage} from 'next'
 import AuthPageLayout from '../../layouts/auth-page-layout'
+import {useRouter} from 'next/router'
+import {useAuth} from '../../hooks/use-auth'
 
 
 const Login: NextPage = () => {
+    const router = useRouter()
+    const {isAuthenticated} = useAuth()
+
     const login = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const data = new FormData(event.currentTarget)
@@ -22,6 +27,11 @@ const Login: NextPage = () => {
             password: data.get('password'),
             callbackUrl: `${window.location.origin}/`
         })
+    }
+
+    if (isAuthenticated) {
+        router.push('/')
+        return null
     }
 
     return (

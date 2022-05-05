@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-// @ts-ignore
 export default NextAuth({
     pages: {
         signIn: '/app/login',
@@ -17,7 +16,6 @@ export default NextAuth({
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                // @Todo Implement logic to check in api
                 if (!credentials) {
                     return null;
                 }

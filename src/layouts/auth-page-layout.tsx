@@ -1,14 +1,14 @@
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import React from 'react'
+import React, {PropsWithChildren} from 'react'
 import Copyright from '../components/shared/Copyright'
 import {AppBar, IconButton, Toolbar} from '@mui/material'
 import LandscapeIcon from '@mui/icons-material/Landscape'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 
-function AuthPageLayout({children}) {
+function AuthPageLayout({children}: PropsWithChildren<any>) {
     return (
         <>
             <AppBar position="fixed" color="transparent" elevation={0}>
