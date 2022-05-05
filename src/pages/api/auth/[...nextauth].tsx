@@ -6,6 +6,9 @@ export default NextAuth({
         signIn: '/app/login',
     },
     secret: process.env.JWT_SECRET,
+    session: {
+        maxAge: 60 * 60 // defaults to 1 hour of idle
+    },
     providers: [
         CredentialsProvider( {
             id: 'credentials',
