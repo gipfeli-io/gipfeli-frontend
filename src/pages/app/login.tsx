@@ -9,13 +9,19 @@ import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import {FormEvent} from 'react'
+import {signIn, useSession} from 'next-auth/react'
+
 
 const Login: NextPageWithLayout = () => {
-    const login = (event: FormEvent<HTMLFormElement>) => {
+    const login = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const data = new FormData(event.currentTarget)
 
-        alert(`Logging in ${data.get('email')}`)
+        const res = await signIn('credentials', {
+            email: data.get('email'),
+            password: data.get('password'),
+            callbackUrl: `${window.location.origin}/`
+        })
     }
 
     return (
@@ -23,46 +29,46 @@ const Login: NextPageWithLayout = () => {
             <Avatar sx={{m: 1, width: 80, height: 80}}>
                 <LockOutlinedIcon/>
             </Avatar>
-            <Typography component='h1' variant='h2'>
+            <Typography component="h1" variant="h2">
                 Sign in
             </Typography>
-            <Box component='form' sx={{mt: 1}} onSubmit={login}>
+            <Box component="form" sx={{mt: 1}} onSubmit={login}>
                 <TextField
-                    margin='normal'
+                    margin="normal"
                     required
                     fullWidth
-                    id='email'
-                    label='Email Address'
-                    name='email'
-                    autoComplete='email'
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
                     autoFocus
                 />
                 <TextField
-                    margin='normal'
+                    margin="normal"
                     required
                     fullWidth
-                    name='password'
-                    label='Password'
-                    type='password'
-                    id='password'
-                    autoComplete='current-password'
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
                 />
                 <Button
-                    type='submit'
+                    type="submit"
                     fullWidth
-                    variant='contained'
+                    variant="contained"
                     sx={{mt: 3, mb: 2}}
                 >
                     Sign In
                 </Button>
                 <Grid container>
                     <Grid item xs>
-                        <Link href='#'>
+                        <Link href="pages/app/login#">
                             Forgot password?
                         </Link>
                     </Grid>
                     <Grid item>
-                        <Link href='#'>
+                        <Link href="pages/app/login#">
                             {'Create a free account'}
                         </Link>
                     </Grid>
