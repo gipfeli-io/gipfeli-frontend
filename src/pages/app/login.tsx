@@ -1,5 +1,3 @@
-import {NextPageWithLayout} from '../../types/layout'
-import authPage from '../../layouts/auth-page'
 import Avatar from '@mui/material/Avatar'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
@@ -9,10 +7,12 @@ import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import {FormEvent} from 'react'
-import {signIn, useSession} from 'next-auth/react'
+import {signIn} from 'next-auth/react'
+import {NextPage} from 'next'
+import AuthPageLayout from '../../layouts/auth-page-layout'
 
 
-const Login: NextPageWithLayout = () => {
+const Login: NextPage = () => {
     const login = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const data = new FormData(event.currentTarget)
@@ -25,7 +25,7 @@ const Login: NextPageWithLayout = () => {
     }
 
     return (
-        <>
+        <AuthPageLayout>
             <Avatar sx={{m: 1, width: 80, height: 80}}>
                 <LockOutlinedIcon/>
             </Avatar>
@@ -74,10 +74,8 @@ const Login: NextPageWithLayout = () => {
                     </Grid>
                 </Grid>
             </Box>
-        </>
+        </AuthPageLayout>
     )
 }
-
-Login.getLayout = authPage
 
 export default Login

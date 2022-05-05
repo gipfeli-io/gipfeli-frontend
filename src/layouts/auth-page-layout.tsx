@@ -1,33 +1,33 @@
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import {FormEvent, ReactElement} from 'react'
+import React from 'react'
 import Copyright from '../components/shared/Copyright'
 import {AppBar, IconButton, Toolbar} from '@mui/material'
 import LandscapeIcon from '@mui/icons-material/Landscape'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 
-function authPage(page: ReactElement) {
+function AuthPageLayout({children}) {
     return (
         <>
-            <AppBar position='fixed' color='transparent' elevation={0}>
+            <AppBar position="fixed" color="transparent" elevation={0}>
                 <Toolbar>
                     <Link href={'/'} passHref>
                         <IconButton
-                            size='large'
-                            edge='start'
+                            size="large"
+                            edge="start"
                             sx={{mr: 2}}
                         >
                             <LandscapeIcon/>
                         </IconButton>
                     </Link>
-                    <Typography variant='h6' component='div' sx={{flexGrow: 1}}>
+                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         gipfeli.io
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <Grid container component='main' sx={{height: '100vh'}}>
+            <Grid container component="main" sx={{height: '100vh'}}>
                 <Grid
                     item
                     xs={false}
@@ -51,7 +51,7 @@ function authPage(page: ReactElement) {
                         }}
                     >
 
-                        {page}
+                        {children}
 
                     </Box>
                     <Copyright/>
@@ -61,4 +61,4 @@ function authPage(page: ReactElement) {
     )
 }
 
-export default authPage
+export default AuthPageLayout

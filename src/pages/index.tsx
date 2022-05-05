@@ -1,21 +1,19 @@
-import {NextPageWithLayout} from '../types/layout'
-import landingPage from '../layouts/landing-page'
 import Hero from '../components/landing-page/Hero'
 import Features from '../components/landing-page/Features'
 import {Container} from '@mui/material'
+import {NextPage} from 'next'
+import LandingPageLayout from '../layouts/landing-page-layout'
 
-const Home: NextPageWithLayout = () => {
+const Home: NextPage = () => {
     return (
-        <>
+        <LandingPageLayout>
             <Hero/>
             <Container maxWidth={'xl'}>
                 <Features/>
             </Container>
-        </>
+        </LandingPageLayout>
 
     )
 }
-
-Home.getLayout = landingPage
 
 export default Home

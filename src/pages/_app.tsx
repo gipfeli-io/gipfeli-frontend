@@ -5,19 +5,16 @@ import '@fontsource/roboto/700.css'
 import {CssBaseline} from '@mui/material'
 import {ThemeProvider} from '@mui/material/styles'
 import theme from '../themes/dark'
-import {AppPropsWithLayout} from '../types/layout'
 import {SessionProvider} from 'next-auth/react'
+import {AppProps} from 'next/app'
 
-function App({Component, pageProps: {session, ...pageProps}}: AppPropsWithLayout) {
-    const getLayout = Component.getLayout ?? ((page) => page)
+function App({Component, pageProps: {session, ...pageProps}} : AppProps) {
 
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <SessionProvider session={session}>
-                {getLayout(
-                    <Component {...pageProps} />
-                )}
+                <Component {...pageProps} />
             </SessionProvider>
         </ThemeProvider>
     )
