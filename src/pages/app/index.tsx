@@ -9,15 +9,15 @@ type AppHomeProps = {
 }
 
 export async function getServerSideProps(context: NextPageContext) {
+    // Todo: this should be moved to a generic handler, like https://github.com/nextauthjs/next-auth/issues/1210#issuecomment-851606553 but working...
     const session = await getSession(context)
     const isUser = !!session?.user
 
-    // No authenticated session
     if (!isUser) {
         return {
             redirect: {
                 permanent: false,
-                destination: 'app/login'
+                destination: `app/login`
             }
         }
     }

@@ -12,17 +12,18 @@ import {NextPage} from 'next'
 import AuthPageLayout from '../../layouts/auth-page-layout'
 import {useRouter} from 'next/router'
 import {useAuth} from '../../hooks/use-auth'
+import {Alert} from '@mui/material'
 
 
 const Login: NextPage = () => {
     const router = useRouter()
     const {isAuthenticated} = useAuth()
+    const {error} = useRouter().query
 
     const login = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const data = new FormData(event.currentTarget)
-
-        const res = await signIn('credentials', {
+        await signIn('credentials', {
             email: data.get('email'),
             password: data.get('password'),
             callbackUrl: `${window.location.origin}/`
@@ -30,7 +31,7 @@ const Login: NextPage = () => {
     }
 
     if (isAuthenticated) {
-        router.push('/')
+        router.push('/app')
         return null
     }
 
@@ -42,6 +43,11 @@ const Login: NextPage = () => {
             <Typography component="h1" variant="h2">
                 Sign in
             </Typography>
+
+            {error &&
+                <Alert severity="error">Invalid credentials.</Alert>
+            }
+
             <Box component="form" sx={{mt: 1}} onSubmit={login}>
                 <TextField
                     margin="normal"
