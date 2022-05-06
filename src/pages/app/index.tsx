@@ -1,14 +1,28 @@
-import {GetServerSideProps} from 'next'
+import {NextPageContext} from 'next'
 import LandingPageLayout from '../../layouts/landing-page-layout'
-import {getSession} from 'next-auth/react'
 import UsersService from '../../services/users/users-service'
-import {Session} from 'next-auth'
+import {getSession} from 'next-auth/react'
 
+type AppHomeProps = {
+    username: string
+    id: number
+}
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session: Session | null = await getSession(context)
+export async function getServerSideProps(context: NextPageContext) {
+    const session = await getSession(context)
+    const isUser = !!session?.user
 
-    const res = await UsersService.profile(session) // Todo: make sure session is set
+    // No authenticated session
+    if (!isUser) {
+        return {
+            redirect: {
+                permanent: false,
+                destination: 'app/login'
+            }
+        }
+    }
+
+    const res = await UsersService.profile(session)
     const body = await res.json()
 
     return {
@@ -19,7 +33,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 }
 
-const AppHome = ({username, id}: { username: string, id: number }) => {
+
+const AppHome = ({username, id}: AppHomeProps) => {
     return (
         <LandingPageLayout>
             <h1>Username in API: {username}</h1>

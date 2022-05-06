@@ -34,7 +34,6 @@ export default abstract class APIService {
             requestBody.headers = {...requestBody.headers, 'Authorization': this.extractBearerTokenFromSession(session)}
         }
 
-        console.log(session)
         return requestBody
     }
 

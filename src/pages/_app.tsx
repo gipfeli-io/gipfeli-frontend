@@ -7,12 +7,16 @@ import {ThemeProvider} from '@mui/material/styles'
 import theme from '../themes/dark'
 import {SessionProvider} from 'next-auth/react'
 import {AppProps} from 'next/app'
+import Head from 'next/head'
 
-function App({Component, pageProps: {session, ...pageProps}} : AppProps) {
+function App({Component, pageProps: {session, ...pageProps}}: AppProps) {
 
-    // Todo: add a generic means to check if a user may access the page
+    // Todo: add a generic means to check if a user may access the page - but we need it in severside props, so...
     return (
         <ThemeProvider theme={theme}>
+            <Head>
+                <meta name='viewport' content='initial-scale=1, width=device-width'/>
+            </Head>
             <CssBaseline/>
             <SessionProvider session={session}>
                 <Component {...pageProps} />
