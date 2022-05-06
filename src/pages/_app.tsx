@@ -5,15 +5,22 @@ import '@fontsource/roboto/700.css'
 import {CssBaseline} from '@mui/material'
 import {ThemeProvider} from '@mui/material/styles'
 import theme from '../themes/dark'
-import {AppPropsWithLayout} from '../types/layout'
+import {SessionProvider} from 'next-auth/react'
+import {AppProps} from 'next/app'
+import Head from 'next/head'
 
-function App({Component, pageProps}: AppPropsWithLayout) {
-    const getLayout = Component.getLayout ?? ((page) => page)
+function App({Component, pageProps: {session, ...pageProps}}: AppProps) {
 
+    // Todo: add a generic means to check if a user may access the page - but we need it in severside props, so...
     return (
         <ThemeProvider theme={theme}>
+            <Head>
+                <meta name='viewport' content='initial-scale=1, width=device-width'/>
+            </Head>
             <CssBaseline/>
-            {getLayout(<Component {...pageProps} />)}
+            <SessionProvider session={session}>
+                <Component {...pageProps} />
+            </SessionProvider>
         </ThemeProvider>
     )
 }
