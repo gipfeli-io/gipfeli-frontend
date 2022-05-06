@@ -10,30 +10,54 @@ export default NextAuth({
         maxAge: 60 * 60 // defaults to 1 hour of idle
     },
     providers: [
-        CredentialsProvider( {
+        CredentialsProvider({
             id: 'credentials',
             name: 'Credentials',
             type: 'credentials',
             credentials: {
-                email: { label: "Email", type: "text" },
-                password: { label: "Password", type: "password" }
+                email: {label: 'Email', type: 'text'},
+                password: {label: 'Password', type: 'password'}
             },
             async authorize(credentials, req) {
                 if (!credentials) {
-                    return null;
+                    return null
                 }
 
                 if (credentials.email === 'admin@gipfeli.io' && credentials.password === 'admin') {
-                    console.log('success')
+                    const res = await fetch(`${process.env.BACKEND_API}/auth/login`, {
+                        method: 'POST',
+                        body: JSON.stringify({username: 'john@gipfeli.io', password: '1234'}),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+
+                    const token = await res.json()
+
                     return {
-                        id: 1,
-                        uid: 1,
-                        name: 'admin',
-                        email: 'admin@dreipol.ch',
+                        email: credentials.email,
+                        access_token: token?.access_token
                     }
                 }
                 return null
+            },
+        })
+    ],
+    callbacks: {
+        async jwt({token, user, account}) {
+            if (account && user) {
+                return {
+                    ...token,
+                    accessToken: user.access_token,
+                }
             }
-        } )
-    ]
+
+            return token
+        },
+        async session({ session, token }) {
+            session.accessToken = token.accessToken
+
+            return session;
+        },
+    }
 })

@@ -19,7 +19,7 @@ function NavBarUserSection() {
     return (
         <Stack spacing={2} direction={'row'}>
             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                Hello, {user?.name}!
+                Hello, {user}!
             </Typography>
             <Button variant={'outlined'} onClick={() => signOut()}>Logout</Button>
         </Stack>

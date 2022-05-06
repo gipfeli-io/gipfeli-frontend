@@ -13,7 +13,7 @@ export const useAuth = () => {
 
     }, [session.status])
 
-    const user = useMemo(() => session.data?.user, [session.data])
+    const user = useMemo(() => session.data?.user?.email, [session.data])
 
     return {
         isAuthenticated,
