@@ -1,39 +1,29 @@
 import {GetServerSideProps} from 'next'
 import LandingPageLayout from '../../layouts/landing-page-layout'
-import {useAuth} from '../../hooks/use-auth'
 import {getSession} from 'next-auth/react'
-import APIService from '../../services/api-service'
+import UsersService from '../../services/users/users-service'
+import {Session} from 'next-auth'
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getSession(context)
-    console.log(session?.accessToken)
-    const res = await fetch(`${process.env.BACKEND_API}/users/profile`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Authorization': `Bearer ${session?.accessToken}`,
-        },
-    })
+    const session: Session | null = await getSession(context)
 
+    const res = await UsersService.profile(session) // Todo: make sure session is set
     const body = await res.json()
-
-    console.log(body)
 
     return {
         props: {
-            a: 5
+            username: body.username,
+            id: body.id
         }
     }
 }
 
-const AppHome = ({a}: { a: number }) => {
-    const {user, isAuthenticated} = useAuth()
-
+const AppHome = ({username, id}: { username: string, id: number }) => {
     return (
         <LandingPageLayout>
-            <h1>{user}</h1>
-            <h2>{a}</h2>
+            <h1>Username in API: {username}</h1>
+            <h2>User ID: {id}</h2>
         </LandingPageLayout>
 
     )
