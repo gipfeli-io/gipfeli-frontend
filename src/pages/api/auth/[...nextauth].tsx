@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import AuthService from '../../../services/auth/auth-service'
 
 export default NextAuth({
     pages: {
@@ -23,22 +24,16 @@ export default NextAuth({
                     return null
                 }
 
-                if (credentials.email === 'admin@gipfeli.io' && credentials.password === 'admin') {
-                    const res = await fetch(`${process.env.BACKEND_API}/auth/login`, {
-                        method: 'POST',
-                        body: JSON.stringify({username: 'john@gipfeli.io', password: '1234'}),
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
+                const res = await AuthService.login(credentials.email, credentials.password)
+                const token = await res.json() // Todo: could return object already typed.
 
-                    const token = await res.json()
-
+                if (res.ok) {
                     return {
                         email: credentials.email,
                         access_token: token?.access_token
                     }
                 }
+
                 return null
             },
         })
@@ -54,10 +49,11 @@ export default NextAuth({
 
             return token
         },
-        async session({ session, token }) {
+        async session({session, token}) {
+            // tODO: Proper typehinting
             session.accessToken = token.accessToken
 
-            return session;
+            return session
         },
     }
 })

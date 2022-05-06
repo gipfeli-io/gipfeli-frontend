@@ -2,6 +2,7 @@ import {GetServerSideProps} from 'next'
 import LandingPageLayout from '../../layouts/landing-page-layout'
 import {useAuth} from '../../hooks/use-auth'
 import {getSession} from 'next-auth/react'
+import APIService from '../../services/api-service'
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -16,6 +17,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     })
 
     const body = await res.json()
+
+    console.log(body)
 
     return {
         props: {
