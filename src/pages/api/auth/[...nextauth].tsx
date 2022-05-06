@@ -30,7 +30,7 @@ export default NextAuth({
                 if (res.ok) {
                     return {
                         email: credentials.email,
-                        access_token: token?.access_token
+                        accessToken: token?.access_token
                     }
                 }
 
@@ -41,16 +41,12 @@ export default NextAuth({
     callbacks: {
         async jwt({token, user, account}) {
             if (account && user) {
-                return {
-                    ...token,
-                    accessToken: user.access_token,
-                }
+                token.accessToken = user.accessToken
             }
 
             return token
         },
         async session({session, token}) {
-            // tODO: Proper typehinting
             session.accessToken = token.accessToken
 
             return session
