@@ -1,27 +1,15 @@
 import {NextPageContext} from 'next'
 import LandingPageLayout from '../../layouts/landing-page-layout'
 import UsersService from '../../services/users/users-service'
-import {getSession} from 'next-auth/react'
+import {withAuthenticatedOrRedirect} from '../../utils/with-authenticated-or-redirect'
+import {Session} from 'next-auth'
 
 type AppHomeProps = {
     username: string
     id: number
 }
 
-export async function getServerSideProps(context: NextPageContext) {
-    // Todo: this should be moved to a generic handler, like https://github.com/nextauthjs/next-auth/issues/1210#issuecomment-851606553 but working...
-    const session = await getSession(context)
-    const isUser = !!session?.user
-
-    if (!isUser) {
-        return {
-            redirect: {
-                permanent: false,
-                destination: `app/login`
-            }
-        }
-    }
-
+export const getServerSideProps = (context: NextPageContext) => withAuthenticatedOrRedirect(context, async (context: NextPageContext, session: Session) => {
     const res = await UsersService.profile(session)
     const body = await res.json()
 
@@ -31,8 +19,7 @@ export async function getServerSideProps(context: NextPageContext) {
             id: body.id
         }
     }
-}
-
+})
 
 const AppHome = ({username, id}: AppHomeProps) => {
     return (
