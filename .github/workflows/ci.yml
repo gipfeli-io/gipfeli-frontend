@@ -4,8 +4,8 @@ on:
   - push
 
 jobs:
-  build:
-    name: Build and Deploy project
+  test:
+    name: Run tests
     runs-on: ubuntu-latest
     env:
       Container_BASE_URL: gcr.io
@@ -15,12 +15,16 @@ jobs:
       id-token: write
 
     steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Build container
-        run: docker build . -t $IMAGE_NAME
+        run: npm i
 
   deploy-stage:
     name: Build and Deploy project
-    needs: build
+    needs: test
     if: github.ref == 'refs/heads/stage'
     runs-on: ubuntu-latest
     env:
@@ -42,6 +46,9 @@ jobs:
 
       - name: Configure Docker
         run: gcloud auth configure-docker $CONTAINER_BASE_URL
+
+      - name: Build container
+        run: docker build . -t $IMAGE_NAME
 
       - name: Push docker image
         run: docker push $IMAGE_NAME
