@@ -4,7 +4,7 @@ on:
   - push
 
 jobs:
-  test-build:
+  test-and-build:
     name: Run tests and build container
     runs-on: ubuntu-latest
     env:
@@ -45,7 +45,7 @@ jobs:
 
   deploy-stage:
     name: Build and Deploy project to stage
-    needs: test
+    needs: test-and-build
     if: github.ref == 'refs/heads/stage'
     runs-on: ubuntu-latest
     env:
