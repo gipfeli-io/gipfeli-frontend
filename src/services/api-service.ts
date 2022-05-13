@@ -1,6 +1,6 @@
 import {Session} from 'next-auth'
 
-interface RequestBody {
+export interface RequestBody {
     headers: {
         'Content-Type': string
         'Authorization'?: string
@@ -11,14 +11,14 @@ interface RequestBody {
 
 
 export default abstract class APIService {
-    protected static baseUrl: string = process.env.BACKEND_API || 'http://localhost:3000'
+    private baseUrl: string = process.env.BACKEND_API || 'http://localhost:3000'
+    protected session?: Session = undefined
 
-    protected static getRequestUrl(prefix: string, endpoint: string): string {
+    protected getRequestUrl(prefix: string, endpoint: string): string {
         return `${this.baseUrl}/${prefix}/${endpoint}`
     }
 
-
-    protected static getRequestBody(method: 'get' | 'post' | 'put' | 'delete', body?: any, session?: Session): RequestBody {
+    protected getRequestBody(method: 'get' | 'post' | 'put' | 'delete', body?: any): RequestBody {
         let requestBody: RequestBody = {
             method,
             headers: {
@@ -30,15 +30,15 @@ export default abstract class APIService {
             requestBody.body = body ? JSON.stringify(body) : ''
         }
 
-        if (session) {
-            requestBody.headers = {...requestBody.headers, 'Authorization': this.extractBearerTokenFromSession(session)}
+        if (this.session) {
+            requestBody.headers = {...requestBody.headers, 'Authorization': this.extractBearerTokenFromSession()}
         }
 
         return requestBody
     }
 
-    private static extractBearerTokenFromSession(session: Session) {
-        return `Bearer ${session.accessToken}`
+    private extractBearerTokenFromSession(): string {
+        return `Bearer ${this.session!.accessToken}`
     }
 
 

@@ -10,7 +10,8 @@ type AppHomeProps = {
 }
 
 export const getServerSideProps = (context: NextPageContext) => withAuthenticatedOrRedirect(context, async (context: NextPageContext, session: Session) => {
-    const res = await UsersService.profile(session)
+    const service = new UsersService(session)
+    const res = await service.profile()
     const body = await res.json()
 
     return {

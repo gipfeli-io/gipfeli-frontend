@@ -10,13 +10,15 @@ describe('AuthService', () => {
     })
 
     it('has correct prefix set', () => {
-        expect(AuthService).toHaveProperty('prefix', 'auth')
+        const service = new AuthService()
+        expect(service).toHaveProperty('prefix', 'auth')
     })
 
     it('calls API with correct login params', async () => {
+        const service = new AuthService()
         fetchMock.mockResponseOnce(JSON.stringify({}))
 
-        const login = await AuthService.login(mockUser, mockPassword)
+        await service.login(mockUser, mockPassword)
 
         expect(fetch).toHaveBeenCalledTimes(1)
         expect(fetchMock.mock.calls[0][1]?.body).toContain(mockUser)
@@ -24,10 +26,11 @@ describe('AuthService', () => {
     })
 
     it('calls API and returns the response as JSON', async () => {
+        const service = new AuthService()
         const mockResponse = {data: 'thisIsTheMock'}
         fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
-        const login = await AuthService.login(mockUser, mockPassword)
+        const login = await service.login(mockUser, mockPassword)
         const result = await login.json()
 
         expect(fetch).toHaveBeenCalledTimes(1)

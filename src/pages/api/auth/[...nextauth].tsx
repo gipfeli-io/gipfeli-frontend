@@ -24,7 +24,8 @@ export default NextAuth({
                     return null
                 }
 
-                const res = await AuthService.login(credentials.email, credentials.password)
+                const service = new AuthService()
+                const res = await service.login(credentials.email, credentials.password)
                 const token = await res.json() // Todo: could return object already typed.
 
                 if (res.ok) {
