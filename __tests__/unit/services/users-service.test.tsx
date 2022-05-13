@@ -1,37 +1,40 @@
 import '@testing-library/jest-dom'
 import AuthService from '../../../src/services/auth/auth-service'
+import UsersService from '../../../src/services/users/users-service'
+import {Session} from 'next-auth'
 
 const mockUser = 'test'
 const mockPassword = 'password'
 
 describe('AuthService', () => {
+    const sessionMock: Session = {
+        accessToken: 'mockedAccessToken',
+        expires: Date.now().toString(),
+        user: {}
+    }
+
     beforeEach(() => {
         fetchMock.resetMocks()
     })
 
-    it('has correct prefix set', () => {
-        const service = new AuthService()
-        expect(service).toHaveProperty('prefix', 'auth')
-    })
-
-    it('calls API with correct login params', async () => {
-        const service = new AuthService()
+    it('calls API with correct request', async () => {
+        const service = new UsersService(sessionMock)
         fetchMock.mockResponseOnce(JSON.stringify({}))
 
-        await service.login(mockUser, mockPassword)
+        await service.profile()
 
         expect(fetch).toHaveBeenCalledTimes(1)
-        expect(fetchMock.mock.calls[0][1]?.body).toContain(mockUser)
-        expect(fetchMock.mock.calls[0][1]?.body).toContain(mockPassword)
-        expect(fetchMock.mock.calls[0][1]?.method).toEqual('post')
+        expect(fetchMock.mock.calls[0][1]?.method).toEqual('get')
+        // @ts-ignore
+        expect(fetchMock.mock.calls[0][1]?.headers?.Authorization).toContain(sessionMock.accessToken)
     })
 
     it('calls API and returns the response as JSON', async () => {
-        const service = new AuthService()
+        const service = new UsersService(sessionMock)
         const mockResponse = {data: 'thisIsTheMock'}
         fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
-        const login = await service.login(mockUser, mockPassword)
+        const login = await service.profile()
         const result = await login.json()
 
         expect(fetch).toHaveBeenCalledTimes(1)
