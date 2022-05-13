@@ -1,4 +1,4 @@
-name: Deploy to staging environment
+name: CI
 
 on:
   - push
