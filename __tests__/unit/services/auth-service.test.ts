@@ -1,10 +1,11 @@
 import '@testing-library/jest-dom'
 import AuthService from '../../../src/services/auth/auth-service'
 
-const mockUser = 'test'
-const mockPassword = 'password'
 
 describe('AuthService', () => {
+    const mockUser = 'test'
+    const mockPassword = 'password'
+
     beforeEach(() => {
         fetchMock.resetMocks()
     })

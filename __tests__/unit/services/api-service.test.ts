@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import APIService, {RequestBody} from '../../../src/services/api-service'
 import {Session} from 'next-auth'
-import mock = jest.mock
+
 
 /**
  * Wrapper class to test protected methods from APIService. These protected methods are not part of the public interface

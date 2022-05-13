@@ -10,10 +10,6 @@ const customJestConfig = {
     setupFilesAfterEnv: ['./jest.setup.js'],
     automock: false,
     resetMocks: false,
-
-    transformIgnorePatterns: [
-        "node_modules/(?!openid-client)/"
-    ]
 }
 
 module.exports = createJestConfig(customJestConfig)

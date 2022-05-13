@@ -3,8 +3,6 @@ import AuthService from '../../../src/services/auth/auth-service'
 import UsersService from '../../../src/services/users/users-service'
 import {Session} from 'next-auth'
 
-const mockUser = 'test'
-const mockPassword = 'password'
 
 describe('AuthService', () => {
     const sessionMock: Session = {
