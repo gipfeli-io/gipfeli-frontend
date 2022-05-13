@@ -21,8 +21,6 @@ jobs:
           node-version: 16
       - name: Run tests
         run: npm i
-      - name: Build container
-        run: docker build . -t $IMAGE_NAME
 
   deploy-stage:
     name: Build and Deploy project
@@ -48,6 +46,9 @@ jobs:
 
       - name: Configure Docker
         run: gcloud auth configure-docker $CONTAINER_BASE_URL
+
+      - name: Build container
+        run: docker build . -t $IMAGE_NAME
 
       - name: Push docker image
         run: docker push $IMAGE_NAME
