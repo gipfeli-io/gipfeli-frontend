@@ -10,7 +10,7 @@ function NavBarUserSection() {
     if (!isAuthenticated) {
         return (
             <Stack spacing={2} direction={'row'}>
-                <Button variant={'contained'}>Join</Button>
+                <Button variant={'contained'} id={'join-button'}>Join</Button>
                 <Button variant={'outlined'} onClick={() => signIn()}>Login</Button>
             </Stack>
         )
@@ -21,7 +21,7 @@ function NavBarUserSection() {
             <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                 Hello, {user}!
             </Typography>
-            <Button variant={'outlined'} onClick={() => signOut()}>Logout</Button>
+            <Button variant={'outlined'} onClick={() => signOut()} id={'logout-button'}>Logout</Button>
         </Stack>
     )
 
