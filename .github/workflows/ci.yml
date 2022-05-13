@@ -20,7 +20,9 @@ jobs:
         with:
           node-version: 16
       - name: Run tests
-        run: npm i
+        run: |
+          npm ci
+          npm test
 
       - name: Build container
         run: docker build . -t $IMAGE_NAME
