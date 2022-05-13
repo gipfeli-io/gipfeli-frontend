@@ -32,5 +32,6 @@ describe('AuthService', () => {
 
         expect(fetch).toHaveBeenCalledTimes(1)
         expect(result).toEqual(mockResponse)
+        expect(result).toEqual('x')
     })
 })
