@@ -22,11 +22,20 @@ jobs:
       - name: Run tests
         run: npm i
 
-      - name: Configure Docker
-        run: gcloud auth configure-docker $CONTAINER_BASE_URL
-
       - name: Build container
         run: docker build . -t $IMAGE_NAME
+
+      - id: auth
+        if: github.ref == 'refs/heads/stage'
+        name: Authenticate to Gcloud Account
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT}}
+
+      - name: Configure Docker
+        if: github.ref == 'refs/heads/stage'
+        run: gcloud auth configure-docker $CONTAINER_BASE_URL
 
       - name: Push docker image
         run: docker push $IMAGE_NAME
