@@ -11,7 +11,7 @@ type Feature = {
 const features: Array<Feature> = [
     {
         title: 'Store everything',
-        description: 'You cannot only store your trip reports, but you can also upload images, add tags to your routs, pin POIs on an interactive map and much more.',
+        description: 'You cannot only store your trip reports, but you can also upload images, add tags to your routes, pin POIs on an interactive map and much more.',
         icon: '/img/landing-page/feature_storage.svg'
     },
     {
