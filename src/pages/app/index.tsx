@@ -1,8 +1,8 @@
 import {NextPageContext} from 'next'
-import LandingPageLayout from '../../layouts/landing-page-layout'
 import UsersService from '../../services/users/users-service'
 import {withAuthenticatedOrRedirect} from '../../utils/with-authenticated-or-redirect'
 import {Session} from 'next-auth'
+import AppPageLayout from '../../layouts/app-page-layout'
 
 type AppHomeProps = {
     username: string
@@ -24,10 +24,10 @@ export const getServerSideProps = (context: NextPageContext) => withAuthenticate
 
 const AppHome = ({username, id}: AppHomeProps) => {
     return (
-        <LandingPageLayout>
+        <AppPageLayout>
             <h1>Username in API: {username}</h1>
             <h2>User ID: {id}</h2>
-        </LandingPageLayout>
+        </AppPageLayout>
 
     )
 }
