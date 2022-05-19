@@ -5,37 +5,17 @@ import {withAuthenticatedOrRedirect} from "../../../utils/with-authenticated-or-
 import {Tour} from "../../../types/tour";
 import AppPageLayout from "../../../layouts/app-page-layout";
 import TourForm from "../../../components/app/TourForm";
+import {sampleTourData} from "../../../utils/sample-data";
 
 type EditTourProps = {
     tour: Tour
 }
 
-const serviceResponse: Tour =
-    {
-        'id': '7eb9cfff-d76f-4421-9064-586cc0511a30',
-        'name': 'Very cool tour',
-        'startLocation': {
-            'type': 'Point',
-            'coordinates': [
-                7.920462,
-                47.328439
-            ]
-        },
-        'endLocation': {
-            'type': 'Point',
-            'coordinates': [
-                47.328439,
-                7.920462
-            ]
-        },
-        'description': 'This is a very cool tour. *****',
-    }
-
 export const getServerSideProps = (context: NextPageContext) => withAuthenticatedOrRedirect(context, async (context: NextPageContext, session: Session) => {
     console.log('param id: ', context.query.id)
     const service = undefined // create TourService instance
     const res = undefined // call TourService.getTour(id) property
-    const body: Tour = serviceResponse // call res.json()
+    const body: Tour = sampleTourData[0] // call res.json()
 
     return {
         props: {
@@ -50,7 +30,7 @@ const EditTour = ({tour}: EditTourProps) => {
             <Typography variant="h2" gutterBottom component="div">
                 Edit Tour
             </Typography>
-            <TourForm tour={tour} formType="create"/>
+            <TourForm tour={tour}/>
         </AppPageLayout>
     )
 }

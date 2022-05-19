@@ -1,7 +1,7 @@
 import {Tour} from "../../types/tour";
 import {Button, Grid, TextField} from "@mui/material";
 
-export default function TourForm(props: { tour: Tour, formType: string }) { //todo: add enum for form type
+export default function TourForm(props: { tour: Tour }) { //todo: add enum for form type
     return <>
         <form action="" method="post">
             <Grid container spacing={4} direction={'row'} alignItems={'center'} justifyContent={'space-evenly'}>
