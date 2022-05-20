@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import {plainToInstance} from 'class-transformer'
 import ToursService from '../../services/tours/tours-service'
 import {Button, Grid} from "@mui/material";
+import {NextPageWithAuth} from '../../types/auth-extended-page'
 
 type AppHomeProps = {
     tours: Tour[]
@@ -26,7 +27,7 @@ export const getServerSideProps = (context: NextPageContext) => withAuthenticate
     }
 })
 
-const AppHome = ({tours}: AppHomeProps): JSX.Element => {
+const AppHome: NextPageWithAuth = ({tours}: AppHomeProps): JSX.Element => {
     tours = plainToInstance(Tour, tours) // todo: maybe have this in a generic fashion?
 
     return (

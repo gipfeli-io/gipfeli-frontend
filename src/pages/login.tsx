@@ -13,9 +13,10 @@ import AuthPageLayout from '../layouts/auth-page-layout'
 import {useRouter} from 'next/router'
 import {useAuth} from '../hooks/use-auth'
 import {Alert} from '@mui/material'
+import {NextPageWithAuth} from '../types/auth-extended-page'
 
 
-const Login: NextPage = () => {
+const Login: NextPageWithAuth = () => {
     const router = useRouter()
     const {isAuthenticated} = useAuth()
     const {error} = useRouter().query
@@ -93,5 +94,7 @@ const Login: NextPage = () => {
         </AuthPageLayout>
     )
 }
+
+Login.isPublic = true
 
 export default Login

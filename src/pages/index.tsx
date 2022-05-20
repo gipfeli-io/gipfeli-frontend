@@ -1,10 +1,10 @@
 import Hero from '../components/landing-page/Hero'
 import Features from '../components/landing-page/Features'
 import {Container} from '@mui/material'
-import {NextPage} from 'next'
 import LandingPageLayout from '../layouts/landing-page-layout'
+import {NextPageWithAuth} from '../types/auth-extended-page'
 
-const Home: NextPage = () => {
+const Home: NextPageWithAuth = () => {
     return (
         <LandingPageLayout>
             <Hero/>
@@ -15,5 +15,7 @@ const Home: NextPage = () => {
 
     )
 }
+
+Home.isPublic = true
 
 export default Home

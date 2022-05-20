@@ -7,6 +7,7 @@ import AppPageLayout from "../../../layouts/app-page-layout";
 import TourForm from "../../../components/app/TourForm";
 import ToursService from "../../../services/tours/tours-service";
 import {plainToInstance} from "class-transformer";
+import {NextPageWithAuth} from '../../../types/auth-extended-page'
 
 type EditTourProps = {
     tour: Tour
@@ -25,7 +26,7 @@ export const getServerSideProps = (context: NextPageContext) => withAuthenticate
     }
 })
 
-const EditTour = ({tour}: EditTourProps) => {
+const EditTour: NextPageWithAuth = ({tour}: EditTourProps) => {
     tour = plainToInstance(Tour, tour) // todo: maybe have this in a generic fashion?
 
     return (
