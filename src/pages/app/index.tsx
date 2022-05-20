@@ -2,10 +2,9 @@ import {NextPageContext} from 'next'
 import {withAuthenticatedOrRedirect} from '../../utils/with-authenticated-or-redirect'
 import {Session} from 'next-auth'
 import AppPageLayout from '../../layouts/app-page-layout'
-import Typography from '@mui/material/Typography'
-import {DataGrid, GridColDef, GridRowsProp} from '@mui/x-data-grid'
 import {Tour} from '../../types/tour'
 import TourList from '../../components/app/TourList'
+import Typography from '@mui/material/Typography'
 
 type AppHomeProps = {
     tours: Tour[]
