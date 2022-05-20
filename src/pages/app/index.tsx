@@ -2,20 +2,22 @@ import {NextPageContext} from 'next'
 import {withAuthenticatedOrRedirect} from '../../utils/with-authenticated-or-redirect'
 import {Session} from 'next-auth'
 import AppPageLayout from '../../layouts/app-page-layout'
-import Typography from '@mui/material/Typography'
 import {Tour} from '../../types/tour'
 import TourList from '../../components/app/TourList'
-import {sampleTourData} from "../../utils/sample-data";
+import Typography from '@mui/material/Typography'
+import {plainToInstance} from 'class-transformer'
+import ToursService from '../../services/tours/tours-service'
 import {Button, Grid} from "@mui/material";
 
 type AppHomeProps = {
     tours: Tour[]
 }
 
+
 export const getServerSideProps = (context: NextPageContext) => withAuthenticatedOrRedirect(context, async (context: NextPageContext, session: Session) => {
-    const service = undefined // create TourService instance
-    const res = undefined // call TourService.getTours() property
-    const body: Tour[] = sampleTourData // call res.json()
+    const service = new ToursService(session)
+    const res = await service.mockAll()
+    const body: Tour[] = res // call res.json()
 
     return {
         props: {
@@ -24,7 +26,9 @@ export const getServerSideProps = (context: NextPageContext) => withAuthenticate
     }
 })
 
-const AppHome = ({tours}: AppHomeProps) => {
+const AppHome = ({tours}: AppHomeProps): JSX.Element => {
+    tours = plainToInstance(Tour, tours) // todo: maybe have this in a generic fashion?
+
     return (
         <AppPageLayout>
             <Grid container spacing={4} direction={'row'} alignItems={'center'} justifyContent={'space-evenly'}>

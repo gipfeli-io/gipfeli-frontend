@@ -8,6 +8,7 @@ import theme from '../themes/dark'
 import {SessionProvider} from 'next-auth/react'
 import {AppProps} from 'next/app'
 import Head from 'next/head'
+import 'reflect-metadata' // todo: use webpack injector for global scoping
 
 function App({Component, pageProps: {session, ...pageProps}}: AppProps) {
 
