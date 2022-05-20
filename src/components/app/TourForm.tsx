@@ -16,7 +16,7 @@ export default function TourForm({tour}: formProps) { //todo: add enum for form 
         //todo: call service to save tour
     }
 
-    const cancel = () => router.push('/app')
+    const cancel = () => router.push('/tours')
 
     const [currentTour, updateValue] = useState(tour)
 

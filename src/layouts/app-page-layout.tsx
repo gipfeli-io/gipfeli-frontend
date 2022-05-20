@@ -6,7 +6,7 @@ import Copyright from '../components/shared/Copyright'
 import NavBarUserSection from '../components/shared/NavBarUserSection'
 
 
-function LandingPageLayout({children}: PropsWithChildren<any>) {
+function AppPageLayout({children}: PropsWithChildren<any>) {
     return (
         <>
             <AppBar position="static">
@@ -33,4 +33,4 @@ function LandingPageLayout({children}: PropsWithChildren<any>) {
     )
 }
 
-export default LandingPageLayout
+export default AppPageLayout
