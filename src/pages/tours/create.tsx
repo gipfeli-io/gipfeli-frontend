@@ -2,9 +2,11 @@ import AppPageLayout from "../../layouts/app-page-layout";
 import Typography from "@mui/material/Typography";
 import TourForm from "../../components/app/TourForm";
 import {Tour} from "../../types/tour";
+import {Point} from 'geojson'
 
 const NewTour = () => {
-    const tour: Tour = {} as Tour;
+    const tour: Tour = new Tour("", "", {} as Point, {} as Point, "", new Date(), new Date())
+
     return (
         <AppPageLayout>
             <Typography variant="h2" gutterBottom component="div">

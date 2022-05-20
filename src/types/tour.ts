@@ -10,7 +10,7 @@ export class Tour {
     @Type(() => Date)
     createdAt: Date
     @Type(() => Date)
-    updatedAt: Date
+    updatedAt: Date // todo: make nullable as for create this will not be set
 
     constructor(id: string, name: string, startLocation: Point, endLocation: Point, description: string, createdAt: Date, updatedAt: Date) {
         this.id = id
