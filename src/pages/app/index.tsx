@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import {Tour} from '../../types/tour'
 import TourList from '../../components/app/TourList'
 import {sampleTourData} from "../../utils/sample-data";
+import {Button, Grid} from "@mui/material";
 
 type AppHomeProps = {
     tours: Tour[]
@@ -26,9 +27,18 @@ export const getServerSideProps = (context: NextPageContext) => withAuthenticate
 const AppHome = ({tours}: AppHomeProps) => {
     return (
         <AppPageLayout>
-            <Typography variant="h2" gutterBottom component="div">
-                My Tours
-            </Typography>
+            <Grid container spacing={4} direction={'row'} alignItems={'center'} justifyContent={'space-evenly'}>
+                <Grid item xs={12} sm={6}>
+                    <Typography variant="h2" gutterBottom component="div">
+                        My Tours
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} alignItems={'end'}>
+                    <Button href="/app/create" variant="contained">
+                        Add Tour
+                    </Button>
+                </Grid>
+            </Grid>
             <TourList rows={tours}/>
         </AppPageLayout>
     )

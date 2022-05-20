@@ -10,7 +10,7 @@ export default function TourListActions(props: { id: string }) {
             <Link href={props.id} passHref>
                 <MuiLink><VisibilityIcon/></MuiLink>
             </Link>
-            <Link href="/app/edit/[id]" as={`/app/edit/${props.id}`} passHref>
+            <Link href={`/app/edit/${props.id}`} passHref>
                 <MuiLink><EditIcon/></MuiLink>
             </Link>
             <Link href={props.id} passHref>

@@ -1,21 +1,24 @@
 import {Tour} from "../../types/tour";
 import {Button, Grid, TextField} from "@mui/material";
 import React, {ChangeEvent, useState} from "react";
-import {generators} from "openid-client";
-import {setState} from "jest-circus";
+import {useRouter} from "next/router";
 
 type formProps = {
     tour: Tour
 }
 
 export default function TourForm({tour}: formProps) { //todo: add enum for form type
+    const router = useRouter();
 
     const saveTour = async (event: any) => {
-        event.preventDefault();
-        console.log('saveTour:', currentTour);
+        event.preventDefault()
+        console.log('saveTour:', currentTour)
+        //todo: call service to save tour
     }
 
-    const [currentTour, updateValue] = useState(tour);
+    const cancel = () => router.push('/app')
+
+    const [currentTour, updateValue] = useState(tour)
 
     return <>
         <form onSubmit={saveTour}>
@@ -42,7 +45,7 @@ export default function TourForm({tour}: formProps) { //todo: add enum for form 
             </Grid>
             <Grid container spacing={2} mt={2} direction={'row'} alignItems={'center'} justifyContent={'center'}>
                 <Grid item xs={12} sm={3}>
-                    <Button fullWidth variant="outlined">Cancel</Button>
+                    <Button fullWidth variant="outlined" onClick={cancel}>Cancel</Button>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <Button type="submit" fullWidth variant="contained" color="primary">Submit</Button>
