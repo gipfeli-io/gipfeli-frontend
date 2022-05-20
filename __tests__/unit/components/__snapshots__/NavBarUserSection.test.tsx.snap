@@ -6,6 +6,20 @@ exports[`NavBarUserSection behaves consistently when logged in 1`] = `
 >
   <div
     className="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root"
+    href="/tours"
+    onClick={[Function]}
+    onMouseEnter={[Function]}
+  >
+    <a
+      className="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1ps4owl-MuiTypography-root-MuiLink-root"
+      onBlur={[Function]}
+      onFocus={[Function]}
+    >
+      MyTours
+    </a>
+  </div>
+  <div
+    className="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root"
   >
     Hello, 
     test@gipfeli.io

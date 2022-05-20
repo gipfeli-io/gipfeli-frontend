@@ -7,8 +7,7 @@ export const AuthWrapper = ({children}: PropsWithChildren<any>) => {
     const router = useRouter()
     const {status} = useSession({
         required: true, onUnauthenticated: () => {
-            router.push('/login')
-            return null
+            router.push('/login').then(r => null)
         }
     })
 
@@ -16,5 +15,7 @@ export const AuthWrapper = ({children}: PropsWithChildren<any>) => {
         return <CircularProgress/>
     }
 
-    return <>{children}</>
+    if (status === 'authenticated') {
+        return <>{children}</>
+    }
 }
