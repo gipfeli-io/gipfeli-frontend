@@ -1,8 +1,9 @@
 import {useSession} from 'next-auth/react'
 import {CircularProgress} from '@mui/material'
 import {useRouter} from 'next/router'
+import {PropsWithChildren} from 'react'
 
-export const AuthWrapper = (children: JSX.Element) => {
+export const AuthWrapper = ({children}: PropsWithChildren<any>) => {
     const router = useRouter()
     const {status} = useSession({
         required: true, onUnauthenticated: () => {
