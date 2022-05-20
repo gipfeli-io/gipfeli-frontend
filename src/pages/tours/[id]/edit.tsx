@@ -26,7 +26,7 @@ export const getServerSideProps = (context: NextPageContext) => withAuthenticate
     }
 })
 
-const EditTour: NextPageWithAuth = ({tour}: EditTourProps) => {
+const EditTour: NextPageWithAuth<EditTourProps> = ({tour}) => {
     tour = plainToInstance(Tour, tour) // todo: maybe have this in a generic fashion?
 
     return (

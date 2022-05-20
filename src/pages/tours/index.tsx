@@ -27,7 +27,7 @@ export const getServerSideProps = (context: NextPageContext) => withAuthenticate
     }
 })
 
-const AppHome: NextPageWithAuth = ({tours}: AppHomeProps): JSX.Element => {
+const AppHome: NextPageWithAuth<AppHomeProps> = ({tours}): JSX.Element => {
     tours = plainToInstance(Tour, tours) // todo: maybe have this in a generic fashion?
 
     return (
