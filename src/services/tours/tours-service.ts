@@ -21,8 +21,8 @@ const serviceResponse: Tour[] = [
             ]
         },
         'description': 'description from nest',
-        'createdAt': '2022-05-18T18:27:11.887Z' as unknown as Date,
-        'updatedAt': '2022-05-18T18:27:11.887Z' as unknown as Date,
+        'createdAt': '2020-05-18T18:27:11.887Z' as unknown as Date,
+        'updatedAt': '2005-05-18T18:27:11.887Z' as unknown as Date,
     },
     {
         'id': 'a815f336-1586-4857-a9cc-b521dac7d3c2',
@@ -43,7 +43,7 @@ const serviceResponse: Tour[] = [
         },
         'description': 'description from nest',
         'createdAt': '2022-05-18T18:27:11.887Z' as unknown as Date,
-        'updatedAt': 'asd' as unknown as Date,
+        'updatedAt': '2022-01-18T18:27:11.887Z' as unknown as Date,
     },
     {
         'id': '48d5f0d1-1f6a-4e63-8968-44f0718c979a',
@@ -63,8 +63,8 @@ const serviceResponse: Tour[] = [
             ]
         },
         'description': 'description from nest',
-        'createdAt': '2022-05-18T18:27:11.887Z' as unknown as Date,
-        'updatedAt': '2022-05-18T18:27:11.887Z' as unknown as Date,
+        'createdAt': '2022-01-18T18:27:11.887Z' as unknown as Date,
+        'updatedAt': '2022-04-18T18:27:11.887Z' as unknown as Date,
     }
 ]
 
