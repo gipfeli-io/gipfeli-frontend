@@ -23,7 +23,7 @@ export const withAuthenticatedOrRedirect = async (context: NextPageContext, fn?:
         return {
             redirect: {
                 permanent: false,
-                destination: '/app/login'
+                destination: '/login'
             }
         }
     }
