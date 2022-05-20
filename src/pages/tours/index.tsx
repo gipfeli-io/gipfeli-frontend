@@ -3,7 +3,7 @@ import {withAuthenticatedOrRedirect} from '../../utils/with-authenticated-or-red
 import {Session} from 'next-auth'
 import AppPageLayout from '../../layouts/app-page-layout'
 import {Tour} from '../../types/tour'
-import TourList from '../../components/app/TourList'
+import TourList from '../../components/tour/TourList'
 import Typography from '@mui/material/Typography'
 import {plainToInstance} from 'class-transformer'
 import ToursService from '../../services/tours/tours-service'

@@ -2,6 +2,7 @@ import {Tour} from "../../types/tour";
 import {Button, Grid, TextField} from "@mui/material";
 import React, {ChangeEvent, useState} from "react";
 import {useRouter} from "next/router";
+import MapWrapper from "../shared/map/map";
 
 type formProps = {
     tour: Tour
@@ -32,6 +33,9 @@ export default function TourForm({tour}: formProps) {
                                onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
                                    updateValue({...currentTour, name: event.target.value})}
                     />
+                </Grid>
+                <Grid item xs={12}>
+                    <MapWrapper/>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField fullWidth

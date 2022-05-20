@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography'
 import {withAuthenticatedOrRedirect} from "../../../utils/with-authenticated-or-redirect";
 import {Tour} from "../../../types/tour";
 import AppPageLayout from "../../../layouts/app-page-layout";
-import TourForm from "../../../components/app/TourForm";
+import TourForm from "../../../components/tour/TourForm";
 import ToursService from "../../../services/tours/tours-service";
 import {plainToInstance} from "class-transformer";
 import {RouteParams} from '../../../types/route-params'

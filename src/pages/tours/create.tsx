@@ -1,6 +1,6 @@
 import AppPageLayout from "../../layouts/app-page-layout";
 import Typography from "@mui/material/Typography";
-import TourForm from "../../components/app/TourForm";
+import TourForm from "../../components/tour/TourForm";
 import {Tour} from "../../types/tour";
 import {Point} from 'geojson'
 import dayjs from 'dayjs'
