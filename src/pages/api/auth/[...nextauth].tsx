@@ -8,7 +8,7 @@ export default NextAuth({
     },
     secret: process.env.JWT_SECRET,
     session: {
-        maxAge: 60 * 60 // defaults to 1 hour of idle
+        maxAge: 10 // defaults to 1 hour of idle
     },
     providers: [
         CredentialsProvider({

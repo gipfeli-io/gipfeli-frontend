@@ -9,6 +9,7 @@ import {plainToInstance} from 'class-transformer'
 import ToursService from '../../services/tours/tours-service'
 import {Button, Grid} from "@mui/material";
 import {NextPageWithAuth} from '../../types/auth-extended-page'
+import useSWR from 'swr'
 
 type AppHomeProps = {
     tours: Tour[]
@@ -28,8 +29,6 @@ export const getServerSideProps = (context: NextPageContext) => withAuthenticate
 })
 
 const AppHome: NextPageWithAuth<AppHomeProps> = ({tours}): JSX.Element => {
-    tours = plainToInstance(Tour, tours) // todo: maybe have this in a generic fashion?
-
     return (
         <AppPageLayout>
             <Typography variant="h2" gutterBottom component="div">
@@ -42,7 +41,7 @@ const AppHome: NextPageWithAuth<AppHomeProps> = ({tours}): JSX.Element => {
                     </Button>
                 </Grid>
             </Grid>
-            <TourList rows={tours}/>
+            <TourList/>
         </AppPageLayout>
     )
 }
