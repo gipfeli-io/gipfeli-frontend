@@ -4,7 +4,7 @@ import AuthService from '../../../services/auth/auth-service'
 
 export default NextAuth({
     pages: {
-        signIn: '/app/login',
+        signIn: '/login',
     },
     secret: process.env.JWT_SECRET,
     session: {

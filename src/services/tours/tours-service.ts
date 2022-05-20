@@ -84,4 +84,8 @@ export default class ToursService extends APIService {
         await sleep(150)
         return serviceResponse
     }
+
+    public async mockOne(): Promise<Tour> {
+        return serviceResponse[0]
+    }
 }
