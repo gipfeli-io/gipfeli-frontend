@@ -7,7 +7,7 @@ type formProps = {
     tour: Tour
 }
 
-export default function TourForm({tour}: formProps) { //todo: add enum for form type
+export default function TourForm({tour}: formProps) {
     const router = useRouter();
 
     const saveTour = async (event: any) => {
