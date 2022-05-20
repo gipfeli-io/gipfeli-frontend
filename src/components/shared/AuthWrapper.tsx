@@ -15,7 +15,5 @@ export const AuthWrapper = ({children}: PropsWithChildren<any>) => {
         return <CircularProgress/>
     }
 
-    if (status === 'authenticated') {
-        return <>{children}</>
-    }
+    return <>{children}</>
 }
