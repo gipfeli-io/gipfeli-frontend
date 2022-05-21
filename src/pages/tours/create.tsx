@@ -3,9 +3,10 @@ import Typography from "@mui/material/Typography";
 import TourForm from "../../components/app/TourForm";
 import {Tour} from "../../types/tour";
 import {Point} from 'geojson'
+import dayjs from 'dayjs'
 
 const NewTour = () => {
-    const tour: Tour = new Tour("", "", {} as Point, {} as Point, "", new Date(), new Date())
+    const tour: Tour = new Tour("", "", {} as Point, {} as Point, "", dayjs(), dayjs())
 
     return (
         <AppPageLayout>

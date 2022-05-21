@@ -37,17 +37,12 @@ const TourDetail = ({tour}: TourDetailProps): JSX.Element => {
             <Grid container mb={2} direction={'row'} spacing={10}>
                 <Grid item>
                     <Typography variant="subtitle1" gutterBottom component="div">
-                        Created at: {tour.getFormattedDate()}
+                        Created at: {tour.createdAt.format('DD.MM.YYYY hh:mm')}
                     </Typography>
                 </Grid>
                 <Grid item>
                     <Typography variant="subtitle1" gutterBottom component="div">
-                        Created at: {tour.getFormattedDate()}
-                    </Typography>
-                </Grid>
-                <Grid item>
-                    <Typography variant="subtitle1" gutterBottom component="div">
-                        Updated at: {tour.getFormattedDate()}
+                        Last updated at: {tour.updatedAt.format('DD.MM.YYYY hh:mm')}
                     </Typography>
                 </Grid>
             </Grid>
