@@ -16,7 +16,7 @@ export default function TourForm({tour}: formProps) {
         //todo: call service to save tour
     }
 
-    const cancel = () => router.push('/tours')
+    const cancel = () => router.back()
 
     const [currentTour, updateValue] = useState(tour)
 
