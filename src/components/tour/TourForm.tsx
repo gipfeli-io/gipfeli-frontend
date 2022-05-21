@@ -3,6 +3,7 @@ import {Button, Grid, TextField} from "@mui/material";
 import React, {ChangeEvent, useState} from "react";
 import {useRouter} from "next/router";
 import MapWrapper from "../shared/map/MapWrapper";
+import FullScreenControl from '../shared/map/controls/FullScreenControl'
 
 type formProps = {
     tour: Tour
@@ -35,7 +36,9 @@ export default function TourForm({tour}: formProps) {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <MapWrapper />
+                    <MapWrapper>
+                        <FullScreenControl />
+                    </MapWrapper>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField fullWidth

@@ -1,17 +1,18 @@
-import {useRef, useEffect, useState, useId} from 'react'
-import {View, Map} from "ol";
+import {PropsWithChildren, useEffect, useId, useState} from 'react'
+import {Map, View} from 'ol'
 import 'ol/ol.css'
-import TileLayer from "ol/layer/Tile";
-import {OSM} from "ol/source";
+import TileLayer from 'ol/layer/Tile'
+import {OSM} from 'ol/source'
 import styles from './MapWrapper.module.css'
+import MapContext from './MapContext'
 
-const MapWrapper = () => {
-    const mapRef = useRef(null) // needs to be initialized with null otherwise using it with ref will not work
-    const [map, setMap] = useState({} as Map)
+const MapWrapper = ({children}: PropsWithChildren<{}>) => {
+    const mapContainerId = useId() // I changed this to useId, since I am not sure if we need the useRefs hook? OL just needs a unique identifier.
+    const [map, setMap] = useState<Map | undefined>(undefined)
 
     useEffect(() => {
         const initialMap = new Map({
-            target: mapRef.current ? mapRef.current : undefined, // target does not accept null values so we have to set undefined if mapref is null
+            target: mapContainerId,
             layers: [
                 new TileLayer({
                     source: new OSM()
@@ -19,7 +20,7 @@ const MapWrapper = () => {
             ],
             view: new View({
                 projection: 'EPSG:4326',
-                center: [0,0],
+                center: [0, 0],
                 zoom: 2
             }),
             controls: []
@@ -27,10 +28,14 @@ const MapWrapper = () => {
         setMap(initialMap)
 
         return () => initialMap.dispose() // Cleans up when the component is dismounted.
-    }, [mapRef])
+    }, [mapContainerId])
 
     return (
-        <div ref={mapRef} className={styles.mapContainer}></div>
+        <MapContext.Provider value={{map}}>
+            <div id={mapContainerId} className={styles.mapContainer}>
+                {children}
+            </div>
+        </MapContext.Provider>
     )
 }
 
