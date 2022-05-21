@@ -1,4 +1,4 @@
-import {NextPageContext} from 'next'
+import {GetServerSideProps} from 'next'
 import {withAuthenticatedOrRedirect} from '../../utils/with-authenticated-or-redirect'
 import {Session} from 'next-auth'
 import AppPageLayout from '../../layouts/app-page-layout'
@@ -10,15 +10,16 @@ import {Divider, Grid, Link as MuiLink} from '@mui/material'
 import Link from 'next/link'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import {RouteParams} from '../../types/route-params'
 
 type TourDetailProps = {
     tour: Tour
 }
 
-
-export const getServerSideProps = (context: NextPageContext) => withAuthenticatedOrRedirect(context, async (context: NextPageContext, session: Session) => {
+export const getServerSideProps: GetServerSideProps = (context) => withAuthenticatedOrRedirect(context, async (context, session: Session) => {
+    const {id} = context.params as RouteParams
     const service = new ToursService(session)
-    const res = await service.mockOne()
+    const res = await service.mockOne(id)
     const body: Tour = res
 
     return {
@@ -55,7 +56,7 @@ const TourDetail = ({tour}: TourDetailProps): JSX.Element => {
                     </Typography>
                 </Grid>
             </Grid>
-            <Divider />
+            <Divider/>
             <Grid container mb={2} mt={2} direction={'column'}>
                 <Grid item>
                     <Typography variant="h5" gutterBottom component="div">
@@ -63,7 +64,7 @@ const TourDetail = ({tour}: TourDetailProps): JSX.Element => {
                     </Typography>
                 </Grid>
                 <Grid item>
-                    <Typography variant="body1" gutterBottom component="div">
+                    <Typography variant="body1" gutterBottom component="div" whiteSpace={'pre-wrap'}>
                         {tour.description}
                     </Typography>
                 </Grid>

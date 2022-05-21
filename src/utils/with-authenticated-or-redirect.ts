@@ -1,6 +1,7 @@
 import {getSession} from 'next-auth/react'
-import {NextPageContext} from 'next'
+import {GetServerSidePropsContext, NextPageContext, PreviewData} from 'next'
 import {Session} from 'next-auth'
+import {ParsedUrlQuery} from 'querystring'
 
 type PropFunction = {
     props: object
@@ -13,9 +14,9 @@ type PropFunction = {
  * Based on https://github.com/nextauthjs/next-auth/issues/1210#issuecomment-851606553, but fixed and adjusted for
  * typehinting.
  * @param context Current request context
- * @param fn Optional function that returns further props that are merged with the session prop
+ * @param fn? Optional function that returns further props that are merged with the session prop
  */
-export const withAuthenticatedOrRedirect = async (context: NextPageContext, fn?: (context: NextPageContext, session: Session) => Promise<PropFunction>) => {
+export const withAuthenticatedOrRedirect = async (context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>, fn?: (context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData>, session: Session) => Promise<PropFunction>) => {
     const session = await getSession(context)
     const isUser = !!session?.user
 
