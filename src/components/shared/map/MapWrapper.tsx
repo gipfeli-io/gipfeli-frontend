@@ -3,7 +3,7 @@ import {Map, View} from 'ol'
 import 'ol/ol.css'
 import TileLayer from 'ol/layer/Tile'
 import {OSM} from 'ol/source'
-import styles from './MapWrapper.module.css'
+import styles from './MapWrapper.module.scss'
 import MapContext from './MapContext'
 
 const MapWrapper = ({children}: PropsWithChildren<{}>) => {
