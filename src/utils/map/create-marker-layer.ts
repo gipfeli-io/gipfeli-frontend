@@ -21,7 +21,11 @@ export default function createMarkerLayer(features: GeoJsonObject[]): GeoJSONLay
     const jsonFeatures: Feature[] = []
 
     features.forEach((feature, idx, features) => {
-        const jsonFeature = new GeoJSON().readFeature(feature)
+        const jsonFeature = new GeoJSON().readFeature(feature, {
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+
+        })
         const style = new Style({
             image: new Icon(({
                 anchor: [0.5, 1],

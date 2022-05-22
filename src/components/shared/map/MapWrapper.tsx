@@ -2,7 +2,7 @@ import {PropsWithChildren, useEffect, useId, useState} from 'react'
 import {Map, View} from 'ol'
 import 'ol/ol.css'
 import TileLayer from 'ol/layer/Tile'
-import {OSM} from 'ol/source'
+import {OSM, XYZ} from 'ol/source'
 import styles from './MapWrapper.module.scss'
 import MapContext from './MapContext'
 
@@ -15,11 +15,13 @@ const MapWrapper = ({children}: PropsWithChildren<{}>) => {
             target: mapContainerId,
             layers: [
                 new TileLayer({
-                    source: new OSM()
+                    source: new XYZ({
+                        url: `https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg`
+                    })
                 }),
             ],
             view: new View({
-                projection: 'EPSG:4326',
+                projection: 'EPSG:3857',
                 center: [0, 0],
                 zoom: 2
             }),
