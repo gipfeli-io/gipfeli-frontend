@@ -11,6 +11,8 @@ import Link from 'next/link'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {RouteParams} from '../../types/route-params'
+import MapWrapper from '../../components/shared/map/MapWrapper'
+import WayPointMarkerLayer from '../../components/shared/map/layers/WayPointMarkerLayer'
 
 type TourDetailProps = {
     tour: Tour
@@ -31,7 +33,6 @@ export const getServerSideProps: GetServerSideProps = (context) => withAuthentic
 
 const TourDetail = ({tour}: TourDetailProps): JSX.Element => {
     tour = plainToInstance(Tour, tour) // todo: maybe have this in a generic fashion?
-    console.log(tour)
 
     return (
         <AppPageLayout>
@@ -57,6 +58,9 @@ const TourDetail = ({tour}: TourDetailProps): JSX.Element => {
                 </Grid>
             </Grid>
             <Divider/>
+            <MapWrapper>
+                <WayPointMarkerLayer features={[tour.startLocation,  tour.endLocation]}/>
+            </MapWrapper>
             <Grid container mb={2} mt={2} direction={'column'}>
                 <Grid item>
                     <Typography variant="h5" gutterBottom component="div">
