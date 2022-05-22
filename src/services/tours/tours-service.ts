@@ -16,15 +16,15 @@ const serviceResponse: Tour[] = [
         'startLocation': {
             'type': 'Point',
             'coordinates': [
-                7.920462,
-                47.328439
+                8.54899,
+                47.38551
             ]
         },
         'endLocation': {
             'type': 'Point',
             'coordinates': [
-                47.328439,
-                7.920462
+                9.13925,
+                47.43645
             ]
         },
         'description': loremIpsumGenerator(5),
@@ -37,15 +37,15 @@ const serviceResponse: Tour[] = [
         'startLocation': {
             'type': 'Point',
             'coordinates': [
-                7.920462,
-                47.328439
+                8.19889,
+                46.81304
             ]
         },
         'endLocation': {
             'type': 'Point',
             'coordinates': [
-                7.920462,
-                47.328439
+                8.18722,
+                46.83812
             ]
         },
         'description': loremIpsumGenerator(3),
@@ -58,15 +58,15 @@ const serviceResponse: Tour[] = [
         'startLocation': {
             'type': 'Point',
             'coordinates': [
-                7.920462,
-                48.328439
+                8.48535,
+                47.26776
             ]
         },
         'endLocation': {
             'type': 'Point',
             'coordinates': [
-                7.920462,
-                47.328439
+                8.48526,
+                47.27442
             ]
         },
         'description': loremIpsumGenerator(22),
