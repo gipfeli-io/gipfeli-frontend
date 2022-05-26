@@ -33,11 +33,16 @@ export default class ToursService extends APIService {
     }
 
     public async update(id: string, tour: UpdateOrCreateTour) {
-        const x = instanceToPlain(tour, {excludeExtraneousValues: true})
-        console.log(x)
         return await fetch(
             this.getRequestUrl(this.prefix, id),
             this.getRequestBody('PATCH', tour),
+        )
+    }
+
+    public async delete(id: string) {
+        return await fetch(
+            this.getRequestUrl(this.prefix, id),
+            this.getRequestBody('DELETE', {}),
         )
     }
 }
