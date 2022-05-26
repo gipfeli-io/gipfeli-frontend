@@ -1,12 +1,12 @@
-import {CreateTour} from '../../types/tour'
+import {UpdateOrCreateTour} from '../../types/tour'
 import {Button, Grid, TextField} from '@mui/material'
 import React, {ChangeEvent, useState} from 'react'
 import {useRouter} from 'next/router'
 import {handleSave} from '../../types/handle-save'
 
 type formProps = {
-    tour: CreateTour
-    handleSave: handleSave<CreateTour>
+    tour: UpdateOrCreateTour
+    handleSave: handleSave<UpdateOrCreateTour>
 }
 
 export default function TourForm({tour, handleSave}: formProps) {

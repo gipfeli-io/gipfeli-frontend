@@ -19,7 +19,7 @@ export default abstract class APIService {
         return endpoint ? `${baseUrl}/${endpoint}` : baseUrl
     }
 
-    protected getRequestBody(method: 'get' | 'post' | 'put' | 'delete', body?: any): RequestBody {
+    protected getRequestBody(method: 'GET' | 'POST' | 'PATCH' | 'DELETE', body?: any): RequestBody {
         let requestBody: RequestBody = {
             method,
             headers: {
@@ -27,7 +27,7 @@ export default abstract class APIService {
             },
         }
 
-        if (method !== 'get') {
+        if (method !== 'GET') {
             requestBody.body = body ? JSON.stringify(body) : ''
         }
 
