@@ -2,10 +2,9 @@ import {PropsWithChildren, useEffect, useId, useState} from 'react'
 import {Map, View} from 'ol'
 import 'ol/ol.css'
 import TileLayer from 'ol/layer/Tile'
-import {OSM, TileWMS, XYZ} from 'ol/source'
+import {TileWMS} from 'ol/source'
 import styles from './MapWrapper.module.scss'
 import MapContext from './MapContext'
-import {Control} from "ol/control";
 
 const MapWrapper = ({children}: PropsWithChildren<{}>) => {
     const mapContainerId = useId()
@@ -42,6 +41,12 @@ const MapWrapper = ({children}: PropsWithChildren<{}>) => {
         return () => initialMap.dispose() // Cleans up when the component is dismounted.
     }, [mapContainerId])
 
+    useEffect(()=>{
+        if(!map){
+            return
+        }
+
+    })
     return (
         <MapContext.Provider value={{map}}>
             <div id={mapContainerId} className={styles.mapContainer}>

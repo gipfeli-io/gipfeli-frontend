@@ -4,12 +4,14 @@ import React, {ChangeEvent, useState} from "react";
 import {useRouter} from "next/router";
 import MapWrapper from "../shared/map/MapWrapper";
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
+import WayPointMarkerLayer from "../shared/map/layers/WayPointMarkerLayer";
 
 type formProps = {
-    tour: Tour
+    tour: Tour,
+    type: string
 }
 
-export default function TourForm({tour}: formProps) {
+export default function TourForm({tour, type}: formProps) {
     const router = useRouter();
 
     const saveTour = async (event: any) => {
@@ -21,6 +23,19 @@ export default function TourForm({tour}: formProps) {
     const cancel = () => router.back()
 
     const [currentTour, updateValue] = useState(tour)
+
+    const handleSetMarker = (coordinates: number[], id: number): void => {
+        if(id == 1){
+            updateValue({...currentTour, startLocation: {
+                    'type': 'Point',
+                    'coordinates': coordinates }})
+        } else {
+            updateValue({...currentTour, endLocation: {
+                    'type': 'Point',
+                    'coordinates': coordinates }})
+        }
+
+    }
 
     return <>
         <form onSubmit={saveTour}>
@@ -38,7 +53,13 @@ export default function TourForm({tour}: formProps) {
                 <Grid item xs={12}>
                     <MapWrapper>
                         <FullScreenControl />
+                        <WayPointMarkerLayer handleSetMarker={handleSetMarker} features={[currentTour.startLocation, currentTour.endLocation]} type={type}/>
                     </MapWrapper>
+                </Grid>
+                <Grid item xs={12}>
+                    Selected Features
+                   <div>{ currentTour.endLocation.coordinates}</div>
+                   <div>{ currentTour.endLocation.coordinates }</div>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField fullWidth

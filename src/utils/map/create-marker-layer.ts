@@ -5,10 +5,7 @@ import VectorLayer from 'ol/layer/Vector'
 import {GeoJsonObject} from 'geojson'
 import {Feature} from 'ol'
 import {GeoJSONLayer} from '../../types/map'
-
-
-const START_ICON = 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-play&size=50&hoffset=0&voffset=-1'
-const END_ICON = 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-flag-checkered&size=50&hoffset=0&voffset=-1'
+import MapConfigurationService from "../../services/map/map-configuration-service";
 
 /**
  * Creates a GeoJSON layer as VectorLayer with markers.
@@ -19,29 +16,39 @@ const END_ICON = 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-fl
  */
 export default function createMarkerLayer(features: GeoJsonObject[]): GeoJSONLayer {
     const jsonFeatures: Feature[] = []
+    const vectorSource = new VectorSource()
+    let extent: number[] = [];
+    const mapConfigurationService: MapConfigurationService = new MapConfigurationService()
+    const startIcon = mapConfigurationService.getStartIcon()
+    const endIcon = mapConfigurationService.getEndIcon()
+
 
     features.forEach((feature, idx, features) => {
-        const jsonFeature = new GeoJSON().readFeature(feature, {
-            dataProjection: 'EPSG:4326',
-            featureProjection: 'EPSG:3857'
+        if(Object.keys(feature).length !== 0){
+            const jsonFeature = new GeoJSON().readFeature(feature, {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+            })
+            const style = new Style({
+                image: new Icon(({
+                    anchor: [0.5, 1],
+                    src: idx === features.length -1 ? endIcon : startIcon
+                }))
+            })
 
-        })
-        const style = new Style({
-            image: new Icon(({
-                anchor: [0.5, 1],
-                src: idx === features.length -1 ? END_ICON : START_ICON
-            }))
-        })
-
-        jsonFeature.setStyle(style)
-        jsonFeatures.push(jsonFeature)
+            jsonFeature.setStyle(style)
+            jsonFeatures.push(jsonFeature)
+        }
     })
 
-    const vectorSource = new VectorSource()
-    vectorSource.addFeatures(jsonFeatures)
+    if(jsonFeatures.length > 0){
+        vectorSource.addFeatures(jsonFeatures)
+        extent = vectorSource.getExtent()
+    }
+
     const vectorLayer = new VectorLayer({
         source: vectorSource
     })
 
-    return {extent: vectorSource.getExtent(), layer: vectorLayer}
+    return {extent: extent, layer: vectorLayer}
 }

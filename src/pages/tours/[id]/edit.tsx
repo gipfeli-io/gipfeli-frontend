@@ -1,4 +1,4 @@
-import {GetServerSideProps, NextPageContext} from 'next'
+import {GetServerSideProps} from 'next'
 import {Session} from 'next-auth'
 import Typography from '@mui/material/Typography'
 import {withAuthenticatedOrRedirect} from "../../../utils/with-authenticated-or-redirect";
@@ -15,7 +15,6 @@ type EditTourProps = {
 
 export const getServerSideProps:GetServerSideProps = (context) => withAuthenticatedOrRedirect(context, async (context, session: Session) => {
     const {id} = context.params as RouteParams
-    console.log('param id: ', id)
     const service = new ToursService(session) // create TourService instance
     const res = await service.mockOne(id) // call TourService.getTour(id) property
     const body: Tour = res // call res.json()
@@ -35,7 +34,7 @@ const EditTour = ({tour}: EditTourProps) => {
             <Typography variant="h2" gutterBottom component="div">
                 Edit Tour
             </Typography>
-            <TourForm tour={tour}/>
+            <TourForm tour={tour} type={'Edit'}/>
         </AppPageLayout>
     )
 }

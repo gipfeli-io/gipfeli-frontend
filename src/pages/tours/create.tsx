@@ -13,7 +13,7 @@ const NewTour = () => {
             <Typography variant="h2" gutterBottom component="div">
                 Create Tour
             </Typography>
-            <TourForm tour={tour}/>
+            <TourForm tour={tour} type={'Create'}/>
         </AppPageLayout>
     )
 }
