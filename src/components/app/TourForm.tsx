@@ -1,8 +1,8 @@
-import {CreateTour, Tour} from '../../types/tour'
-import {Button, Grid, TextField} from "@mui/material";
-import React, {ChangeEvent, useState} from "react";
-import {useRouter} from "next/router";
-import { handleSave } from "../../types/handle-save";
+import {CreateTour} from '../../types/tour'
+import {Button, Grid, TextField} from '@mui/material'
+import React, {ChangeEvent, useState} from 'react'
+import {useRouter} from 'next/router'
+import {handleSave} from '../../types/handle-save'
 
 type formProps = {
     tour: CreateTour
@@ -10,7 +10,7 @@ type formProps = {
 }
 
 export default function TourForm({tour, handleSave}: formProps) {
-    const router = useRouter();
+    const router = useRouter()
 
     const saveTour = async (event: any) => {
         event.preventDefault()
@@ -41,7 +41,7 @@ export default function TourForm({tour, handleSave}: formProps) {
                                rows={5}
                                label="Tour Description"
                                value={currentTour.description}
-                               onChange={(event:ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
+                               onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
                                    setCurrentTour({...currentTour, description: event.target.value})}/>
                 </Grid>
             </Grid>

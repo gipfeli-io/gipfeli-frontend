@@ -1,6 +1,6 @@
 import APIService from '../api-service'
 import {Session} from 'next-auth'
-import {CreateTour, Tour} from '../../types/tour'
+import {CreateTour} from '../../types/tour'
 import {instanceToPlain} from 'class-transformer'
 
 export default class ToursService extends APIService {

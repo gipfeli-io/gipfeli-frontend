@@ -26,4 +26,4 @@ export class Tour {
     }
 }
 
-export type CreateTour = Pick<Tour, "name" | "description" | "startLocation" | "endLocation">
+export type CreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation'>

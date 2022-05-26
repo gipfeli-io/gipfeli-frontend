@@ -1,5 +1,4 @@
 import {Session} from 'next-auth'
-import {plainToInstance} from 'class-transformer'
 
 export interface RequestBody {
     headers: {

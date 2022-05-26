@@ -1,12 +1,11 @@
 import AppPageLayout from '../../layouts/app-page-layout'
 import Typography from '@mui/material/Typography'
 import TourForm from '../../components/app/TourForm'
-import {CreateTour, Tour} from '../../types/tour'
+import {CreateTour} from '../../types/tour'
 import {GetServerSideProps} from 'next'
 import {withAuthenticatedOrRedirect} from '../../utils/with-authenticated-or-redirect'
 import {Session} from 'next-auth'
 import ToursService from '../../services/tours/tours-service'
-import {router} from 'next/client'
 import {useRouter} from 'next/router'
 
 type createTourProps = {
@@ -22,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = (context) => withAuthentic
 })
 
 const NewTour = ({user}: createTourProps) => {
-    const router = useRouter();
+    const router = useRouter()
     const service = new ToursService(user)
 
     const tour: CreateTour = {
@@ -46,7 +45,7 @@ const NewTour = ({user}: createTourProps) => {
 
     const handleSave: (tour: CreateTour) => void = async (tour: CreateTour) => {
         const result = await service.create(tour) // todo: handle errors
-        if(result.ok) {
+        if (result.ok) {
             await router.push('/tours')
         }
     }
