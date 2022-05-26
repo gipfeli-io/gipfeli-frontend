@@ -22,7 +22,7 @@ export default function TourListActions(props: { id: string }): JSX.Element {
             <Link href={`tours/${props.id}/edit`} passHref>
                 <MuiLink><EditIcon/></MuiLink>
             </Link>
-            <MuiLink onClick={onClick}><DeleteIcon/></MuiLink>
+            <MuiLink href="#" onClick={onClick}><DeleteIcon/></MuiLink>
         </>
     )
 }

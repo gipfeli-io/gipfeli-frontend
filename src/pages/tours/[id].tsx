@@ -57,7 +57,7 @@ const TourDetail = (props: TourDetailProps): JSX.Element => {
                 <Link href={`${tour.id}/edit`} passHref>
                     <MuiLink><EditIcon/></MuiLink>
                 </Link>
-                <MuiLink onClick={() => setOpen(true)}><DeleteIcon/></MuiLink>
+                <MuiLink href="#" onClick={() => setOpen(true)}><DeleteIcon/></MuiLink>
             </Typography>
             <Grid container mb={2} direction={'row'} spacing={5}>
                 <Grid item>
