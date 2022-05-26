@@ -1,4 +1,4 @@
-import {NextPageContext} from 'next'
+import {GetServerSideProps, NextPageContext} from 'next'
 import {Session} from 'next-auth'
 import Typography from '@mui/material/Typography'
 import {withAuthenticatedOrRedirect} from "../../../utils/with-authenticated-or-redirect";
@@ -7,15 +7,17 @@ import AppPageLayout from "../../../layouts/app-page-layout";
 import TourForm from "../../../components/tour/TourForm";
 import ToursService from "../../../services/tours/tours-service";
 import {plainToInstance} from "class-transformer";
+import {RouteParams} from '../../../types/route-params'
 
 type EditTourProps = {
     tour: Tour
 }
 
-export const getServerSideProps = (context: NextPageContext) => withAuthenticatedOrRedirect(context, async (context: NextPageContext, session: Session) => {
-    console.log('param id: ', context.query.id)
+export const getServerSideProps:GetServerSideProps = (context) => withAuthenticatedOrRedirect(context, async (context, session: Session) => {
+    const {id} = context.params as RouteParams
+    console.log('param id: ', id)
     const service = new ToursService(session) // create TourService instance
-    const res = await service.mockOne() // call TourService.getTour(id) property
+    const res = await service.mockOne(id) // call TourService.getTour(id) property
     const body: Tour = res // call res.json()
 
     return {

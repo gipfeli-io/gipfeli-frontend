@@ -1,4 +1,4 @@
-import {NextPageContext} from 'next'
+import {GetServerSideProps, NextPageContext} from 'next'
 import {withAuthenticatedOrRedirect} from '../../utils/with-authenticated-or-redirect'
 import {Session} from 'next-auth'
 import AppPageLayout from '../../layouts/app-page-layout'
@@ -14,7 +14,7 @@ type AppHomeProps = {
 }
 
 
-export const getServerSideProps = (context: NextPageContext) => withAuthenticatedOrRedirect(context, async (context: NextPageContext, session: Session) => {
+export const getServerSideProps: GetServerSideProps = (context) => withAuthenticatedOrRedirect(context, async (context, session: Session) => {
     const service = new ToursService(session)
     const res = await service.mockAll()
     const body: Tour[] = res // call res.json()
