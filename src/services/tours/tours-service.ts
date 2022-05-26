@@ -87,9 +87,18 @@ export default class ToursService extends APIService {
         this.session = session
     }
 
-    public async mockAll(): Promise<Tour[]> {
-        await sleep(150)
-        return serviceResponse
+    public async findAll(): Promise<Response> {
+        return await fetch(
+            this.getRequestUrl(this.prefix),
+            this.getRequestBody('get', {}),
+        )
+    }
+
+    public async findOne(id: string) : Promise<Response> {
+        return await fetch(
+            this.getRequestUrl(this.prefix, id),
+            this.getRequestBody('get', {}),
+        )
     }
 
     public async mockOne(id: string): Promise<Tour> {

@@ -11,11 +11,12 @@ export interface RequestBody {
 
 
 export default abstract class APIService {
-    private baseUrl: string = process.env.BACKEND_API || 'http://localhost:3000'
     protected session?: Session = undefined
+    private baseUrl: string = process.env.BACKEND_API || 'http://localhost:3000'
 
-    protected getRequestUrl(prefix: string, endpoint: string): string {
-        return `${this.baseUrl}/${prefix}/${endpoint}`
+    protected getRequestUrl(prefix: string, endpoint?: string): string {
+        const baseUrl = `${this.baseUrl}/${prefix}`
+        return endpoint ? `${baseUrl}/${endpoint}` : baseUrl
     }
 
     protected getRequestBody(method: 'get' | 'post' | 'put' | 'delete', body?: any): RequestBody {

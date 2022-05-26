@@ -15,10 +15,9 @@ type EditTourProps = {
 
 export const getServerSideProps:GetServerSideProps = (context) => withAuthenticatedOrRedirect(context, async (context, session: Session) => {
     const {id} = context.params as RouteParams
-    console.log('param id: ', id)
-    const service = new ToursService(session) // create TourService instance
-    const res = await service.mockOne(id) // call TourService.getTour(id) property
-    const body: Tour = res // call res.json()
+    const service = new ToursService(session)
+    const res = await service.findOne(id)
+    const body: Tour = await res.json()
 
     return {
         props: {

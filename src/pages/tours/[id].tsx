@@ -19,8 +19,8 @@ type TourDetailProps = {
 export const getServerSideProps: GetServerSideProps = (context) => withAuthenticatedOrRedirect(context, async (context, session: Session) => {
     const {id} = context.params as RouteParams
     const service = new ToursService(session)
-    const res = await service.mockOne(id)
-    const body: Tour = res
+    const res = await service.findOne(id)
+    const body: Tour = await res.json()
 
     return {
         props: {

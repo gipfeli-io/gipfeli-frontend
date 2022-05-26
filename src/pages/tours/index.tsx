@@ -16,8 +16,8 @@ type AppHomeProps = {
 
 export const getServerSideProps: GetServerSideProps = (context) => withAuthenticatedOrRedirect(context, async (context, session: Session) => {
     const service = new ToursService(session)
-    const res = await service.mockAll()
-    const body: Tour[] = res // call res.json()
+    const res = await service.findAll()
+    const body: Tour[] = await res.json()
 
     return {
         props: {
