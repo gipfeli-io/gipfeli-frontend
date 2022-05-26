@@ -17,11 +17,10 @@ type AppHomeProps = {
 export const getServerSideProps: GetServerSideProps = (context) => withAuthenticatedOrRedirect(context, async (context, session: Session) => {
     const service = new ToursService(session)
     const res = await service.findAll()
-    const body: Tour[] = await res.json()
 
     return {
         props: {
-            tours: body
+            tours: res
         }
     }
 })

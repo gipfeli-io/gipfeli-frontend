@@ -1,4 +1,5 @@
 import {Session} from 'next-auth'
+import {plainToInstance} from 'class-transformer'
 
 export interface RequestBody {
     headers: {
@@ -36,6 +37,13 @@ export default abstract class APIService {
         }
 
         return requestBody
+    }
+
+    protected async fetchDataFromApi(url: string, body: RequestBody): Promise<any> {
+        const result = await fetch(url, body)
+        const raw = await result.json()
+
+        return raw
     }
 
     private extractBearerTokenFromSession(): string {
