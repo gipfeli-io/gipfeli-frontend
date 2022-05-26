@@ -1,24 +1,26 @@
-import {Tour} from "../../types/tour";
-import {Button, Grid, TextField} from "@mui/material";
-import React, {ChangeEvent, useState} from "react";
-import {useRouter} from "next/router";
+import {UpdateOrCreateTour} from '../../types/tour'
+import {Button, Grid, TextField} from '@mui/material'
+import React, {ChangeEvent, useState} from 'react'
+import {useRouter} from 'next/router'
+import {handleSave} from '../../types/handle-save'
 
 type formProps = {
-    tour: Tour
+    tour: UpdateOrCreateTour
+    handleSave: handleSave<UpdateOrCreateTour>
 }
 
-export default function TourForm({tour}: formProps) {
-    const router = useRouter();
+export default function TourForm({tour, handleSave}: formProps) {
+    const router = useRouter()
 
     const saveTour = async (event: any) => {
         event.preventDefault()
-        console.log('saveTour:', currentTour)
-        //todo: call service to save tour
+        // todo: perform validation
+        handleSave(currentTour)
     }
 
     const cancel = () => router.back()
 
-    const [currentTour, updateValue] = useState(tour)
+    const [currentTour, setCurrentTour] = useState(tour)
 
     return <>
         <form onSubmit={saveTour}>
@@ -30,7 +32,7 @@ export default function TourForm({tour}: formProps) {
                                value={currentTour.name}
                                required
                                onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                                   updateValue({...currentTour, name: event.target.value})}
+                                   setCurrentTour({...currentTour, name: event.target.value})}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -39,8 +41,8 @@ export default function TourForm({tour}: formProps) {
                                rows={5}
                                label="Tour Description"
                                value={currentTour.description}
-                               onChange={(event:ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                                   updateValue({...currentTour, description: event.target.value})}/>
+                               onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
+                                   setCurrentTour({...currentTour, description: event.target.value})}/>
                 </Grid>
             </Grid>
             <Grid container spacing={2} mt={2} direction={'row'} alignItems={'center'} justifyContent={'center'}>

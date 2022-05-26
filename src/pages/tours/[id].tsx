@@ -11,27 +11,44 @@ import Link from 'next/link'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {RouteParams} from '../../types/route-params'
+import {useState} from 'react'
+import {TourDeleteConfirmation} from '../../components/app/tour-list/TourDeleteConfirmation'
+import {useRouter} from 'next/router'
 
 type TourDetailProps = {
     tour: Tour
+    user: Session
 }
 
 export const getServerSideProps: GetServerSideProps = (context) => withAuthenticatedOrRedirect(context, async (context, session: Session) => {
     const {id} = context.params as RouteParams
     const service = new ToursService(session)
-    const res = await service.mockOne(id)
-    const body: Tour = res
+    const res = await service.findOne(id)
+    const body: Tour = await res.json()
 
     return {
         props: {
-            tour: body
+            tour: body,
+            user: session
         }
     }
 })
 
-const TourDetail = ({tour}: TourDetailProps): JSX.Element => {
-    tour = plainToInstance(Tour, tour) // todo: maybe have this in a generic fashion?
-    console.log(tour)
+const TourDetail = (props: TourDetailProps): JSX.Element => {
+    const router = useRouter()
+    const [tour, setTour] = useState(plainToInstance(Tour, props.tour))
+    const [open, setOpen] = useState(false)
+    const service = new ToursService(props.user)
+
+    const handleDeleteModalClose = () => {
+        setOpen(false)
+    }
+
+    const handleDelete = async () => {
+        await service.delete(tour.id)
+        handleDeleteModalClose()
+        router.push('/tours')
+    }
 
     return (
         <AppPageLayout>
@@ -40,9 +57,7 @@ const TourDetail = ({tour}: TourDetailProps): JSX.Element => {
                 <Link href={`${tour.id}/edit`} passHref>
                     <MuiLink><EditIcon/></MuiLink>
                 </Link>
-                <Link href={`${tour.id}/delete`} passHref>
-                    <MuiLink><DeleteIcon/></MuiLink>
-                </Link>
+                <MuiLink href="#" onClick={() => setOpen(true)}><DeleteIcon/></MuiLink>
             </Typography>
             <Grid container mb={2} direction={'row'} spacing={5}>
                 <Grid item>
@@ -69,6 +84,7 @@ const TourDetail = ({tour}: TourDetailProps): JSX.Element => {
                     </Typography>
                 </Grid>
             </Grid>
+            <TourDeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
         </AppPageLayout>
     )
 }

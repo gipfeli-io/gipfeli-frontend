@@ -11,14 +11,15 @@ export interface RequestBody {
 
 
 export default abstract class APIService {
-    private baseUrl: string = process.env.BACKEND_API || 'http://localhost:3000'
     protected session?: Session = undefined
+    private baseUrl: string = process.env.BACKEND_API || 'http://localhost:3000'
 
-    protected getRequestUrl(prefix: string, endpoint: string): string {
-        return `${this.baseUrl}/${prefix}/${endpoint}`
+    protected getRequestUrl(prefix: string, endpoint?: string): string {
+        const baseUrl = `${this.baseUrl}/${prefix}`
+        return endpoint ? `${baseUrl}/${endpoint}` : baseUrl
     }
 
-    protected getRequestBody(method: 'get' | 'post' | 'put' | 'delete', body?: any): RequestBody {
+    protected getRequestBody(method: 'GET' | 'POST' | 'PATCH' | 'DELETE', body?: any): RequestBody {
         let requestBody: RequestBody = {
             method,
             headers: {
@@ -26,7 +27,7 @@ export default abstract class APIService {
             },
         }
 
-        if (method !== 'get') {
+        if (method !== 'GET') {
             requestBody.body = body ? JSON.stringify(body) : ''
         }
 
@@ -35,6 +36,13 @@ export default abstract class APIService {
         }
 
         return requestBody
+    }
+
+    protected async fetchDataFromApi(url: string, body: RequestBody): Promise<any> {
+        const result = await fetch(url, body)
+        const raw = await result.json()
+
+        return raw
     }
 
     private extractBearerTokenFromSession(): string {
