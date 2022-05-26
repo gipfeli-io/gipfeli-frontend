@@ -25,3 +25,5 @@ export class Tour {
         this.updatedAt = updatedAt
     }
 }
+
+export type CreateTour = Pick<Tour, "name" | "description" | "startLocation" | "endLocation">
