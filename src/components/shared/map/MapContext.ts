@@ -6,7 +6,7 @@ interface MapContext {
 }
 
 /**
- * MapContext wrapper to allow acces to the map object for subcomponents.
+ * MapContext wrapper to allow access to the map object for subcomponents.
  */
 const MapContext = React.createContext<MapContext>({})
 

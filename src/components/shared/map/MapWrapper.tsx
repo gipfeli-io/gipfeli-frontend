@@ -2,31 +2,41 @@ import {PropsWithChildren, useEffect, useId, useState} from 'react'
 import {Map, View} from 'ol'
 import 'ol/ol.css'
 import TileLayer from 'ol/layer/Tile'
-import {OSM, XYZ} from 'ol/source'
+import {OSM, TileWMS, XYZ} from 'ol/source'
 import styles from './MapWrapper.module.scss'
 import MapContext from './MapContext'
+import {Control} from "ol/control";
 
 const MapWrapper = ({children}: PropsWithChildren<{}>) => {
-    const mapContainerId = useId() // I changed this to useId, since I am not sure if we need the useRefs hook? OL just needs a unique identifier.
+    const mapContainerId = useId()
     const [map, setMap] = useState<Map | undefined>(undefined)
 
     useEffect(() => {
-        const initialMap = new Map({
+       const initialMap = new Map({
             target: mapContainerId,
             layers: [
                 new TileLayer({
-                    source: new XYZ({
-                        url: `https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg`
-                    })
-                }),
+                    source: new TileWMS({ //todo: add these values to a config file or get them from a config service
+                        crossOrigin: 'anonymous',
+                        params: {
+                            'LAYERS': 'ch.swisstopo.pixelkarte-farbe',
+                            'FORMAT': 'image/jpeg',
+                        },
+                        url: 'https://wms.geo.admin.ch/',
+                        projection: 'EPSG:3857',
+                    }),
+                })
             ],
             view: new View({
                 projection: 'EPSG:3857',
-                center: [0, 0],
-                zoom: 2
+                center: [916355.758968,5909242.750142],
+                zoom: 8,
+                minZoom: 8,
             }),
-            controls: []
+            controls: [
+            ]
         })
+
         setMap(initialMap)
 
         return () => initialMap.dispose() // Cleans up when the component is dismounted.
