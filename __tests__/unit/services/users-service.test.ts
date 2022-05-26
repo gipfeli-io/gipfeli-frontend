@@ -22,7 +22,7 @@ describe('AuthService', () => {
         await service.profile()
 
         expect(fetch).toHaveBeenCalledTimes(1)
-        expect(fetchMock.mock.calls[0][1]?.method).toEqual('get')
+        expect(fetchMock.mock.calls[0][1]?.method).toEqual('GET')
         // @ts-ignore
         expect(fetchMock.mock.calls[0][1]?.headers?.Authorization).toContain(sessionMock.accessToken)
     })
