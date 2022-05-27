@@ -78,6 +78,10 @@ const WayPointMarkerLayer = ({features, type, handleSetMarker}: WayPointMarkerLa
 
             map!.addInteraction(draw)
 
+            initDrawListener(draw, markerId)
+        }
+
+        const initDrawListener = (draw: Draw, markerId: number): void => {
             draw.on('drawend', (evt)=> {
                 const selectedFeature: Geometry = evt.feature.getGeometry()!
                 const point: Point = new Feature(selectedFeature.clone().transform('EPSG:3857', 'EPSG:4326')).getGeometry() as Point
