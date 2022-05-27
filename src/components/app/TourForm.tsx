@@ -27,7 +27,7 @@ export default function TourForm({tour, handleSave, type}: formProps) {
     const [currentTour, setCurrentTour] = useState(tour)
 
     const handleSetMarker = (coordinates: number[], id: number): void => {
-        if(id == 0){
+       if(id == 0){
             currentTour.startLocation = {
                 'type': 'Point',
                 'coordinates': coordinates }
@@ -58,11 +58,6 @@ export default function TourForm({tour, handleSave, type}: formProps) {
                         <FullScreenControl />
                         <WayPointMarkerLayer handleSetMarker={handleSetMarker} features={[currentTour.startLocation, currentTour.endLocation]} type={type}/>
                     </MapWrapper>
-                </Grid>
-                <Grid item xs={12}>
-                    Selected Features
-                   <div>{ currentTour.startLocation.coordinates}</div>
-                   <div>{ currentTour.endLocation.coordinates }</div>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField fullWidth
