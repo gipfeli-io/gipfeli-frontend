@@ -12,6 +12,8 @@ import MapConfigurationService from "../../../../services/map/map-configuration-
 import addLayerFeatures from "../../../../utils/map/add-layer-features";
 import VectorLayer from "ol/layer/Vector";
 import {Layer} from "ol/layer";
+import {DrawEvent} from "ol/interaction/Draw";
+import {ModifyEvent} from "ol/interaction/Modify";
 
 interface WayPointMarkerLayerProps {
     /** An array of GeoJSON Points that will be mapped to markers. */
@@ -61,11 +63,14 @@ const WayPointMarkerLayer = ({features, type, handleSetMarker}: WayPointMarkerLa
         }
 
         const addModifyInteraction = (source: VectorSource): void => {
-            map!.addInteraction(new Modify({source: source}))
+            const modifyInteraction = new Modify({source: source})
+            map!.addInteraction(modifyInteraction)
+
+            initModifyListener(modifyInteraction)
         }
 
         const setupDrawInteraction = (source: VectorSource, markerId: number): void => {
-            const draw = new Draw({
+            const drawInteraction = new Draw({
                 source: source,
                 type: 'Point',
                 style: new Style({
@@ -73,24 +78,34 @@ const WayPointMarkerLayer = ({features, type, handleSetMarker}: WayPointMarkerLa
                         anchor: [0.5, 1],
                         src: markerId === 0 ? startIcon : endIcon
                     }))
-                })
+                }),
             })
 
-            map!.addInteraction(draw)
+            map!.addInteraction(drawInteraction)
 
-            initDrawListener(draw, markerId)
+            initDrawListener(drawInteraction, markerId)
         }
 
-        const initDrawListener = (draw: Draw, markerId: number): void => {
-            draw.on('drawend', (evt)=> {
+        const initDrawListener = (drawInteraction: Draw, markerId: number): void => {
+            drawInteraction.on('drawend', (evt: DrawEvent)=> {
                 const selectedFeature: Geometry = evt.feature.getGeometry()!
                 const point: Point = new Feature(selectedFeature.clone().transform('EPSG:3857', 'EPSG:4326')).getGeometry() as Point
                 handleSetMarker!(point.getCoordinates(), markerId)
                 markerId++
                 //remove draw interaction if we reach the max marker count
                 if(markerId >= maxMarkerCount){
-                    map!.removeInteraction(draw)
+                    map!.removeInteraction(drawInteraction)
                 }
+            })
+        }
+
+        const initModifyListener = (modifyInteraction: Modify): void => {
+            modifyInteraction.on('modifyend', (evt: ModifyEvent) => {
+                const modifiedFeature: Geometry = evt.features.getArray()[0].getGeometry() as Geometry
+                const point: Point = new Feature(modifiedFeature!.clone().transform('EPSG:3857', 'EPSG:4326')).getGeometry() as Point
+                console.log('modified point', point.getCoordinates())
+                // todo: how to find the which point is being udpated?
+                //handleSetMarker!(point.getCoordinates(), 0)
             })
         }
 
