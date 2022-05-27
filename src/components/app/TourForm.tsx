@@ -1,40 +1,42 @@
-import {Tour} from "../../types/tour";
-import {Button, Grid, TextField} from "@mui/material";
-import React, {ChangeEvent, useState} from "react";
-import {useRouter} from "next/router";
+import {UpdateOrCreateTour} from '../../types/tour'
+import {Button, Grid, TextField} from '@mui/material'
+import React, {ChangeEvent, useState} from 'react'
+import {useRouter} from 'next/router'
+import {handleSave} from '../../types/handle-save'
 import MapWrapper from "../shared/map/MapWrapper";
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
 import WayPointMarkerLayer from "../shared/map/layers/WayPointMarkerLayer";
 
 type formProps = {
-    tour: Tour,
+    tour: UpdateOrCreateTour
+    handleSave: handleSave<UpdateOrCreateTour>
     type: string
 }
 
-export default function TourForm({tour, type}: formProps) {
+export default function TourForm({tour, handleSave, type}: formProps) {
     const router = useRouter();
 
     const saveTour = async (event: any) => {
         event.preventDefault()
-        console.log('saveTour:', currentTour)
-        //todo: call service to save tour
+        // todo: perform validation
+        handleSave(currentTour)
     }
 
     const cancel = () => router.back()
 
-    const [currentTour, updateValue] = useState(tour)
+    const [currentTour, setCurrentTour] = useState(tour)
 
     const handleSetMarker = (coordinates: number[], id: number): void => {
         if(id == 0){
             currentTour.startLocation = {
                 'type': 'Point',
                 'coordinates': coordinates }
-            updateValue({...currentTour})
+            setCurrentTour({...currentTour})
         } else {
             currentTour.endLocation = {
                 'type': 'Point',
                 'coordinates': coordinates }
-            updateValue({...currentTour})
+            setCurrentTour({...currentTour})
         }
     }
 
@@ -48,7 +50,7 @@ export default function TourForm({tour, type}: formProps) {
                                value={currentTour.name}
                                required
                                onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                                   updateValue({...currentTour, name: event.target.value})}
+                                   setCurrentTour({...currentTour, name: event.target.value})}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -68,8 +70,8 @@ export default function TourForm({tour, type}: formProps) {
                                rows={5}
                                label="Tour Description"
                                value={currentTour.description}
-                               onChange={(event:ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-                                   updateValue({...currentTour, description: event.target.value})}/>
+                               onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
+                                   setCurrentTour({...currentTour, description: event.target.value})}/>
                 </Grid>
             </Grid>
             <Grid container spacing={2} mt={2} direction={'row'} alignItems={'center'} justifyContent={'center'}>

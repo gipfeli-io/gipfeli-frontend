@@ -17,7 +17,7 @@ class ApiServiceWrapper extends APIService {
         return super.getRequestUrl(prefix, endpoint)
     }
 
-    getRequestBody(method: 'get' | 'post' | 'put' | 'delete', body?: any): RequestBody {
+    getRequestBody(method: 'GET' | 'POST' | 'PATCH' | 'DELETE', body?: any): RequestBody {
         return super.getRequestBody(method, body)
     }
 }
@@ -49,7 +49,7 @@ describe('APIService', () => {
 
     it('overrides default base URL if environment variable is set', () => {
         const overrideBaseUrl = 'http://www.this-is-overridden.com'
-        process.env.BACKEND_API = overrideBaseUrl
+        process.env.NEXT_PUBLIC_BACKEND_API = overrideBaseUrl
         const wrapper = new ApiServiceWrapper()
 
         const result = wrapper.getRequestUrl(prefix, endpoint)
@@ -61,13 +61,13 @@ describe('APIService', () => {
     it('generates correct request body for GET request', () => {
         const wrapper = new ApiServiceWrapper()
 
-        const result = wrapper.getRequestBody('get')
+        const result = wrapper.getRequestBody('GET')
 
         const expected: RequestBody = {
             headers: {
                 'Content-Type': 'application/json'
             },
-            method: 'get'
+            method: 'GET'
         }
         expect(result).toEqual(expected)
     })
@@ -75,7 +75,7 @@ describe('APIService', () => {
     it('ignores body parameter for GET requests', () => {
         const wrapper = new ApiServiceWrapper()
 
-        const result = wrapper.getRequestBody('get', body)
+        const result = wrapper.getRequestBody('GET', body)
 
         expect(result).not.toHaveProperty('body')
     })
@@ -83,13 +83,13 @@ describe('APIService', () => {
     it('generates correct request body for POST request', () => {
         const wrapper = new ApiServiceWrapper()
 
-        const result = wrapper.getRequestBody('post', body)
+        const result = wrapper.getRequestBody('POST', body)
 
         const expected: RequestBody = {
             headers: {
                 'Content-Type': 'application/json'
             },
-            method: 'post',
+            method: 'POST',
             body: JSON.stringify(body)
         }
         expect(result).toEqual(expected)
@@ -98,7 +98,7 @@ describe('APIService', () => {
     it('correctly injects the authorization token from the session', () => {
         const wrapper = new ApiServiceWrapper(sessionMock)
 
-        const result = wrapper.getRequestBody('get')
+        const result = wrapper.getRequestBody('GET')
 
         const expected = `Bearer ${sessionMock.accessToken}`
         expect(result.headers.Authorization).toEqual(expected)

@@ -24,7 +24,7 @@ describe('AuthService', () => {
         expect(fetch).toHaveBeenCalledTimes(1)
         expect(fetchMock.mock.calls[0][1]?.body).toContain(mockUser)
         expect(fetchMock.mock.calls[0][1]?.body).toContain(mockPassword)
-        expect(fetchMock.mock.calls[0][1]?.method).toEqual('post')
+        expect(fetchMock.mock.calls[0][1]?.method).toEqual('POST')
     })
 
     it('calls API and returns the response as JSON', async () => {

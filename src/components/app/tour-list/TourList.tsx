@@ -1,4 +1,4 @@
-import {Tour} from '../../types/tour'
+import {Tour} from '../../../types/tour'
 import {DataGrid, GridColDef, GridValueGetterParams} from '@mui/x-data-grid'
 import TourListActions from './TourListActions'
 
