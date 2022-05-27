@@ -40,9 +40,7 @@ export default abstract class APIService {
 
     protected async fetchDataFromApi(url: string, body: RequestBody): Promise<any> {
         const result = await fetch(url, body)
-        const raw = await result.json()
-
-        return raw
+        return await result.json()
     }
 
     private extractBearerTokenFromSession(): string {

@@ -30,17 +30,11 @@ const NewTour = ({user}: CreateTourProps) => {
         description: '',
         startLocation: { // Todo: make empty and add points in edit
             'type': 'Point',
-            'coordinates': [
-                7.920462,
-                47.328439
-            ]
+            'coordinates': []
         },
         endLocation: {
             'type': 'Point',
-            'coordinates': [
-                47.328439,
-                7.920462
-            ]
+            'coordinates': []
         },
     }
 
@@ -56,7 +50,7 @@ const NewTour = ({user}: CreateTourProps) => {
             <Typography variant="h2" gutterBottom component="div">
                 Create Tour
             </Typography>
-            <TourForm tour={tour} handleSave={handleSave}/>
+            <TourForm tour={tour} handleSave={handleSave} type={'Create'}/>
         </AppPageLayout>
     )
 }

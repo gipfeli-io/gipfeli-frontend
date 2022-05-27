@@ -1,7 +1,6 @@
 import APIService from '../api-service'
 import {Session} from 'next-auth'
 import {UpdateOrCreateTour} from '../../types/tour'
-import {instanceToPlain} from 'class-transformer'
 
 export default class ToursService extends APIService {
     private prefix: string = 'tours'

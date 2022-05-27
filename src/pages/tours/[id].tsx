@@ -14,6 +14,8 @@ import {RouteParams} from '../../types/route-params'
 import {useState} from 'react'
 import {TourDeleteConfirmation} from '../../components/app/tour-list/TourDeleteConfirmation'
 import {useRouter} from 'next/router'
+import MapWrapper from '../../components/shared/map/MapWrapper'
+import WayPointMarkerLayer from '../../components/shared/map/layers/WayPointMarkerLayer'
 
 type TourDetailProps = {
     tour: Tour
@@ -36,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = (context) => withAuthentic
 
 const TourDetail = (props: TourDetailProps): JSX.Element => {
     const router = useRouter()
-    const [tour, setTour] = useState(plainToInstance(Tour, props.tour))
+    const [tour] = useState(plainToInstance(Tour, props.tour))
     const [open, setOpen] = useState(false)
     const service = new ToursService(props.user)
 
@@ -72,6 +74,9 @@ const TourDetail = (props: TourDetailProps): JSX.Element => {
                 </Grid>
             </Grid>
             <Divider/>
+            <MapWrapper>
+                <WayPointMarkerLayer features={[tour.startLocation,  tour.endLocation]}/>
+            </MapWrapper>
             <Grid container mb={2} mt={2} direction={'column'}>
                 <Grid item>
                     <Typography variant="h5" gutterBottom component="div">

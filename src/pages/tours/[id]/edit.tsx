@@ -55,7 +55,7 @@ const EditTour = ({id, tour, user}: EditTourProps) => {
             <Typography variant="h2" gutterBottom component="div">
                 Edit Tour
             </Typography>
-            <TourForm tour={tour} handleSave={handleSave}/>
+            <TourForm tour={tour} handleSave={handleSave} type={'Edit'}/>
         </AppPageLayout>
     )
 }
