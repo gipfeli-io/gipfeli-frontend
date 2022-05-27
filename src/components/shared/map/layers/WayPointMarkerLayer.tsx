@@ -9,6 +9,9 @@ import Point from "ol/geom/Point"
 import {Point as GeoJsonPoint} from 'geojson'
 import {Feature} from "ol";
 import MapConfigurationService from "../../../../services/map/map-configuration-service";
+import addLayerFeatures from "../../../../utils/map/add-layer-features";
+import VectorLayer from "ol/layer/Vector";
+import {Layer} from "ol/layer";
 
 interface WayPointMarkerLayerProps {
     /** An array of GeoJSON Points that will be mapped to markers. */
@@ -24,34 +27,47 @@ const WayPointMarkerLayer = ({features, type, handleSetMarker}: WayPointMarkerLa
     const {map} = useContext(MapContext)
 
     useEffect(() => {
+
         const mapConfigurationService = new MapConfigurationService()
         const maxMarkerCount = mapConfigurationService.getMaxMarkerCount() //this might change in the future?
         const startIcon = mapConfigurationService.getStartIcon()
         const endIcon = mapConfigurationService.getEndIcon()
+        let layerExtent;
+        let markerLayer: VectorLayer<VectorSource>;
+
         if (!map || !features) {
             return
         }
-        console.log('create marker layer', features)
-        const {extent, layer} = createMarkerLayer(features)
-        map.addLayer(layer)
+
+        markerLayer = map.getAllLayers().find((layer: Layer) => layer.getProperties()['name'] === 'marker_layer') as VectorLayer<VectorSource>
+        if(!markerLayer) {
+            const {layer} = createMarkerLayer()
+            markerLayer = layer as VectorLayer<VectorSource>
+            layerExtent = addLayerFeatures(features, markerLayer as VectorLayer<VectorSource>)
+            map.addLayer(markerLayer)
+        } else {
+            markerLayer.getSource()?.clear(true)
+            layerExtent = addLayerFeatures(features, markerLayer as VectorLayer<VectorSource>)
+        }
+
         //if no features were added the extent is set to an empty array
-        if(extent.length !== 0){
-            map.getView().fit(extent, {size: map.getSize(), padding: [100, 100, 100, 100]})
+        if(layerExtent!.length !== 0){
+            map.getView().fit(layerExtent!, {size: map.getSize(), padding: [100, 100, 100, 100]})
         }
 
         if(type){
-            const source = layer.getSource() as VectorSource
+            const source = markerLayer.getSource() as VectorSource
+            let markerId = source.getFeatures().length
             const modify = new Modify({source: source})
             map.addInteraction(modify)
-            if(type==='Create'){
-                let markerId = 1;
+            if(type==='Create' && markerId < maxMarkerCount){
                 const draw = new Draw({
-                    source: layer.getSource() as VectorSource,
+                    source: markerLayer.getSource() as VectorSource,
                     type: 'Point',
                     style: new Style({
                         image: new Icon(({
                             anchor: [0.5, 1],
-                            src: markerId === 1 ? startIcon : endIcon
+                            src: markerId === 0 ? startIcon : endIcon
                         }))
                     })
                 })
@@ -64,13 +80,13 @@ const WayPointMarkerLayer = ({features, type, handleSetMarker}: WayPointMarkerLa
                     handleSetMarker!(point.getCoordinates(), markerId)
                     markerId++
                     //remove draw interaction if we reach the max marker count
-                    if(markerId > maxMarkerCount){
+                    if(markerId >= maxMarkerCount){
                         map.removeInteraction(draw)
                     }
                 })
             }
         }
-    }, [map, features])
+    }, [map, features, handleSetMarker, type])
     return null
 }
 

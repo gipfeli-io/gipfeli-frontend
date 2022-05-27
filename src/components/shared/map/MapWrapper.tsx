@@ -24,7 +24,7 @@ const MapWrapper = ({children}: PropsWithChildren<{}>) => {
                         url: 'https://wms.geo.admin.ch/',
                         projection: 'EPSG:3857',
                     }),
-                })
+                }),
             ],
             view: new View({
                 projection: 'EPSG:3857',
@@ -37,16 +37,9 @@ const MapWrapper = ({children}: PropsWithChildren<{}>) => {
         })
 
         setMap(initialMap)
-
         return () => initialMap.dispose() // Cleans up when the component is dismounted.
     }, [mapContainerId])
 
-    useEffect(()=>{
-        if(!map){
-            return
-        }
-
-    })
     return (
         <MapContext.Provider value={{map}}>
             <div id={mapContainerId} className={styles.mapContainer}>
