@@ -101,11 +101,11 @@ const WayPointMarkerLayer = ({features, type, handleSetMarker}: WayPointMarkerLa
 
         const initModifyListener = (modifyInteraction: Modify): void => {
             modifyInteraction.on('modifyend', (evt: ModifyEvent) => {
-                const modifiedFeature: Geometry = evt.features.getArray()[0].getGeometry() as Geometry
+                const feature = evt.features.getArray()[0]
+                const featureId = feature.getId() as number
+                const modifiedFeature: Geometry = feature.getGeometry() as Geometry
                 const point: Point = new Feature(modifiedFeature!.clone().transform('EPSG:3857', 'EPSG:4326')).getGeometry() as Point
-                console.log('modified point', point.getCoordinates())
-                // todo: how to find the which point is being udpated?
-                //handleSetMarker!(point.getCoordinates(), 0)
+                handleSetMarker!(point.getCoordinates(), featureId)
             })
         }
 

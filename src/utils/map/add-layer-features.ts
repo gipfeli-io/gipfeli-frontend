@@ -29,7 +29,7 @@ export default function addLayerFeatures(features: GeoJsonObject[], layer: Vecto
                     src: idx === features.length -1 ? endIcon : startIcon
                 }))
             })
-
+            jsonFeature.setId(idx)
             jsonFeature.setStyle(style)
             jsonFeatures.push(jsonFeature)
         }
