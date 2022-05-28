@@ -40,8 +40,7 @@ export default function TourForm({tour, handleSave, type}: formProps) {
         }
     }
 
-    return <>
-        <form onSubmit={saveTour}>
+    return <form onSubmit={saveTour}>
             <Grid container spacing={4} direction={'row'} alignItems={'center'} justifyContent={'space-evenly'}>
                 <Grid item xs={12}>
                     <TextField fullWidth
@@ -78,5 +77,4 @@ export default function TourForm({tour, handleSave, type}: formProps) {
                 </Grid>
             </Grid>
         </form>
-    </>
 }

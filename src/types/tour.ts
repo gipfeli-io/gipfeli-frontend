@@ -13,7 +13,7 @@ export class Tour {
     createdAt: Dayjs
     @Type(() => Date)
     @Transform(({value}) => dayjs(value), {toClassOnly: true})
-    updatedAt: Dayjs // todo: make nullable as for create this will not be set
+    updatedAt: Dayjs
 
     constructor(id: string, name: string, startLocation: Point, endLocation: Point, description: string, createdAt: Dayjs, updatedAt: Dayjs) {
         this.id = id
