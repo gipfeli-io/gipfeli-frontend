@@ -17,6 +17,7 @@ function App({Component, pageProps: {session, ...pageProps}}: AppProps) {
         <ThemeProvider theme={theme}>
             <Head>
                 <meta name='viewport' content='initial-scale=1, width=device-width'/>
+                <title>gipfeli.io | Your one and only outdoor companion</title>
             </Head>
             <CssBaseline/>
             <SessionProvider session={session}>
