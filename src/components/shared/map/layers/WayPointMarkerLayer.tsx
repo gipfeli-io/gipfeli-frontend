@@ -28,6 +28,7 @@ interface WayPointMarkerLayerProps {
 const WayPointMarkerLayer = ({features, type, handleSetMarker}: WayPointMarkerLayerProps) => {
     const {map} = useContext(MapContext)
 
+
     useEffect(() => {
 
         // if map or features are not set do nothing
