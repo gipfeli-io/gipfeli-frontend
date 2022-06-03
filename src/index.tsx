@@ -13,12 +13,14 @@ import dark from './themes/dark'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import AuthPageLayout from './components/pages/layouts/AuthPageLayout'
 import Login from './components/pages/Login'
+import AuthenticationProvider from './components/auth/AuthenticationProvider'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 )
 root.render(
   <React.StrictMode>
+    <AuthenticationProvider>
       <ThemeProvider theme={dark}>
           <CssBaseline/>
           <BrowserRouter>
@@ -32,6 +34,7 @@ root.render(
               </Routes>
           </BrowserRouter>
       </ThemeProvider>
+    </AuthenticationProvider>
   </React.StrictMode>
 )
 

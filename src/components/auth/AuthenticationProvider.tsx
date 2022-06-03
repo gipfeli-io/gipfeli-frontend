@@ -1,21 +1,28 @@
-const AuthenticationProvider: () => ({ children }: { children: React.ReactNode }) {
-  let [user, setUser] = React.useState<any>(null);
+import React, { useState } from 'react'
+import AuthenticationContext, { AuthenticationContextType } from '../../context/AuthenticationContext'
+import AuthService from '../../services/auth/auth-service'
 
-  let signin = (newUser: string, callback: VoidFunction) => {
-    return fakeAuthProvider.signin(() => {
-      setUser(newUser);
-      callback();
-    });
-  };
+const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => {
+  const [username, setUsername] = useState<string | undefined>(undefined)
+  const authService: AuthService = new AuthService()
 
-  let signout = (callback: VoidFunction) => {
-    return fakeAuthProvider.signout(() => {
-      setUser(null);
-      callback();
-    });
-  };
+  const signIn = async (username: string, password: string, callback: ()=>void) => {
+    // todo: handle error
+    await authService.login(
+      username,
+      password
+    )
+    setUsername(username)
+    callback()
+  }
 
-  let value = { user, signin, signout };
+  const signOut = (callback: () => void) => {
+    alert('signed out')
+  }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const value: AuthenticationContextType = { username, signIn, signOut }
+
+  return <AuthenticationContext.Provider value={value}>{children}</AuthenticationContext.Provider>
 }
+
+export default AuthenticationProvider

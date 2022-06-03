@@ -7,23 +7,22 @@ import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import React, { FormEvent } from 'react'
-import AuthService from '../../services/auth/auth-service'
 import { useNavigate } from 'react-router'
+import useAuth from '../../hooks/use-auth'
 
 const Login = () => {
-  const authService: AuthService = new AuthService()
   const navigate = useNavigate()
+  const auth = useAuth()
 
   const login = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     // todo: handle error
-    await authService.login(
+    await auth.signIn(
       data.get('email')!.toString(),
-      data.get('password')!.toString()
+      data.get('password')!.toString(),
+      () => navigate('/')
     )
-
-    navigate('/')
   }
   return (
         <>
