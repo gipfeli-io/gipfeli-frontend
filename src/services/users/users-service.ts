@@ -3,9 +3,9 @@ import APIService from '../api-service'
 export default class UsersService extends APIService {
   private prefix: string = 'users'
 
-  constructor (session: any) {
+  constructor (token: string | any) {
     super()
-    this.session = session
+    this.token = token
   }
 
   public async profile (): Promise<Response> {

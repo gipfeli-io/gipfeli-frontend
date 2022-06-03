@@ -5,9 +5,11 @@ import LocalStorageService from '../../services/local-storage-service'
 import { LocalStorageKey } from '../../enums/LocalStorageKey'
 import jwtDecode from 'jwt-decode'
 import Loader from '../shared/Loader'
+import { JwtToken } from '../../types/jwt-token'
 
 const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => {
   const [username, setUsername] = useState<string | undefined>(undefined)
+  const [token, setToken] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(true)
   const authService: AuthService = new AuthService()
   const localStorageService: LocalStorageService = new LocalStorageService()
@@ -16,7 +18,8 @@ const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => 
     const token = localStorageService.getItem(LocalStorageKey.UserSession)
     if (token) {
       // todo: check with API if token is still valid
-      const decoded = jwtDecode(token) as { username: string }
+      const decoded: JwtToken = jwtDecode(token)
+      setToken(token)
       setUsername(decoded.username)
     }
     setLoading(false)
@@ -43,7 +46,7 @@ const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => 
     callback()
   }
 
-  const value: AuthenticationContextType = { username, signIn, signOut }
+  const value: AuthenticationContextType = { username, token, signIn, signOut }
 
   if (loading) {
     return <Loader />

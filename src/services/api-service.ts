@@ -8,7 +8,7 @@ export interface RequestBody {
 }
 
 export default abstract class APIService {
-  protected session?: any = undefined
+  protected token?: string = undefined
   private baseUrl: string = process.env.NEXT_PUBLIC_BACKEND_API || 'http://localhost:3000'
 
   protected getRequestUrl (prefix: string, endpoint?: string): string {
@@ -28,7 +28,7 @@ export default abstract class APIService {
       requestBody.body = body ? JSON.stringify(body) : ''
     }
 
-    if (this.session) {
+    if (this.token) {
       requestBody.headers = { ...requestBody.headers, Authorization: this.extractBearerTokenFromSession() }
     }
 
@@ -41,6 +41,6 @@ export default abstract class APIService {
   }
 
   private extractBearerTokenFromSession (): string {
-    return `Bearer ${this.session!.accessToken}`
+    return `Bearer ${this.token}`
   }
 }

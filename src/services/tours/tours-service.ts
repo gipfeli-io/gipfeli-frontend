@@ -4,9 +4,9 @@ import { UpdateOrCreateTour } from '../../types/tour'
 export default class ToursService extends APIService {
   private prefix: string = 'tours'
 
-  constructor (session: any) {
+  constructor (token: string | undefined) {
     super()
-    this.session = session
+    this.token = token
   }
 
   public async findAll (): Promise<any> {

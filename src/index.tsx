@@ -1,4 +1,5 @@
 import React from 'react'
+import 'reflect-metadata'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import ReactDOM from 'react-dom/client'
@@ -15,6 +16,8 @@ import AuthPageLayout from './components/pages/layouts/AuthPageLayout'
 import Login from './components/pages/Login'
 import AuthenticationProvider from './components/auth/AuthenticationProvider'
 import RequireAuth from './components/auth/RequireAuth'
+import AppPageLayout from './components/pages/layouts/AppPageLayout'
+import ToursOverview from './components/pages/tours/ToursOverview'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -33,6 +36,9 @@ root.render(
                   <Route path="/" element={<AuthPageLayout/>}>
                       <Route path="login" element={<Login/>}/>
                   </Route>
+                <Route path="/tours" element={<AppPageLayout />}>
+                  <Route index element={<ToursOverview />} />
+                </Route>
               </Routes>
           </BrowserRouter>
       </ThemeProvider>
