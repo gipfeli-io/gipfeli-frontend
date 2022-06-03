@@ -48,9 +48,7 @@ const TourDetail = (): JSX.Element => {
       <>
         <Typography variant="h2" gutterBottom component="div">
           {tour.name}
-          <Link to={`${tour.id}/edit`}>
-            <MuiLink><EditIcon/></MuiLink>
-          </Link>
+            <MuiLink component={Link} to='edit'><EditIcon/></MuiLink>
           <MuiLink href="#" onClick={() => setOpen(true)}><DeleteIcon/></MuiLink>
         </Typography>
         <Grid container mb={2} direction={'row'} spacing={5}>

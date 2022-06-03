@@ -8,6 +8,7 @@ import ToursService from '../../../services/tours/tours-service'
 import { Tour } from '../../../types/tour'
 import useAuth from '../../../hooks/use-auth'
 import { plainToInstance } from 'class-transformer'
+import { Link } from 'react-router-dom'
 
 const ToursOverview = (): JSX.Element => {
   const auth = useAuth()
@@ -52,9 +53,9 @@ const ToursOverview = (): JSX.Element => {
       </Typography>
       <Grid container mb={2} direction={'row'} justifyContent="flex-end">
         <Grid item>
-          <Button href="tours/create" variant="contained">
-            Add Tour
-          </Button>
+            <Button component={Link} to='create' variant="contained">
+              Add Tour
+            </Button>
         </Grid>
       </Grid>
       <TourListContext.Provider value={deleteHandler}>

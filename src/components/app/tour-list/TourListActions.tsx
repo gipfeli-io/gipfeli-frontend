@@ -16,12 +16,8 @@ export default function TourListActions (props: { id: string }): JSX.Element {
 
   return (
     <>
-      <Link to={`${props.id}`}>
-        <MuiLink><VisibilityIcon/></MuiLink>
-      </Link>
-      <Link to={`${props.id}/edit`}>
-        <MuiLink><EditIcon/></MuiLink>
-      </Link>
+      <MuiLink component={Link} to={props.id}><VisibilityIcon/></MuiLink>
+      <MuiLink component={Link} to={`${props.id}/edit`}><EditIcon/></MuiLink>
       <MuiLink href="#" onClick={onClick}><DeleteIcon/></MuiLink>
     </>
   )
