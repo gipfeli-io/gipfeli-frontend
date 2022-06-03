@@ -1,11 +1,12 @@
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import { AppBar, IconButton, Toolbar } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import LandscapeIcon from '@mui/icons-material/Landscape'
 import NavBarUserSection from '../../shared/NavBarUserSection'
 import Copyright from '../../shared/Copyright'
+import { Outlet } from 'react-router-dom'
 
-function LandingPageLayout ({ children }: PropsWithChildren<any>) {
+function LandingPageLayout () {
   return (
         <>
             <AppBar position="static">
@@ -24,7 +25,7 @@ function LandingPageLayout ({ children }: PropsWithChildren<any>) {
                 </Toolbar>
             </AppBar>
 
-            {children}
+            <Outlet/>
 
             <Copyright/>
         </>

@@ -7,18 +7,26 @@ import {
   Routes,
   Route
 } from 'react-router-dom'
-import Home from './components/pages'
+import Home from './components/pages/Home'
+import LandingPageLayout from './components/pages/layouts/LandingPageLayout'
+import dark from './themes/dark'
+import { CssBaseline, ThemeProvider } from '@mui/material'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 )
 root.render(
   <React.StrictMode>
-      <BrowserRouter>
-          <Routes>
-              <Route path="/" element={<Home />}/>
-          </Routes>
-      </BrowserRouter>
+      <ThemeProvider theme={dark}>
+          <CssBaseline/>
+          <BrowserRouter>
+              <Routes>
+                  <Route path="/" element={<LandingPageLayout />}>
+                      <Route index element={<Home/>}/>
+                  </Route>
+              </Routes>
+          </BrowserRouter>
+      </ThemeProvider>
   </React.StrictMode>
 )
 
