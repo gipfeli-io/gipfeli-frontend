@@ -1,14 +1,14 @@
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import { AppBar, IconButton, Toolbar } from '@mui/material'
 import LandscapeIcon from '@mui/icons-material/Landscape'
 import Typography from '@mui/material/Typography'
 import Copyright from '../../shared/Copyright'
-import { Link } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 
-function AuthPageLayout ({ children }: PropsWithChildren<any>) {
+function AuthPageLayout () {
   return (
         <>
             <AppBar position="fixed" color="transparent" elevation={0}>
@@ -51,7 +51,7 @@ function AuthPageLayout ({ children }: PropsWithChildren<any>) {
                         }}
                     >
 
-                        {children}
+                     <Outlet />
 
                     </Box>
                     <Copyright/>

@@ -1,6 +1,7 @@
 import { Button, Stack } from '@mui/material'
 import React from 'react'
 import Typography from '@mui/material/Typography'
+import { Link } from 'react-router-dom'
 
 function NavBarUserSection () {
   const isAuthenticated = false
@@ -9,7 +10,7 @@ function NavBarUserSection () {
     return (
             <Stack spacing={2} direction={'row'}>
                 <Button variant={'contained'} id={'join-button'}>Join</Button>
-                <Button variant={'outlined'}>Login</Button>
+                <Link to={'login'}><Button variant={'outlined'} >Login</Button></Link>
             </Stack>
     )
   }

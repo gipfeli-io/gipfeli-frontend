@@ -11,6 +11,8 @@ import Home from './components/pages/Home'
 import LandingPageLayout from './components/pages/layouts/LandingPageLayout'
 import dark from './themes/dark'
 import { CssBaseline, ThemeProvider } from '@mui/material'
+import AuthPageLayout from './components/pages/layouts/AuthPageLayout'
+import Login from './components/pages/Login'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -23,6 +25,9 @@ root.render(
               <Routes>
                   <Route path="/" element={<LandingPageLayout />}>
                       <Route index element={<Home/>}/>
+                  </Route>
+                  <Route path="/" element={<AuthPageLayout/>}>
+                      <Route path="login" element={<Login/>}/>
                   </Route>
               </Routes>
           </BrowserRouter>
