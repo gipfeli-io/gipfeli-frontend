@@ -16,10 +16,10 @@ export default function TourListActions (props: { id: string }): JSX.Element {
 
   return (
     <>
-      <Link to={`tours/${props.id}`}>
+      <Link to={`${props.id}`}>
         <MuiLink><VisibilityIcon/></MuiLink>
       </Link>
-      <Link to={`tours/${props.id}/edit`}>
+      <Link to={`${props.id}/edit`}>
         <MuiLink><EditIcon/></MuiLink>
       </Link>
       <MuiLink href="#" onClick={onClick}><DeleteIcon/></MuiLink>

@@ -18,6 +18,8 @@ import AuthenticationProvider from './components/auth/AuthenticationProvider'
 import RequireAuth from './components/auth/RequireAuth'
 import AppPageLayout from './components/pages/layouts/AppPageLayout'
 import ToursOverview from './components/pages/tours/ToursOverview'
+import TourCreate from './components/pages/tours/TourCreate'
+import TourDetail from './components/pages/tours/TourDetail'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -36,8 +38,10 @@ root.render(
                   <Route path="/" element={<AuthPageLayout/>}>
                       <Route path="login" element={<Login/>}/>
                   </Route>
-                <Route path="/tours" element={<AppPageLayout />}>
+                <Route path="tours" element={<AppPageLayout />}>
                   <Route index element={<ToursOverview />} />
+                  <Route path="create" element={<TourCreate />} />
+                  <Route path=":id" element={<TourDetail />} />
                 </Route>
               </Routes>
           </BrowserRouter>

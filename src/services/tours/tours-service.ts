@@ -1,5 +1,5 @@
 import APIService from '../api-service'
-import { UpdateOrCreateTour } from '../../types/tour'
+import { Tour, UpdateOrCreateTour } from '../../types/tour'
 
 export default class ToursService extends APIService {
   private prefix: string = 'tours'
@@ -16,8 +16,8 @@ export default class ToursService extends APIService {
     )
   }
 
-  public async findOne (id: string): Promise<Response> {
-    return await fetch(
+  public async findOne (id: string): Promise<Tour> {
+    return await this.fetchDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('GET', {})
     )
