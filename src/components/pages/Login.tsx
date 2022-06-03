@@ -6,9 +6,25 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
-import React from 'react'
+import React, { FormEvent } from 'react'
+import AuthService from '../../services/auth/auth-service'
+import { useNavigate } from 'react-router'
 
 const Login = () => {
+  const authService: AuthService = new AuthService()
+  const navigate = useNavigate()
+
+  const login = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    // todo: handle error
+    await authService.login(
+      data.get('email')!.toString(),
+      data.get('password')!.toString()
+    )
+
+    navigate('/')
+  }
   return (
         <>
             <Avatar sx={{ m: 1, width: 80, height: 80 }}>
@@ -18,7 +34,7 @@ const Login = () => {
                 Sign in
             </Typography>
 
-            <Box component="form" sx={{ mt: 1 }}>
+            <Box component="form" sx={{ mt: 1 }} onSubmit={login}>
                 <TextField
                     margin="normal"
                     required
