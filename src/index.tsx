@@ -14,6 +14,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material'
 import AuthPageLayout from './components/pages/layouts/AuthPageLayout'
 import Login from './components/pages/Login'
 import AuthenticationProvider from './components/auth/AuthenticationProvider'
+import RequireAuth from './components/auth/RequireAuth'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -27,6 +28,7 @@ root.render(
               <Routes>
                   <Route path="/" element={<LandingPageLayout />}>
                       <Route index element={<Home/>}/>
+                    <Route path="/protected" element={<RequireAuth><Home/></RequireAuth>}/>
                   </Route>
                   <Route path="/" element={<AuthPageLayout/>}>
                       <Route path="login" element={<Login/>}/>

@@ -1,6 +1,6 @@
 export default class LocalStorageService {
-  public getItem (key: string): void {
-    localStorage.getItem(key)
+  public getItem (key: string): string | null {
+    return localStorage.getItem(key)
   }
 
   public addItem (key: string, value: string): void {

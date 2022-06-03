@@ -11,6 +11,11 @@ export default class AuthService extends APIService {
     this.localStorageService.addItem(LocalStorageKey.UserSession, response.access_token)
   }
 
+  public async logout (): Promise<void> {
+    // todo: call api endpoint
+    this.localStorageService.removeItem(LocalStorageKey.UserSession)
+  }
+
   private async sendLoginRequest (username: string, password: string): Promise<any> {
     return await this.fetchDataFromApi(
       this.getRequestUrl(this.prefix, 'login'),
