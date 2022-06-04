@@ -5,6 +5,7 @@ import React from 'react'
 import renderer from 'react-test-renderer'
 import { render } from '@testing-library/react'
 import NavBarUserSection from '../../../src/components/shared/NavBarUserSection'
+
 const mockSignIn: jest.Mock = jest.fn()
 const mockSignOut: jest.Mock = jest.fn()
 const mockUseContext = {
@@ -12,7 +13,7 @@ const mockUseContext = {
   token: 'mockedToken',
   mockSignIn,
   mockSignOut
-} // jest.SpyInstance = jest.spyOn(React, 'useContext')
+}
 
 const mockUseLocationValue = {
   pathname: '/localhost:3000/login',
@@ -30,8 +31,6 @@ jest.mock('react-router', () => ({
 }))
 
 describe('NavBarUserSection', () => {
-  // const auth = renderHook(() => useAuth())
-
   it('behaves consistently when logged in', () => {
     const tree = renderer
       .create(<NavBarUserSection/>)

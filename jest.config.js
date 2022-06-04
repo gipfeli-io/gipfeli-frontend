@@ -5,7 +5,6 @@ const customJestConfig = {
   transform: {
     '^.+\\.ts|tsx?$': 'ts-jest'
   },
-  setupFilesAfterEnv: ['./jest.setup.js'],
   automock: false,
   resetMocks: false
 }
