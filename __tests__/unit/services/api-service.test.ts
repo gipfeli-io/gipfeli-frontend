@@ -6,13 +6,9 @@ import APIService, { RequestBody } from '../../../src/services/api-service'
  * but only used by extending classes. However, since they are heavily used, they should be unit-tested nonetheless.
  */
 class ApiServiceWrapper extends APIService {
-  constructor (session?: any) {
+  constructor (accessToken?: string) {
     super()
-    this.session = {
-      accessToken: 'mockedAccessToken',
-      expires: Date.now().toString(),
-      user: {}
-    }
+    this.token = accessToken
   }
 
   getRequestUrl (prefix: string, endpoint: string): string {
@@ -29,11 +25,7 @@ describe('APIService', () => {
   const prefix = 'test-prefix'
   const endpoint = 'test-endpoint'
   const body = { data: 'testBody' }
-  const sessionMock: any = {
-    accessToken: 'mockedAccessToken',
-    expires: Date.now().toString(),
-    user: {}
-  }
+  const mockedAccessToken = 'mockedAccessTocken'
 
   beforeEach(() => {
     jest.resetModules()
@@ -98,11 +90,11 @@ describe('APIService', () => {
   })
 
   it('correctly injects the authorization token from the session', () => {
-    const wrapper = new ApiServiceWrapper(sessionMock)
+    const wrapper = new ApiServiceWrapper(mockedAccessToken)
 
     const result = wrapper.getRequestBody('GET')
 
-    const expected = `Bearer ${sessionMock.accessToken}`
+    const expected = `Bearer ${mockedAccessToken}`
     expect(result.headers.Authorization).toEqual(expected)
   })
 

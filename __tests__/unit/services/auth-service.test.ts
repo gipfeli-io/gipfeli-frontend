@@ -1,11 +1,15 @@
 import '@testing-library/jest-dom'
 import AuthService from '../../../src/services/auth/auth-service'
+import fetchMock from 'jest-fetch-mock'
+import { LocalStorageKey } from '../../../src/enums/LocalStorageKey'
 
 describe('AuthService', () => {
   const mockUser = 'test'
   const mockPassword = 'password'
+  const mockedToken: string = 'mockedAccessToken'
 
   beforeEach(() => {
+    fetchMock.enableMocks()
     fetchMock.resetMocks()
   })
 
@@ -28,13 +32,11 @@ describe('AuthService', () => {
 
   it('calls API and returns the response as JSON', async () => {
     const service = new AuthService()
-    const mockResponse = { data: 'thisIsTheMock' }
+    const mockResponse = { access_token: mockedToken }
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
-
-    const login = await service.login(mockUser, mockPassword)
-    const result = await login.json()
+    await service.login(mockUser, mockPassword)
 
     expect(fetch).toHaveBeenCalledTimes(1)
-    expect(result).toEqual(mockResponse)
+    expect(localStorage.getItem(LocalStorageKey.UserSession)).toEqual(mockedToken)
   })
 })
