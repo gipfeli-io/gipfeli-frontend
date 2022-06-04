@@ -18,8 +18,8 @@ const EditTour = () => {
 
   useEffect(() => {
     async function fetchTour () {
-      const tour = await service.findOne(id!)
-      setTour(plainToInstance<Tour, Tour>(Tour, tour))
+      const tour: Tour = await service.findOne(id!)
+      setTour(plainToInstance<Tour, Tour>(Tour, tour, { excludeExtraneousValues: true }))
     }
 
     fetchTour()

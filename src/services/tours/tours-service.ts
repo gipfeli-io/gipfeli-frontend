@@ -24,21 +24,21 @@ export default class ToursService extends APIService {
   }
 
   public async create (tour: UpdateOrCreateTour) {
-    return await fetch(
+    return await this.fetchDataFromApi(
       this.getRequestUrl(this.prefix),
       this.getRequestBody('POST', tour)
     )
   }
 
   public async update (id: string, tour: UpdateOrCreateTour) {
-    return await fetch(
+    return await this.fetchDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('PATCH', tour)
     )
   }
 
   public async delete (id: string) {
-    return await fetch(
+    return await this.fetchDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('DELETE', {})
     )
