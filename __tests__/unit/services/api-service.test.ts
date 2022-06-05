@@ -43,7 +43,7 @@ describe('APIService', () => {
 
   it('overrides default base URL if environment variable is set', () => {
     const overrideBaseUrl = 'http://www.this-is-overridden.com'
-    process.env.NEXT_PUBLIC_BACKEND_API = overrideBaseUrl
+    process.env.REACT_APP_PUBLIC_BACKEND_API = overrideBaseUrl
     const wrapper = new ApiServiceWrapper()
 
     const result = wrapper.getRequestUrl(prefix, endpoint)

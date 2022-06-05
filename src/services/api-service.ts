@@ -9,7 +9,7 @@ export interface RequestBody {
 
 export default abstract class APIService {
   protected token?: string = undefined
-  private baseUrl: string = process.env.NEXT_PUBLIC_BACKEND_API || 'http://localhost:3000'
+  private baseUrl: string = process.env.REACT_APP_PUBLIC_BACKEND_API || 'http://localhost:3000'
 
   protected getRequestUrl (prefix: string, endpoint?: string): string {
     const baseUrl = `${this.baseUrl}/${prefix}`

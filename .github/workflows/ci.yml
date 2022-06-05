@@ -27,9 +27,9 @@ jobs:
       - name: Setup base URL environment variable
         run: | 
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo "NEXT_PUBLIC_BACKEND_API=https://api.gipfeli.io" >> $GITHUB_ENV
+            echo "REACT_APP_PUBLIC_BACKEND_API=https://api.gipfeli.io" >> $GITHUB_ENV
           else
-            echo "NEXT_PUBLIC_BACKEND_API=https://staging-api.gipfeli.io" >> $GITHUB_ENV
+            echo "REACT_APP_PUBLIC_BACKEND_API=https://staging-api.gipfeli.io" >> $GITHUB_ENV
           fi
         
 
