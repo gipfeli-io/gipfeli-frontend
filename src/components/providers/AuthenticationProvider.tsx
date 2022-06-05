@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import AuthenticationContext, { AuthenticationContextType } from '../../context/AuthenticationContext'
+import AuthenticationContext, { AuthenticationContextType } from '../../contexts/AuthenticationContext'
 import AuthService from '../../services/auth/auth-service'
 import LocalStorageService from '../../services/local-storage-service'
 import { LocalStorageKey } from '../../enums/LocalStorageKey'

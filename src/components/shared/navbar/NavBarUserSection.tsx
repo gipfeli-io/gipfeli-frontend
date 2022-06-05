@@ -2,8 +2,9 @@ import { Button, Stack } from '@mui/material'
 import React from 'react'
 import Typography from '@mui/material/Typography'
 import { Link } from 'react-router-dom'
-import useAuth from '../../hooks/use-auth'
+import useAuth from '../../../hooks/use-auth'
 import { useNavigate } from 'react-router'
+import ThemeSwitcher from './ThemeSwitcher'
 
 function NavBarUserSection () {
   const auth = useAuth()
@@ -25,6 +26,7 @@ function NavBarUserSection () {
       </Typography>
       <Button variant={'outlined'} id={'logout-button'}
               onClick={() => auth.signOut(() => navigate('/login'))}>Logout</Button>
+      <ThemeSwitcher/>
     </Stack>
   )
 }

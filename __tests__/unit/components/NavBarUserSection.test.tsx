@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import React from 'react'
 // @ts-ignore
 import renderer from 'react-test-renderer'
-import NavBarUserSection from '../../../src/components/shared/NavBarUserSection'
+import NavBarUserSection from '../../../src/components/shared/navbar/NavBarUserSection'
 import { MemoryRouter } from 'react-router'
 import { render } from '@testing-library/react'
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import { AppBar, IconButton, Toolbar } from '@mui/material'
 import LandscapeIcon from '@mui/icons-material/Landscape'
-import NavBarUserSection from '../../shared/NavBarUserSection'
+import NavBarUserSection from '../../shared/navbar/NavBarUserSection'
 import Copyright from '../../shared/Copyright'
 import { Outlet } from 'react-router-dom'
-import NavBarLinkSection from '../../shared/NavBarLinkSection'
+import NavBarLinkSection from '../../shared/navbar/NavBarLinkSection'
 
 function MainLayout () {
   return (

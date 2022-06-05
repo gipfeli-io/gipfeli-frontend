@@ -6,8 +6,6 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './components/pages/Home'
 import MainLayout from './components/pages/layouts/MainLayout'
-import dark from './themes/dark'
-import { CssBaseline, ThemeProvider } from '@mui/material'
 import AuthPageLayout from './components/pages/layouts/AuthPageLayout'
 import Login from './components/pages/Login'
 import AuthenticationProvider from './components/providers/AuthenticationProvider'
@@ -19,6 +17,7 @@ import TourEdit from './components/pages/tours/TourEdit'
 import { Navigate } from 'react-router'
 import NotFound from './components/pages/NotFound'
 import NotificationProvider from './components/providers/NotificationProvider'
+import SwitchableThemeProvider from './components/providers/SwitchableThemeProvider'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -26,29 +25,28 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <AuthenticationProvider>
-      <NotificationProvider>
-        <ThemeProvider theme={dark}>
-          <CssBaseline/>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<MainLayout/>}>
-                <Route index element={<Home/>}/>
-                <Route path="tours" element={<AppPageLayout/>}>
-                  <Route index element={<ToursOverview/>}/>
-                  <Route path="create" element={<TourCreate/>}/>
-                  <Route path=":id/edit" element={<TourEdit/>}/>
-                  <Route path=":id" element={<TourDetail/>}/>
+      <SwitchableThemeProvider>
+        <NotificationProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<MainLayout/>}>
+                  <Route index element={<Home/>}/>
+                  <Route path="tours" element={<AppPageLayout/>}>
+                    <Route index element={<ToursOverview/>}/>
+                    <Route path="create" element={<TourCreate/>}/>
+                    <Route path=":id/edit" element={<TourEdit/>}/>
+                    <Route path=":id" element={<TourDetail/>}/>
+                  </Route>
                 </Route>
-              </Route>
-              <Route path="/" element={<AuthPageLayout/>}>
-                <Route path="login" element={<Login/>}/>
-              </Route>
-              <Route path="404" element={<NotFound/>}/>
-              <Route path="*" element={<Navigate to="/404" replace/>}/>
-            </Routes>
-          </BrowserRouter>
-        </ThemeProvider>
-      </NotificationProvider>
+                <Route path="/" element={<AuthPageLayout/>}>
+                  <Route path="login" element={<Login/>}/>
+                </Route>
+                <Route path="404" element={<NotFound/>}/>
+                <Route path="*" element={<Navigate to="/404" replace/>}/>
+              </Routes>
+            </BrowserRouter>
+        </NotificationProvider>
+      </SwitchableThemeProvider>
     </AuthenticationProvider>
   </React.StrictMode>
 )

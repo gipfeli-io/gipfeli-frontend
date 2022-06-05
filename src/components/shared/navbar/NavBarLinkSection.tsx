@@ -1,5 +1,5 @@
 import React from 'react'
-import useAuth from '../../hooks/use-auth'
+import useAuth from '../../../hooks/use-auth'
 import Typography from '@mui/material/Typography'
 import { Link as MuiLink, Stack } from '@mui/material'
 import { Link } from 'react-router-dom'
