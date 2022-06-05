@@ -16,6 +16,8 @@ import ToursOverview from './components/pages/tours/ToursOverview'
 import TourCreate from './components/pages/tours/TourCreate'
 import TourDetail from './components/pages/tours/TourDetail'
 import TourEdit from './components/pages/tours/TourEdit'
+import { Navigate } from 'react-router'
+import NotFound from './components/pages/NotFound'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -29,7 +31,6 @@ root.render(
           <Routes>
             <Route path="/" element={<MainLayout/>}>
               <Route index element={<Home/>}/>
-
               <Route path="tours" element={<AppPageLayout/>}>
                 <Route index element={<ToursOverview/>}/>
                 <Route path="create" element={<TourCreate/>}/>
@@ -40,6 +41,8 @@ root.render(
             <Route path="/" element={<AuthPageLayout/>}>
               <Route path="login" element={<Login/>}/>
             </Route>
+            <Route path="404" element={<NotFound />}/>
+            <Route path="*" element={<Navigate to="/404" replace />}/>
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

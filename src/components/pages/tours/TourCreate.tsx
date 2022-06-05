@@ -26,10 +26,8 @@ const TourCreate = () => {
   }
 
   const handleSave: handleSave<UpdateOrCreateTour> = async (tour: UpdateOrCreateTour) => {
-    const result = await service.create(tour) // todo: handle errors
-    if (result.ok) {
-      await navigate('/tours')
-    }
+    await service.create(tour) // todo: handle errors
+    navigate('/tours')
   }
 
   return (

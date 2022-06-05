@@ -6,7 +6,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 .feature-icon{
   width: 200px;
   height: 200px;
+}
+
+.not-found-illustration {
+  width: 100%;
 }
