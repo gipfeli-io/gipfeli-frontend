@@ -1,63 +1,94 @@
 import '@testing-library/jest-dom'
+// @ts-ignore
+import React from 'react'
+// @ts-ignore
 import renderer from 'react-test-renderer'
-import {Session} from 'next-auth'
 import NavBarUserSection from '../../../src/components/shared/NavBarUserSection'
-import {SessionProvider} from 'next-auth/react'
-import {render} from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
+import { render } from '@testing-library/react'
 
+const mockSignIn: jest.Mock = jest.fn()
+const mockSignOut: jest.Mock = jest.fn()
+const mockAuthenticationContext: any = {
+  username: null,
+  token: null,
+  mockSignIn,
+  mockSignOut
+}
 
-/**
- * Todo: Replace <SessionProvider> wrappers with jest.mock('next-auth') and mock useSession() hook
- * Currently, there is a bug preventing us from utilizing jest's mock capacities. Ideally, we would mock the
- * useSession() hook from next-auth and return a fake session from there. However, due to a sub-dependency not having
- * correct syntax, jest fails because it cannot transform it properly. However, it seems to be an issue with newer
- * next and next-auth versions, so it might be fixed. Since we do not have lots of components with useSession() hook,
- * code duplication is not that bad.
- */
+const mockUseLocationValue = {
+  pathname: '/localhost:3000/login',
+  search: '',
+  hash: '',
+  state: null
+}
+
+const mockUsername = 'test@gipfeli.io'
+const mockToken = 'mockedToken'
+
+jest.mock('../../../src/hooks/use-auth', () => jest.fn().mockImplementation(() => mockAuthenticationContext))
+
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router') as any,
+  useNavigate: () => jest.fn(),
+  useLocation: () => jest.fn().mockImplementation(() => mockUseLocationValue),
+  useHref: () => jest.fn()
+}))
+
 describe('NavBarUserSection', () => {
-    const mockSession: Session = {
-        expires: '1',
-        user: {email: 'test@gipfeli.io'},
-        accessToken: 'asd'
-    }
+  describe('test with logged in user', () => {
+    beforeEach(() => {
+      mockAuthenticationContext.token = mockToken
+      mockAuthenticationContext.username = mockUsername
+    })
 
     it('behaves consistently when logged in', () => {
-        const tree = renderer
-            .create(<SessionProvider session={mockSession}><NavBarUserSection></NavBarUserSection></SessionProvider>)
-            .toJSON()
-        expect(tree).toMatchSnapshot()
+      const tree = renderer
+        .create(<MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>)
+        .toJSON()
+      expect(tree).toMatchSnapshot()
+    })
+    it('shows logout button and name of user if logged in', async () => {
+      mockAuthenticationContext.username = mockUsername
+      mockAuthenticationContext.token = mockToken
+      const { container, queryByText } = render(
+    <MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>
+      )
+
+      const logoutButton = container.querySelector('#logout-button')
+      const joinButton = container.querySelector('#join-button')
+      // @ts-ignore
+      const greeting = queryByText('test@gipfeli.io', { exact: false })
+
+      expect(logoutButton).toBeInTheDocument()
+      expect(joinButton).not.toBeInTheDocument()
+      expect(greeting).toBeInTheDocument()
+    })
+  })
+
+  describe('test with logged out user', () => {
+    beforeEach(() => {
+      mockAuthenticationContext.token = null
+      mockAuthenticationContext.username = null
     })
 
     it('behaves consistently when not logged in', () => {
-        const tree = renderer
-            .create(<SessionProvider><NavBarUserSection></NavBarUserSection></SessionProvider>)
-            .toJSON()
-        expect(tree).toMatchSnapshot()
+      const tree = renderer
+        .create(<MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>)
+        .toJSON()
+      expect(tree).toMatchSnapshot()
     })
 
     it('shows login button if not logged in', async () => {
-        const {container} = render(
-            <SessionProvider><NavBarUserSection></NavBarUserSection></SessionProvider>
-        )
+      const { container } = render(
+        <MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>
+      )
 
-        const joinButton = container.querySelector('#join-button')
-        const logoutButton = container.querySelector('#logout-button')
+      const joinButton = container.querySelector('#join-button')
+      const logoutButton = container.querySelector('#logout-button')
 
-        expect(joinButton).toBeInTheDocument()
-        expect(logoutButton).not.toBeInTheDocument()
+      expect(joinButton).toBeInTheDocument()
+      expect(logoutButton).not.toBeInTheDocument()
     })
-
-    it('shows logout button and name of user if logged in', async () => {
-        const {container, queryByText} = render(
-            <SessionProvider session={mockSession}><NavBarUserSection></NavBarUserSection></SessionProvider>
-        )
-
-        const logoutButton = container.querySelector('#logout-button')
-        const joinButton = container.querySelector('#join-button')
-        const greeting = queryByText(mockSession.user.email!, {exact: false})
-
-        expect(logoutButton).toBeInTheDocument()
-        expect(joinButton).not.toBeInTheDocument()
-        expect(greeting).toBeInTheDocument()
-    })
+  })
 })

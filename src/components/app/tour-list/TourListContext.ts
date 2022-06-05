@@ -1,7 +1,7 @@
 import React from 'react'
 
 export interface TourListContextProperties {
-    deleteEvent: (id: string) => void
+  deleteEvent: (id: string) => void
 }
 
 /**
@@ -9,8 +9,8 @@ export interface TourListContextProperties {
  * nested child components.
  */
 const TourListContext = React.createContext<TourListContextProperties>({
-    deleteEvent: id => {
-    }
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  deleteEvent: id => {}
 })
 
 export default TourListContext

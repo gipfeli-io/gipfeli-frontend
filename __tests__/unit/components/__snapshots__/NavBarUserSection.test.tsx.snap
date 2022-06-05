@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`NavBarUserSection behaves consistently when logged in 1`] = `
+exports[`NavBarUserSection test with logged in user behaves consistently when logged in 1`] = `
 <div
   className="css-e53awj-MuiStack-root"
 >
@@ -36,7 +36,7 @@ exports[`NavBarUserSection behaves consistently when logged in 1`] = `
 </div>
 `;
 
-exports[`NavBarUserSection behaves consistently when not logged in 1`] = `
+exports[`NavBarUserSection test with logged out user behaves consistently when not logged in 1`] = `
 <div
   className="css-e53awj-MuiStack-root"
 >
@@ -64,29 +64,33 @@ exports[`NavBarUserSection behaves consistently when not logged in 1`] = `
       className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
     />
   </button>
-  <button
-    className="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root  css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
-    disabled={false}
-    onBlur={[Function]}
+  <a
+    href={[MockFunction]}
     onClick={[Function]}
-    onContextMenu={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    tabIndex={0}
-    type="button"
   >
-    Login
-    <span
-      className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-    />
-  </button>
+    <button
+      className="MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root  css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="button"
+    >
+      Login
+      <span
+        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </button>
+  </a>
 </div>
 `;

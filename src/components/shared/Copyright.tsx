@@ -1,11 +1,12 @@
-import {Divider} from '@mui/material'
+import { Divider } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
+import React from 'react'
 
-function Copyright() {
-    return (
-        <Box sx={{p: 6}} component='footer'>
-            <Divider sx={{mb: 2}}/>
+function Copyright () {
+  return (
+        <Box sx={{ p: 6 }} component='footer'>
+            <Divider sx={{ mb: 2 }}/>
             <Typography variant='subtitle1' align='center' gutterBottom>
                 {'Powered by gipfeli.io '}
                 {new Date().getFullYear()}
@@ -19,7 +20,7 @@ function Copyright() {
                 Made with ☕ and ❤ in Switzerland.
             </Typography>
         </Box>
-    )
+  )
 }
 
 export default Copyright

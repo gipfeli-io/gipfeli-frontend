@@ -1,4 +1,4 @@
-import {ParsedUrlQuery} from 'querystring'
+import { ParsedUrlQuery } from 'querystring'
 
 /**
  * This interface is a workaround for having type-security on dynamic routes with slugs that use [id]. Without it, next
