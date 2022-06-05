@@ -14,14 +14,16 @@ const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => 
   const authService: AuthService = new AuthService()
   const localStorageService: LocalStorageService = new LocalStorageService()
 
+  // Check on page reload if we have a stored token and set it accordingly
   useEffect(() => {
-    const token = localStorageService.getItem(LocalStorageKey.UserSession)
-    if (token) {
+    const storedToken = localStorageService.getItem(LocalStorageKey.UserSession)
+    if (storedToken && !token) {
       // todo: check with API if token is still valid
-      const decoded: JwtToken = jwtDecode(token)
-      setToken(token)
+      const decoded: JwtToken = jwtDecode(storedToken)
+      setToken(storedToken)
       setUsername(decoded.username)
     }
+
     setLoading(false)
   }, [])
 
@@ -29,11 +31,12 @@ const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => 
 
   const signIn = async (username: string, password: string, callback: () => void) => {
     // todo: handle error
-    await authService.login(
+    const { token } = await authService.login(
       username,
       password
     )
     setUsername(username)
+    setToken(token)
 
     callback()
   }
@@ -42,6 +45,7 @@ const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => 
     // todo: handle error
     await authService.logout()
     setUsername(undefined)
+    setToken(undefined)
 
     callback()
   }

@@ -2,13 +2,19 @@ import APIService from '../api-service'
 import LocalStorageService from '../local-storage-service'
 import { LocalStorageKey } from '../../enums/LocalStorageKey'
 
+interface LoginResponse {
+  token: string;
+}
+
 export default class AuthService extends APIService {
   private prefix: string = 'auth'
   private localStorageService: LocalStorageService = new LocalStorageService()
 
-  public async login (username: string, password: string): Promise<void> {
+  public async login (username: string, password: string): Promise<LoginResponse> {
     const response = await this.sendLoginRequest(username, password)
     this.localStorageService.addItem(LocalStorageKey.UserSession, response.access_token)
+
+    return { token: response.access_token }
   }
 
   public async logout (): Promise<void> {

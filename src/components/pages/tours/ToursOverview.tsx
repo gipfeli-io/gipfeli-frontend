@@ -11,8 +11,8 @@ import { plainToInstance } from 'class-transformer'
 import { Link } from 'react-router-dom'
 
 const ToursOverview = (): JSX.Element => {
-  const auth = useAuth()
-  const service = new ToursService(auth.token)
+  const { token } = useAuth()
+  const service = new ToursService(token)
   const [tourList, setTourList] = useState<Tour[]>([])
   const [open, setOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -26,7 +26,7 @@ const ToursOverview = (): JSX.Element => {
     }
 
     fetchTours()
-  }, [])
+  }, [token])
 
   const handleDeleteModalClose = () => {
     setDeleteId(null)
@@ -53,16 +53,16 @@ const ToursOverview = (): JSX.Element => {
       </Typography>
       <Grid container mb={2} direction={'row'} justifyContent="flex-end">
         <Grid item>
-            <Button component={Link} to='create' variant="contained">
-              Add Tour
-            </Button>
+          <Button component={Link} to="create" variant="contained">
+            Add Tour
+          </Button>
         </Grid>
       </Grid>
       <TourListContext.Provider value={deleteHandler}>
         <TourList rows={tourList} loading={loading}/>
       </TourListContext.Provider>
       <TourDeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
-      </>
+    </>
   )
 }
 
