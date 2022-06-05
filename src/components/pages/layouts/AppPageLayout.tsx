@@ -1,7 +1,6 @@
 import React from 'react'
 import { Container } from '@mui/material'
 import RequireAuth from '../../auth/RequireAuth'
-import Copyright from '../../shared/Copyright'
 import { Outlet } from 'react-router'
 
 function AppPageLayout () {
@@ -11,7 +10,6 @@ function AppPageLayout () {
         <Container maxWidth={'lg'}>
           <Outlet/>
         </Container>
-        <Copyright/>
       </>
     </RequireAuth>
   )
