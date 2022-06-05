@@ -15,6 +15,7 @@ function NavBarUserSection () {
       <Stack spacing={2} direction={'row'}>
         <Button variant={'contained'} id={'join-button'}>Join</Button>
         <Link to={'login'}><Button variant={'outlined'}>Login</Button></Link>
+        <ThemeSwitcher/>
       </Stack>
     )
   }

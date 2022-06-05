@@ -1,30 +1,38 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ThemeContext, ThemeContextType } from '../../contexts/ThemeContext'
 import { LocalStorageKey } from '../../enums/LocalStorageKey'
 import { AppTheme } from '../../types/theme'
 import LightMode from '../../themes/LightMode'
 import DarkMode from '../../themes/DarkMode'
 import { CssBaseline, ThemeProvider } from '@mui/material'
+import LocalStorageService from '../../services/local-storage-service'
 
 const SwitchableThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const setLocalStorageAndReturnTheme = (theme: AppTheme): AppTheme => {
-    localStorage.setItem(LocalStorageKey.ActiveStyle, theme.name)
-
-    return theme
-  }
+  const localStorageService: LocalStorageService = new LocalStorageService()
 
   const getThemeToActivate = (theme: string): AppTheme => {
-    return theme === LocalStorageKey.DarkMode ? setLocalStorageAndReturnTheme(LightMode) : setLocalStorageAndReturnTheme(DarkMode)
+    return theme === LocalStorageKey.DarkMode ? LightMode : DarkMode
   }
+
   const getInitialTheme = () => {
+    const savedThemeChoice = localStorageService.getItem(LocalStorageKey.ActiveStyle)
+    if (savedThemeChoice) {
+      return savedThemeChoice === LocalStorageKey.DarkMode ? DarkMode : LightMode
+    }
+
     return LightMode
   }
+
   const [activeTheme, setActiveTheme] = useState<AppTheme>(getInitialTheme())
 
   const toggleTheme = () => {
     const newTheme = getThemeToActivate(activeTheme.name)
     setActiveTheme(newTheme)
   }
+
+  useEffect(() => {
+    localStorageService.addItem(LocalStorageKey.ActiveStyle, activeTheme.name)
+  }, [activeTheme])
 
   const value: ThemeContextType = { activeTheme, toggleTheme }
 
