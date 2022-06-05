@@ -1,7 +1,7 @@
 import React from 'react'
-import useAuth from '../../hooks/use-auth'
+import useAuth from '../../../hooks/use-auth'
 import Typography from '@mui/material/Typography'
-import { Link as MuiLink, Stack } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 function NavBarUserSection () {
@@ -13,8 +13,8 @@ function NavBarUserSection () {
         gipfeli.io
       </Typography>
       {auth.username &&
-          <Typography variant="h6" component="div">
-              <MuiLink component={Link} to="tours">My Tours</MuiLink>
+          <Typography variant="body1" component="div">
+              <Button component={Link} to="tours" variant="text" color="inherit">My Tours</Button>
           </Typography>
       }
     </Stack>

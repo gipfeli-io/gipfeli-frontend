@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import NotificationContext, { NotificationContextType } from '../../context/NotificationContext'
+import NotificationContext, { NotificationContextType } from '../../contexts/NotificationContext'
 import { Notification } from '../../types/notifications'
 import { NotificationType } from '../../enums/NotificationType'
 import NotificationSnackbar from '../shared/NotificationSnackbar'
