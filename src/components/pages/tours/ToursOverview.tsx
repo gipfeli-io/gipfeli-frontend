@@ -9,9 +9,11 @@ import { Tour } from '../../../types/tour'
 import useAuth from '../../../hooks/use-auth'
 import { plainToInstance } from 'class-transformer'
 import { Link } from 'react-router-dom'
+import useNotifications from '../../../hooks/use-notifications'
 
 const ToursOverview = (): JSX.Element => {
   const { token } = useAuth()
+  const { triggerSuccessNotification } = useNotifications()
   const service = new ToursService(token)
   const [tourList, setTourList] = useState<Tour[]>([])
   const [open, setOpen] = useState(false)
@@ -35,6 +37,7 @@ const ToursOverview = (): JSX.Element => {
 
   const handleDelete = async () => {
     await service.delete(deleteId!)
+    triggerSuccessNotification('Successfully deleted tour!')
     setTourList(prevState => prevState.filter(tour => tour.id !== deleteId))
     handleDeleteModalClose()
   }

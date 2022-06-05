@@ -8,11 +8,13 @@ import useAuth from '../../../hooks/use-auth'
 import React, { useEffect, useState } from 'react'
 import { plainToInstance } from 'class-transformer'
 import Loader from '../../shared/Loader'
+import useNotifications from '../../../hooks/use-notifications'
 
 const EditTour = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const auth = useAuth()
+  const { triggerSuccessNotification } = useNotifications()
   const [tour, setTour] = useState<UpdateOrCreateTour | undefined>(undefined)
   const service = new ToursService(auth.token)
 
@@ -27,12 +29,14 @@ const EditTour = () => {
 
   const handleSave: handleSave<UpdateOrCreateTour> = async (tour: UpdateOrCreateTour) => {
     await service.update(id!, tour) // todo: handle errors
-    navigate('/tours')
+    triggerSuccessNotification('Successfully updated tour!')
+    navigate(`/tours/${id}`)
   }
 
   if (!tour) {
-    return (<Loader />)
+    return (<Loader/>)
   }
+
   return (
     <>
       <Typography variant="h2" gutterBottom component="div">

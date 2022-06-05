@@ -6,10 +6,12 @@ import { UpdateOrCreateTour } from '../../../types/tour'
 import { handleSave } from '../../../types/handle-save'
 import Typography from '@mui/material/Typography'
 import TourForm from '../../app/TourForm'
+import useNotifications from '../../../hooks/use-notifications'
 
 const TourCreate = () => {
   const auth = useAuth()
   const navigate = useNavigate()
+  const { triggerSuccessNotification } = useNotifications()
   const service = new ToursService(auth.token)
 
   const tour: UpdateOrCreateTour = {
@@ -26,8 +28,9 @@ const TourCreate = () => {
   }
 
   const handleSave: handleSave<UpdateOrCreateTour> = async (tour: UpdateOrCreateTour) => {
-    await service.create(tour) // todo: handle errors
-    navigate('/tours')
+    const newTour = await service.create(tour) // todo: handle errors
+    triggerSuccessNotification('Created new tour!')
+    navigate(`/tours/${newTour.id}`)
   }
 
   return (
