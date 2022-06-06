@@ -1,25 +1,27 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react'
 import NotificationContext, { NotificationContextType } from '../../contexts/NotificationContext'
 import ServerError from '../pages/ServerError'
-import { NonCriticalApiError } from '../../types/errors'
 
-interface Props {
+interface ErrorBoundaryProps {
   children?: ReactNode;
 }
 
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
   error?: Error;
 }
 
-class ErrorBoundary extends Component<Props, State> {
-  context!: React.ContextType<typeof NotificationContext>
+/**
+ * The errorboundary handles all unhandled errors that are thrown throughout the application.
+ */
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   static contextType: React.Context<NotificationContextType> = NotificationContext
-  public state: State = {
+  public context!: React.ContextType<typeof NotificationContext>
+  public state: ErrorBoundaryState = {
     hasError: false
   }
 
-  public static getDerivedStateFromError (error: Error): State {
+  public static getDerivedStateFromError (error: Error): ErrorBoundaryState {
     return { hasError: true, error }
   }
 
@@ -28,21 +30,16 @@ class ErrorBoundary extends Component<Props, State> {
     console.log(error)
   }
 
-  private render500Page () {
-    return <ServerError error={this.state.error} />
+  /**
+   * Depending on the error thrown, we either trigger a notification and redirect to the tour index, or we render a 500
+   * error page if something really terrible happened (like API down).
+   */
+  public render () {
+    return this.state.hasError ? this.render500Page() : this.props.children
   }
 
-  public render () {
-    const { hasError, error } = this.state
-    if (hasError) {
-      if (error && error instanceof NonCriticalApiError) {
-        this.context.triggerErrorNotification(error.message)
-      } else {
-        return this.render500Page()
-      }
-    }
-
-    return this.props.children
+  private render500Page () {
+    return <ServerError error={this.state.error}/>
   }
 }
 

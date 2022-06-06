@@ -27,9 +27,9 @@ root.render(
   <React.StrictMode>
     <AuthenticationProvider>
       <SwitchableThemeProvider>
-          <NotificationProvider>
+        <NotificationProvider>
+          <BrowserRouter>
             <ErrorBoundary>
-            <BrowserRouter>
               <Routes>
                 <Route path="/" element={<MainLayout/>}>
                   <Route index element={<Home/>}/>
@@ -46,9 +46,9 @@ root.render(
                 <Route path="404" element={<NotFound/>}/>
                 <Route path="*" element={<Navigate to="/404" replace/>}/>
               </Routes>
-            </BrowserRouter>
             </ErrorBoundary>
-          </NotificationProvider>
+          </BrowserRouter>
+        </NotificationProvider>
       </SwitchableThemeProvider>
     </AuthenticationProvider>
   </React.StrictMode>
