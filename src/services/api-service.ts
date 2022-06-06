@@ -98,7 +98,7 @@ export default abstract class APIService {
   private async fetchDataFromApi (url: string, body: RequestBody): Promise<[ApiResponseWrapper, any]> {
     try {
       const response = await fetch(url, body)
-      const jsonBody = this.extractJsonResponse(response)
+      const jsonBody = await this.extractJsonResponse(response)
       return [this.createResponseWrapper(response.ok, response.status, response.statusText), jsonBody]
     } catch (error) {
       return [this.createResponseWrapper(false, 500, (error as Error).message), {}]
