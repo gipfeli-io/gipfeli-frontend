@@ -32,8 +32,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   /**
-   * Depending on the error thrown, we either trigger a notification and redirect to the tour index, or we render a 500
-   * error page if something really terrible happened (like API down).
+   * If we have an error at this point, we render the 500 page because something terrible happened. Otherwise, we render
+   * the component tree.
    */
   public render () {
     return this.state.hasError ? this.render500Page() : this.props.children
