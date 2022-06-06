@@ -25,6 +25,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return { hasError: true, error }
   }
 
+  // eslint-disable-next-line unused-imports/no-unused-vars
   public componentDidCatch (error: Error, errorInfo: ErrorInfo) {
     // todo log to sentry
     console.log(error)
