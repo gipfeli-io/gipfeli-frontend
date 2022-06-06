@@ -9,6 +9,7 @@ import { Tour } from '../../../types/tour'
 import useAuth from '../../../hooks/use-auth'
 import { Link } from 'react-router-dom'
 import useNotifications from '../../../hooks/use-notifications'
+import useApiError from '../../../hooks/use-api-error'
 
 const ToursOverview = (): JSX.Element => {
   const { token } = useAuth()
@@ -18,6 +19,7 @@ const ToursOverview = (): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
+  const throwError = useApiError()
 
   useEffect(() => {
     async function fetchTours () {
@@ -25,7 +27,7 @@ const ToursOverview = (): JSX.Element => {
       if (data.success) {
         setTourList(data.content!)
       } else {
-        throw Error('something bad happened')
+        throwError(data)
       }
       setLoading(false)
     }
@@ -39,9 +41,13 @@ const ToursOverview = (): JSX.Element => {
   }
 
   const handleDelete = async () => {
-    await service.delete(deleteId!)
-    triggerSuccessNotification('Successfully deleted tour!')
-    setTourList(prevState => prevState.filter(tour => tour.id !== deleteId))
+    const data = await service.delete(deleteId!)
+    if (data.success) {
+      triggerSuccessNotification('Successfully deleted tour!')
+      setTourList(prevState => prevState.filter(tour => tour.id !== deleteId))
+    } else {
+      throwError(data)
+    }
     handleDeleteModalClose()
   }
 

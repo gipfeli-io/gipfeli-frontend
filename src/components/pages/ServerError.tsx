@@ -5,7 +5,7 @@ import Copyright from '../shared/Copyright'
 import { ReactComponent as NotFoundIllustration } from '../../static/img/server-error/server_error.svg'
 
 interface ServerErrorProps {
-  error?: string
+  error?: Error
 }
 
 const ServerError = (props: ServerErrorProps) => {
@@ -30,7 +30,7 @@ const ServerError = (props: ServerErrorProps) => {
         </Typography>
         { props.error &&
             <Typography variant="h6" align="center" color="text.secondary" paragraph>
-                Error: {props.error}
+              {props.error.name}: {props.error.message}
             </Typography>
         }
         <Copyright/>

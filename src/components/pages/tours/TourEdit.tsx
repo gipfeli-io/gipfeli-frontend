@@ -8,6 +8,7 @@ import useAuth from '../../../hooks/use-auth'
 import React, { useEffect, useState } from 'react'
 import Loader from '../../shared/Loader'
 import useNotifications from '../../../hooks/use-notifications'
+import useApiError from '../../../hooks/use-api-error'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -16,6 +17,7 @@ const EditTour = () => {
   const { triggerSuccessNotification } = useNotifications()
   const [tour, setTour] = useState<UpdateOrCreateTour | undefined>(undefined)
   const service = new ToursService(auth.token)
+  const throwError = useApiError()
 
   useEffect(() => {
     async function fetchTour () {
@@ -24,7 +26,7 @@ const EditTour = () => {
         const { description, endLocation, startLocation, name } = data.content!
         setTour({ description, endLocation, startLocation, name })
       } else {
-        throw Error('something bad happened')
+        throwError(data)
       }
     }
 
@@ -32,9 +34,13 @@ const EditTour = () => {
   }, [])
 
   const handleSave: handleSave<UpdateOrCreateTour> = async (tour: UpdateOrCreateTour) => {
-    await service.update(id!, tour) // todo: handle errors
-    triggerSuccessNotification('Successfully updated tour!')
-    navigate(`/tours/${id}`)
+    const data = await service.update(id!, tour)
+    if (data.success) {
+      triggerSuccessNotification('Successfully updated tour!')
+      navigate(`/tours/${id}`)
+    } else {
+      throwError(data)
+    }
   }
 
   if (!tour) {
