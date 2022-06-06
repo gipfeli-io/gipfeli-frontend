@@ -47,15 +47,12 @@ export default abstract class APIService {
    * @protected
    */
   protected async fetchArrayDataFromApi<T> (url: string, body: RequestBody, responseClass: ClassCastHint<T> = undefined): Promise<ArrayApiResponse<T>> {
-    const response = await this.fetchDataFromApi(url, body)
-    const wrapper = this.createResponseWrapper(response)
+    const [wrapper, responseBody] = await this.fetchDataFromApi(url, body)
 
     if (wrapper.success) {
-      const body = await this.extractJsonResponse(response)
-
       let content
       if (responseClass !== undefined) {
-        content = plainToInstance<T, T>(responseClass, body)
+        content = plainToInstance<T, T>(responseClass, responseBody)
       }
 
       return { content, ...wrapper }
@@ -73,15 +70,12 @@ export default abstract class APIService {
    * @protected
    */
   protected async fetchSingleDataFromApi<T> (url: string, body: RequestBody, responseClass: ClassCastHint<T> = undefined): Promise<SingleApiResponse<T>> {
-    const response = await this.fetchDataFromApi(url, body)
-    const wrapper = this.createResponseWrapper(response)
+    const [wrapper, responseBody] = await this.fetchDataFromApi(url, body)
 
     if (wrapper.success) {
-      const body = await this.extractJsonResponse(response)
-
       let content
       if (responseClass !== undefined) {
-        content = plainToInstance(responseClass, body)
+        content = plainToInstance(responseClass, responseBody)
       }
 
       return { content, ...wrapper }
@@ -90,12 +84,25 @@ export default abstract class APIService {
     return wrapper
   }
 
-  private createResponseWrapper (response: Response): ApiResponseWrapper {
-    return { success: true, statusCode: response.status, statusMessage: response.statusText }
+  private createResponseWrapper (success: boolean, statusCode: number, statusMessage: string): ApiResponseWrapper {
+    return { success, statusCode, statusMessage }
   }
 
-  private async fetchDataFromApi (url: string, body: RequestBody): Promise<any> {
-    return await fetch(url, body)
+  /**
+   * Wraps the fetch call and handles cases where fetch succeeds or fails if e.g. the API is down.
+   * Returns an array where the first element is the wrapper object and the second is the parsed response body.
+   * @param url
+   * @param body
+   * @private
+   */
+  private async fetchDataFromApi (url: string, body: RequestBody): Promise<[ApiResponseWrapper, any]> {
+    try {
+      const response = await fetch(url, body)
+      const jsonBody = this.extractJsonResponse(response)
+      return [this.createResponseWrapper(response.ok, response.status, response.statusText), jsonBody]
+    } catch (error) {
+      return [this.createResponseWrapper(false, 500, (error as Error).message), {}]
+    }
   }
 
   /**
