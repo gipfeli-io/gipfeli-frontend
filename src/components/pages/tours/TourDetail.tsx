@@ -12,6 +12,7 @@ import MapWrapper from '../../shared/map/MapWrapper'
 import { Tour } from '../../../types/tour'
 import { Link } from 'react-router-dom'
 import Loader from '../../shared/Loader'
+import useAsyncError from '../../../hooks/use-async-error'
 
 const TourDetail = (): JSX.Element => {
   const navigate = useNavigate()
@@ -20,6 +21,7 @@ const TourDetail = (): JSX.Element => {
   const service = new ToursService(auth.token)
   const [tour, setTour] = useState<Tour | undefined>(undefined)
   const [open, setOpen] = useState(false)
+  const throwError = useAsyncError()
 
   useEffect(() => {
     async function fetchTour () {
@@ -27,7 +29,7 @@ const TourDetail = (): JSX.Element => {
       if (data.success) {
         setTour(data.content!)
       } else {
-        throw Error('something bad happened')
+        throwError(Error('something bad happened'))
       }
     }
 
