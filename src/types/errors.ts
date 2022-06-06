@@ -56,3 +56,13 @@ export class UnauthorizedError extends NonCriticalApiError {
     this.name = ErrorType.UNAUTHORIZED
   }
 }
+
+/**
+ * Displayed on login if either password or user or both are wrong
+ */
+export class LoginError extends NonCriticalApiError {
+  constructor (message: string) {
+    super(message)
+    this.name = ErrorType.LOGIN_ERROR
+  }
+}

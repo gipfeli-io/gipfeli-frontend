@@ -25,11 +25,11 @@ const root = ReactDOM.createRoot(
 )
 root.render(
   <React.StrictMode>
-    <AuthenticationProvider>
-      <SwitchableThemeProvider>
-        <NotificationProvider>
-          <BrowserRouter>
-            <ErrorBoundary>
+    <SwitchableThemeProvider>
+      <NotificationProvider>
+        <BrowserRouter>
+          <ErrorBoundary>
+            <AuthenticationProvider>
               <Routes>
                 <Route path="/" element={<MainLayout/>}>
                   <Route index element={<Home/>}/>
@@ -46,11 +46,11 @@ root.render(
                 <Route path="404" element={<NotFound/>}/>
                 <Route path="*" element={<Navigate to="/404" replace/>}/>
               </Routes>
-            </ErrorBoundary>
-          </BrowserRouter>
-        </NotificationProvider>
-      </SwitchableThemeProvider>
-    </AuthenticationProvider>
+            </AuthenticationProvider>
+          </ErrorBoundary>
+        </BrowserRouter>
+      </NotificationProvider>
+    </SwitchableThemeProvider>
   </React.StrictMode>
 )
 
