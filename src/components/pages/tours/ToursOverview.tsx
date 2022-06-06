@@ -7,7 +7,6 @@ import TourList from '../../app/tour-list/TourList'
 import ToursService from '../../../services/tours/tours-service'
 import { Tour } from '../../../types/tour'
 import useAuth from '../../../hooks/use-auth'
-import { plainToInstance } from 'class-transformer'
 import { Link } from 'react-router-dom'
 import useNotifications from '../../../hooks/use-notifications'
 
@@ -22,8 +21,16 @@ const ToursOverview = (): JSX.Element => {
 
   useEffect(() => {
     async function fetchTours () {
-      const tours = await service.findAll()
-      setTourList(plainToInstance<Tour, Tour[]>(Tour, tours))
+      const data = await service.findAll()
+      if (data.success) {
+        if (data.content) {
+          setTourList(data.content)
+        } else {
+          setTourList([])
+        }
+      } else {
+        throw Error('something bad happened')
+      }
       setLoading(false)
     }
 

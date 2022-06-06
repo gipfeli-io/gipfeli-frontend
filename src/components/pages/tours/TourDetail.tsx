@@ -1,5 +1,4 @@
 import Typography from '@mui/material/Typography'
-import { plainToInstance } from 'class-transformer'
 import { Divider, Grid, Link as MuiLink } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -25,7 +24,7 @@ const TourDetail = (): JSX.Element => {
   useEffect(() => {
     async function fetchTour () {
       const tour = await service.findOne(id!)
-      setTour(plainToInstance(Tour, tour))
+      setTour(tour)
     }
 
     fetchTour()

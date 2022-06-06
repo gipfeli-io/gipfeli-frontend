@@ -10,38 +10,43 @@ export default class ToursService extends APIService {
   }
 
   public async findAll (): Promise<any> {
-    return await this.fetchDataFromApi(
+    return await this.fetchArrayDataFromApi(
       this.getRequestUrl(this.prefix),
-      this.getRequestBody('GET', {})
+      this.getRequestBody('GET', {}),
+      Tour
     )
   }
 
-  public async findOne (id: string): Promise<Tour> {
-    return await this.fetchDataFromApi(
+  public async findOne (id: string): Promise<any> {
+    return await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
-      this.getRequestBody('GET', {})
+      this.getRequestBody('GET', {}),
+      Tour
     )
   }
 
-  public async create (tour: UpdateOrCreateTour): Promise<Tour> {
-    return await this.fetchDataFromApi(
+  public async create (tour: UpdateOrCreateTour): Promise<any> {
+    return await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix),
-      this.getRequestBody('POST', tour)
+      this.getRequestBody('POST', tour),
+      Tour
     )
   }
 
-  public async update (id: string, tour: UpdateOrCreateTour): Promise<Tour> {
-    return await this.fetchDataFromApi(
+  public async update (id: string, tour: UpdateOrCreateTour): Promise<any> {
+    return await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
-      this.getRequestBody('PATCH', tour)
+      this.getRequestBody('PATCH', tour),
+      Tour
     )
   }
 
   public async delete (id: string): Promise<void> {
     try {
-      await this.fetchDataFromApi(
+      await this.fetchSingleDataFromApi(
         this.getRequestUrl(this.prefix, id),
-        this.getRequestBody('DELETE', {})
+        this.getRequestBody('DELETE', {}),
+        Tour // todo...
       )
     } catch (e) {
       // Todo: Since delete from API does not return anything, we need to wrap this here :(

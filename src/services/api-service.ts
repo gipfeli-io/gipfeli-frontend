@@ -1,10 +1,13 @@
+import { ApiResponseWrapper, ArrayApiResponse, SingleApiResponse } from '../types/api'
+import { plainToInstance } from 'class-transformer'
+
 export interface RequestBody {
-    headers: {
-        'Content-Type': string
-        'Authorization'?: string
-    };
-    method: string;
-    body?: string;
+  headers: {
+    'Content-Type': string
+    'Authorization'?: string
+  };
+  method: string;
+  body?: string;
 }
 
 export default abstract class APIService {
@@ -35,9 +38,40 @@ export default abstract class APIService {
     return requestBody
   }
 
-  protected async fetchDataFromApi (url: string, body: RequestBody): Promise<any> {
-    const result = await fetch(url, body)
-    return await result.json()
+  protected async fetchArrayDataFromApi<T> (url: string, body: RequestBody, responseClass: new (...args: any[]) => T): Promise<ArrayApiResponse<T>> {
+    const response = await this.fetchDataFromApi(url, body)
+    const wrapper = this.createResponseWrapper(response)
+
+    if (wrapper.success) {
+      const body = await response.json()
+      const content = plainToInstance<T, T>(responseClass, body)
+
+      return { content, ...wrapper }
+    }
+
+    return wrapper
+  }
+
+  protected async fetchSingleDataFromApi<T> (url: string, body: RequestBody, responseClass: new (...args: any[]) => T): Promise<SingleApiResponse<T>> {
+    const response = await this.fetchDataFromApi(url, body)
+    const wrapper = this.createResponseWrapper(response)
+
+    if (wrapper.success) {
+      const body = await response.json()
+      const content = plainToInstance(responseClass, body)
+
+      return { content, ...wrapper }
+    }
+
+    return wrapper
+  }
+
+  private createResponseWrapper (response: Response): ApiResponseWrapper {
+    return { success: true, statusCode: response.status, statusMessage: response.statusText }
+  }
+
+  private async fetchDataFromApi (url: string, body: RequestBody): Promise<any> {
+    return await fetch(url, body)
   }
 
   private extractBearerTokenFromSession (): string {
