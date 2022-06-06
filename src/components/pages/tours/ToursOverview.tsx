@@ -23,11 +23,7 @@ const ToursOverview = (): JSX.Element => {
     async function fetchTours () {
       const data = await service.findAll()
       if (data.success) {
-        if (data.content) {
-          setTourList(data.content)
-        } else {
-          setTourList([])
-        }
+        setTourList(data.content!)
       } else {
         throw Error('something bad happened')
       }

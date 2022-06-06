@@ -1,4 +1,4 @@
-import { ApiResponseWrapper, ArrayApiResponse, SingleApiResponse } from '../types/api'
+import { ApiResponseWrapper, ArrayApiResponse, ClassCastHint, SingleApiResponse } from '../types/api'
 import { plainToInstance } from 'class-transformer'
 
 export interface RequestBody {
@@ -38,13 +38,25 @@ export default abstract class APIService {
     return requestBody
   }
 
-  protected async fetchArrayDataFromApi<T> (url: string, body: RequestBody, responseClass: new (...args: any[]) => T): Promise<ArrayApiResponse<T>> {
+  /**
+   * Returns data from an endpoint that contains arrays of data. The generic parameter is used to cast the response
+   * content to its object.
+   * @param url Exact URL for the endpoint
+   * @param body The request payload
+   * @param responseClass Defines the object the response should be cast into. If undefined, no content is returned.
+   * @protected
+   */
+  protected async fetchArrayDataFromApi<T> (url: string, body: RequestBody, responseClass: ClassCastHint<T> = undefined): Promise<ArrayApiResponse<T>> {
     const response = await this.fetchDataFromApi(url, body)
     const wrapper = this.createResponseWrapper(response)
 
     if (wrapper.success) {
-      const body = await response.json()
-      const content = plainToInstance<T, T>(responseClass, body)
+      const body = await this.extractJsonResponse(response)
+
+      let content
+      if (responseClass !== undefined) {
+        content = plainToInstance<T, T>(responseClass, body)
+      }
 
       return { content, ...wrapper }
     }
@@ -52,13 +64,25 @@ export default abstract class APIService {
     return wrapper
   }
 
-  protected async fetchSingleDataFromApi<T> (url: string, body: RequestBody, responseClass: new (...args: any[]) => T): Promise<SingleApiResponse<T>> {
+  /**
+   * Returns data from an endpoint that contains single data objects. The generic parameter is used to cast the response
+   * content to its object.
+   * @param url Exact URL for the endpoint
+   * @param body The request payload
+   * @param responseClass Defines the object the response should be cast into. If undefined, no content is returned.
+   * @protected
+   */
+  protected async fetchSingleDataFromApi<T> (url: string, body: RequestBody, responseClass: ClassCastHint<T> = undefined): Promise<SingleApiResponse<T>> {
     const response = await this.fetchDataFromApi(url, body)
     const wrapper = this.createResponseWrapper(response)
 
     if (wrapper.success) {
-      const body = await response.json()
-      const content = plainToInstance(responseClass, body)
+      const body = await this.extractJsonResponse(response)
+
+      let content
+      if (responseClass !== undefined) {
+        content = plainToInstance(responseClass, body)
+      }
 
       return { content, ...wrapper }
     }
@@ -72,6 +96,20 @@ export default abstract class APIService {
 
   private async fetchDataFromApi (url: string, body: RequestBody): Promise<any> {
     return await fetch(url, body)
+  }
+
+  /**
+   * Extracts the body from an API Response. Since some endpoints might not have a body (e.g. DELETE endpoints), an
+   * empty object is returned.
+   * @param response
+   * @private
+   */
+  private async extractJsonResponse (response: Response): Promise<any> {
+    try {
+      return await response.json()
+    } catch (e) {
+      return {}
+    }
   }
 
   private extractBearerTokenFromSession (): string {

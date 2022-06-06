@@ -29,8 +29,12 @@ const TourCreate = () => {
 
   const handleSave: handleSave<UpdateOrCreateTour> = async (tour: UpdateOrCreateTour) => {
     const newTour = await service.create(tour) // todo: handle errors
-    triggerSuccessNotification('Created new tour!')
-    navigate(`/tours/${newTour.id}`)
+    if (newTour.success) {
+      triggerSuccessNotification('Created new tour!')
+      navigate(`/tours/${newTour.content!.id}`)
+    } else {
+      throw Error('something bad happened')
+    }
   }
 
   return (

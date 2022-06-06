@@ -1,12 +1,11 @@
 import Typography from '@mui/material/Typography'
-import { Tour, UpdateOrCreateTour } from '../../../types/tour'
+import { UpdateOrCreateTour } from '../../../types/tour'
 import TourForm from '../../../components/app/TourForm'
 import ToursService from '../../../services/tours/tours-service'
 import { handleSave } from '../../../types/handle-save'
 import { useNavigate, useParams } from 'react-router'
 import useAuth from '../../../hooks/use-auth'
 import React, { useEffect, useState } from 'react'
-import { plainToInstance } from 'class-transformer'
 import Loader from '../../shared/Loader'
 import useNotifications from '../../../hooks/use-notifications'
 
@@ -20,8 +19,13 @@ const EditTour = () => {
 
   useEffect(() => {
     async function fetchTour () {
-      const tour: Tour = await service.findOne(id!)
-      setTour(plainToInstance<Tour, Tour>(Tour, tour, { excludeExtraneousValues: true }))
+      const data = await service.findOne(id!)
+      if (data.success) {
+        const { description, endLocation, startLocation, name } = data.content!
+        setTour({ description, endLocation, startLocation, name })
+      } else {
+        throw Error('something bad happened')
+      }
     }
 
     fetchTour()

@@ -11,3 +11,5 @@ export interface SingleApiResponse<T> extends ApiResponseWrapper {
 export interface ArrayApiResponse<T> extends ApiResponseWrapper {
   content?: T[]
 }
+
+export type ClassCastHint<T> = (new (...args: any[]) => T) | void

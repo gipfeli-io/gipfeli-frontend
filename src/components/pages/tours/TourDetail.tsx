@@ -23,8 +23,12 @@ const TourDetail = (): JSX.Element => {
 
   useEffect(() => {
     async function fetchTour () {
-      const tour = await service.findOne(id!)
-      setTour(tour)
+      const data = await service.findOne(id!)
+      if (data.success) {
+        setTour(data.content!)
+      } else {
+        throw Error('something bad happened')
+      }
     }
 
     fetchTour()
