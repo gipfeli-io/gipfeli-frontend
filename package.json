@@ -21,7 +21,19 @@
     "react-scripts": "5.0.1",
     "reflect-metadata": "^0.1.13",
     "typescript": "^4.7.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "workbox-background-sync": "^6.5.3",
+    "workbox-broadcast-update": "^6.5.3",
+    "workbox-cacheable-response": "^6.5.3",
+    "workbox-core": "^6.5.3",
+    "workbox-expiration": "^6.5.3",
+    "workbox-google-analytics": "^6.5.3",
+    "workbox-navigation-preload": "^6.5.3",
+    "workbox-precaching": "^6.5.3",
+    "workbox-range-requests": "^6.5.3",
+    "workbox-routing": "^6.5.3",
+    "workbox-strategies": "^6.5.3",
+    "workbox-streams": "^6.5.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
@@ -58,7 +70,8 @@
     "build": "react-scripts build",
     "test": "jest",
     "test:watch": "jest --watch",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:prod": "react-scripts build && serve -s build"
   },
   "eslintConfig": {
     "extends": [
