@@ -22,7 +22,11 @@ const ToursOverview = (): JSX.Element => {
 
   useEffect(() => {
     async function fetchTours () {
-      const tours = await service.findAll()
+      let tours = await service.findAll()
+      if (!tours) {
+        tours = []
+      }
+
       setTourList(plainToInstance<Tour, Tour[]>(Tour, tours))
       setLoading(false)
     }

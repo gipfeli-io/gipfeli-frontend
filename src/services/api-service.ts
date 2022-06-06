@@ -36,8 +36,10 @@ export default abstract class APIService {
   }
 
   protected async fetchDataFromApi (url: string, body: RequestBody): Promise<any> {
-    const result = await fetch(url, body)
-    return await result.json()
+    return await fetch(url, body).then(response =>
+      response.json()).then(response => response).catch(error => {
+      console.log('you are offline', error)
+    })
   }
 
   private extractBearerTokenFromSession (): string {
