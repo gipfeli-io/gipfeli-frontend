@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react'
-import { ThemeContext} from '../../contexts/theme-context'
+import { ThemeContext } from '../../contexts/theme-context'
 import { LocalStorageKey } from '../../enums/local-storage-key'
 import { AppTheme } from '../../types/theme'
 import LightMode from '../../themes/light-mode'
