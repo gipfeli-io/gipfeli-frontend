@@ -6,8 +6,10 @@ import React, { useContext } from 'react'
 import TourListContext from './TourListContext'
 import { Link } from 'react-router-dom'
 
-export default function TourListActions (props: { id: string }): JSX.Element {
-  const { id } = props
+type TourListActionsProps = {
+  id: string
+}
+export default function TourListActions ({ id }: TourListActionsProps): JSX.Element {
   const tourListContext = useContext(TourListContext)
 
   const onClick = () => {
@@ -16,8 +18,8 @@ export default function TourListActions (props: { id: string }): JSX.Element {
 
   return (
     <>
-      <MuiLink component={Link} to={props.id}><VisibilityIcon/></MuiLink>
-      <MuiLink component={Link} to={`${props.id}/edit`}><EditIcon/></MuiLink>
+      <MuiLink component={Link} to={id}><VisibilityIcon/></MuiLink>
+      <MuiLink component={Link} to={`${id}/edit`}><EditIcon/></MuiLink>
       <MuiLink href="#" onClick={onClick}><DeleteIcon/></MuiLink>
     </>
   )

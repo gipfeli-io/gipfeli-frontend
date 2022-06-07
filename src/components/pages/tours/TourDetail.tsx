@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom'
 import Loader from '../../shared/Loader'
 import useApiError from '../../../hooks/use-api-error'
 
-const TourDetail = (): JSX.Element => {
+const TourDetail = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const auth = useAuth()

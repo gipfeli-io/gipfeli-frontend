@@ -1,4 +1,4 @@
-import { NotificationType } from '../enums/NotificationType'
+import { NotificationType } from '../enums/notification-type'
 
 export interface Notification {
   visible: boolean;

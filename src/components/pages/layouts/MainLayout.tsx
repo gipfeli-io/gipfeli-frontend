@@ -7,31 +7,29 @@ import { Link, Outlet } from 'react-router-dom'
 import NavBarLinkSection from '../../shared/navbar/NavBarLinkSection'
 import ThemeSwitcher from '../../shared/navbar/ThemeSwitcher'
 
-function MainLayout () {
-  return (
-    <>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            sx={{ mr: 2 }}
-            component={Link}
-            to='/'
-          >
-            <LandscapeIcon/>
-          </IconButton>
-          <NavBarLinkSection/>
-          <NavBarUserSection/>
-          <ThemeSwitcher/>
-        </Toolbar>
-      </AppBar>
+const MainLayout = () => (
+  <>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          sx={{ mr: 2 }}
+          component={Link}
+          to='/'
+        >
+          <LandscapeIcon/>
+        </IconButton>
+        <NavBarLinkSection/>
+        <NavBarUserSection/>
+        <ThemeSwitcher/>
+      </Toolbar>
+    </AppBar>
 
-      <Outlet/>
+    <Outlet/>
 
-      <Copyright/>
-    </>
-  )
-}
+    <Copyright/>
+  </>
+)
 
 export default MainLayout

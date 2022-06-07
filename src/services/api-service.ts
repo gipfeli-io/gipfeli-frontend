@@ -1,14 +1,5 @@
-import { ApiResponseWrapper, ArrayApiResponse, ClassCastHint, SingleApiResponse } from '../types/api'
+import { ApiResponseWrapper, ArrayApiResponse, ClassCastHint, RequestBody, SingleApiResponse } from '../types/api'
 import { plainToInstance } from 'class-transformer'
-
-export interface RequestBody {
-  headers: {
-    'Content-Type': string
-    'Authorization'?: string
-  };
-  method: string;
-  body?: string;
-}
 
 export default abstract class APIService {
   protected token?: string = undefined

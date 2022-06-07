@@ -1,16 +1,16 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import React from 'react'
 
-interface TourDeleteConfirmationProps {
+type TourDeleteConfirmationProps = {
   open: boolean,
   onClose: () => void,
   onClick: () => Promise<void>
 }
 
-export function TourDeleteConfirmation (props: TourDeleteConfirmationProps) {
+export function TourDeleteConfirmation ({ onClick, onClose, open }: TourDeleteConfirmationProps) {
   return <Dialog
-    open={props.open}
-    onClose={props.onClose}
+    open={open}
+    onClose={onClose}
     aria-labelledby="alert-dialog-title"
     aria-describedby="alert-dialog-description"
   >
@@ -23,8 +23,8 @@ export function TourDeleteConfirmation (props: TourDeleteConfirmationProps) {
       </DialogContentText>
     </DialogContent>
     <DialogActions>
-      <Button onClick={props.onClose}>No, cancel</Button>
-      <Button onClick={props.onClick} autoFocus>
+      <Button onClick={onClose}>No, cancel</Button>
+      <Button onClick={onClick} autoFocus>
         Yes, delete
       </Button>
     </DialogActions>

@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles'
-import { LocalStorageKey } from '../enums/LocalStorageKey'
+import { LocalStorageKey } from '../enums/local-storage-key'
 import { AppTheme } from '../types/theme'
 
 const DarkMode: AppTheme = {

@@ -7,13 +7,13 @@ import MapWrapper from '../shared/map/MapWrapper'
 import WayPointMarkerLayer from '../shared/map/layers/WayPointMarkerLayer'
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
 
-type formProps = {
+type TourFormProps = {
   tour: UpdateOrCreateTour
   handleSave: handleSave<UpdateOrCreateTour>
   type: string
 }
 
-export default function TourForm ({ tour, handleSave, type }: formProps) {
+export default function TourForm ({ tour, handleSave, type }: TourFormProps) {
   const navigate = useNavigate()
   const [currentTour, setCurrentTour] = useState(tour)
 

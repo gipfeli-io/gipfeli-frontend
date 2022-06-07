@@ -1,6 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { FullScreen } from 'ol/control'
 import MapContext from '../MapContext'
+
 /**
  * Adds a fullscreen control to a map.
  */
