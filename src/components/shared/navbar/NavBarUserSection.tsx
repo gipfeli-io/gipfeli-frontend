@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import useAuth from '../../../hooks/use-auth'
 import { useNavigate } from 'react-router'
 
-function NavBarUserSection () {
+const NavBarUserSection = () => {
   const auth = useAuth()
   const navigate = useNavigate()
 

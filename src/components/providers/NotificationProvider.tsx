@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
-import NotificationContext, { NotificationContextType } from '../../contexts/notification-context'
+import React, { PropsWithChildren, useState } from 'react'
+import NotificationContext from '../../contexts/notification-context'
 import { Notification } from '../../types/notifications'
 import { NotificationType } from '../../enums/notification-type'
 import NotificationSnackbar from '../shared/NotificationSnackbar'
+import { NotificationContextType } from '../../types/contexts'
 
-const NotificationProvider = ({ children }: { children: React.ReactNode }) => {
+const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined)
 
   const triggerNotification = (message: string, type: NotificationType) => {

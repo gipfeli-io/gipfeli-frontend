@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography'
 import { Button, Grid } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import TourListContext, { TourListContextProperties } from '../../app/tour-list/TourListContext'
+import TourListContext from '../../app/tour-list/TourListContext'
 import { TourDeleteConfirmation } from '../../app/tour-list/TourDeleteConfirmation'
 import TourList from '../../app/tour-list/TourList'
 import ToursService from '../../../services/tours/tours-service'
@@ -10,8 +10,9 @@ import useAuth from '../../../hooks/use-auth'
 import { Link } from 'react-router-dom'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
+import { TourListContextProperties } from '../../../types/contexts'
 
-const ToursOverview = (): JSX.Element => {
+const ToursOverview = () => {
   const { token } = useAuth()
   const { triggerSuccessNotification } = useNotifications()
   const service = new ToursService(token)

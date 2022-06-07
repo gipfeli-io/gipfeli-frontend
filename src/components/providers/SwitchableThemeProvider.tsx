@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { ThemeContext, ThemeContextType } from '../../contexts/theme-context'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
+import { ThemeContext} from '../../contexts/theme-context'
 import { LocalStorageKey } from '../../enums/local-storage-key'
 import { AppTheme } from '../../types/theme'
 import LightMode from '../../themes/light-mode'
 import DarkMode from '../../themes/dark-mode'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import LocalStorageService from '../../services/local-storage-service'
+import { ThemeContextType } from '../../types/contexts'
 
-const SwitchableThemeProvider = ({ children }: { children: React.ReactNode }) => {
+const SwitchableThemeProvider = ({ children }: PropsWithChildren<any>) => {
   const localStorageService: LocalStorageService = new LocalStorageService()
 
   const getThemeToActivate = (theme: string): AppTheme => {

@@ -3,6 +3,11 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import TourListActions from './TourListActions'
 import React from 'react'
 
+type TourListProps = {
+  rows: Tour[],
+  loading: boolean,
+}
+
 function getActions (params: GridValueGetterParams<Tour, Tour>): JSX.Element {
   return <TourListActions id={params.row.id} />
 }
@@ -14,14 +19,14 @@ const columns: GridColDef[] = [
   { field: 'actions', headerName: 'Actions', flex: 0.5, renderCell: getActions }
 ]
 
-export default function TourList (props: { rows: Tour[], loading: boolean }): JSX.Element {
+export default function TourList ({ loading, rows }: TourListProps): JSX.Element {
   return <div style={{ width: '100%' }}>
     <DataGrid
-      loading={props.loading}
+      loading={loading}
       autoHeight
       disableColumnSelector
       disableSelectionOnClick
-      rows={props.rows}
+      rows={rows}
       columns={columns}/>
   </div>
 }

@@ -1,8 +1,8 @@
 import useAuth from '../../hooks/use-auth'
 import { Navigate, useLocation } from 'react-router'
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 
-const RequireAuth = ({ children }: { children: JSX.Element }) => {
+const RequireAuth = ({ children }: PropsWithChildren<any>) => {
   const auth = useAuth()
   const location = useLocation()
 

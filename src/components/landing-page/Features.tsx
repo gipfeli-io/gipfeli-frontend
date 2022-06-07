@@ -29,7 +29,7 @@ const features: Array<Feature> = [
   }
 ]
 
-function Features () {
+const Features = () => {
   return (
         <Grid container spacing={4}>
             {features.map((feature) => (

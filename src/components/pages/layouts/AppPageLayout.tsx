@@ -3,7 +3,7 @@ import { Container } from '@mui/material'
 import RequireAuth from '../../auth/RequireAuth'
 import { Outlet } from 'react-router'
 
-function AppPageLayout () {
+const AppPageLayout = () => {
   return (
     <RequireAuth>
       <>

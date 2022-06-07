@@ -4,11 +4,11 @@ import Typography from '@mui/material/Typography'
 import Copyright from '../shared/Copyright'
 import { ReactComponent as NotFoundIllustration } from '../../static/img/server-error/server_error.svg'
 
-interface ServerErrorProps {
+type ServerErrorProps = {
   error?: Error
 }
 
-const ServerError = (props: ServerErrorProps) => {
+const ServerError = ({ error }: ServerErrorProps) => {
   return (
     <Box
       sx={{
@@ -28,9 +28,9 @@ const ServerError = (props: ServerErrorProps) => {
         <Typography variant="h5" align="center" color="text.secondary" paragraph>
           This should not happen. The error has been logged and will be investigated. Please try again later.
         </Typography>
-        { props.error &&
+        { error &&
             <Typography variant="h6" align="center" color="text.secondary" paragraph>
-              {props.error.name}: {props.error.message}
+              {error.name}: {error.message}
             </Typography>
         }
         <Copyright/>

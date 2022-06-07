@@ -1,9 +1,4 @@
 import React from 'react'
-import { AppTheme } from '../types/theme'
-
-export interface ThemeContextType {
-  activeTheme: AppTheme;
-  toggleTheme: () => void;
-}
+import { ThemeContextType } from '../types/contexts'
 
 export const ThemeContext = React.createContext<ThemeContextType>(null!)

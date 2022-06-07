@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import AuthenticationContext, { AuthenticationContextType } from '../../contexts/authentication-context'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
+import AuthenticationContext from '../../contexts/authentication-context'
 import AuthService from '../../services/auth/auth-service'
 import LocalStorageService from '../../services/local-storage-service'
 import { LocalStorageKey } from '../../enums/local-storage-key'
@@ -8,8 +8,9 @@ import Loader from '../shared/Loader'
 import { JwtToken } from '../../types/jwt-token'
 import useApiError from '../../hooks/use-api-error'
 import useNotifications from '../../hooks/use-notifications'
+import { AuthenticationContextType } from '../../types/contexts'
 
-const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => {
+const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const [username, setUsername] = useState<string | undefined>(undefined)
   const [token, setToken] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(true)

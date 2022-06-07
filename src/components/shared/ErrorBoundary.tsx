@@ -1,8 +1,9 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react'
-import NotificationContext, { NotificationContextType } from '../../contexts/notification-context'
+import NotificationContext from '../../contexts/notification-context'
 import ServerError from '../pages/ServerError'
+import { NotificationContextType } from '../../types/contexts'
 
-interface ErrorBoundaryProps {
+type ErrorBoundaryProps = {
   children?: ReactNode;
 }
 
