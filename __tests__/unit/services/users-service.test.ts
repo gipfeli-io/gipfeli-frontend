@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import fetchMock from 'jest-fetch-mock'
 import UsersService from '../../../src/services/users/users-service'
 
-describe('AuthService', () => {
+describe('UsersService', () => {
   const mockedToken: string = 'mockedAccessToken'
 
   beforeEach(() => {
