@@ -17,7 +17,7 @@ function Copyright () {
                 color='text.secondary'
                 component='p'
             >
-                Made with ☕ and ❤ in Switzerland.
+                Made with ☕,🍺 and ❤ in Switzerland.
             </Typography>
         </Box>
   )
