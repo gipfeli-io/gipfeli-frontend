@@ -1,6 +1,6 @@
 import useTheme from '../../../hooks/use-theme'
 import { IconButton } from '@mui/material'
-import DarkMode from '../../../themes/DarkMode'
+import DarkMode from '../../../themes/dark-mode'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 import React from 'react'

@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react'
-import NotificationContext, { NotificationContextType } from '../../contexts/NotificationContext'
+import NotificationContext, { NotificationContextType } from '../../contexts/notification-context'
 import ServerError from '../pages/ServerError'
 
 interface ErrorBoundaryProps {

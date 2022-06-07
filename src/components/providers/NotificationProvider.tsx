@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import NotificationContext, { NotificationContextType } from '../../contexts/NotificationContext'
+import NotificationContext, { NotificationContextType } from '../../contexts/notification-context'
 import { Notification } from '../../types/notifications'
-import { NotificationType } from '../../enums/NotificationType'
+import { NotificationType } from '../../enums/notification-type'
 import NotificationSnackbar from '../shared/NotificationSnackbar'
 
 const NotificationProvider = ({ children }: { children: React.ReactNode }) => {

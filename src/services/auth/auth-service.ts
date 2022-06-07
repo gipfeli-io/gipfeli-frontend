@@ -1,6 +1,6 @@
 import APIService from '../api-service'
 import LocalStorageService from '../local-storage-service'
-import { LocalStorageKey } from '../../enums/LocalStorageKey'
+import { LocalStorageKey } from '../../enums/local-storage-key'
 import { AuthObject } from '../../types/auth'
 import { SingleApiResponse } from '../../types/api'
 

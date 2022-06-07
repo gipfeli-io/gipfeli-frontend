@@ -1,4 +1,4 @@
-import { ErrorType } from '../enums/ErrorType'
+import { ErrorType } from '../enums/error-type'
 
 /**
  * This base error class is used to throw any non-specific errors that happen during any API calls. If not extending
