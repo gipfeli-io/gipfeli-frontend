@@ -7,12 +7,14 @@ import { handleSave } from '../../../types/handle-save'
 import Typography from '@mui/material/Typography'
 import TourForm from '../../app/TourForm'
 import useNotifications from '../../../hooks/use-notifications'
+import useApiError from '../../../hooks/use-api-error'
 
 const TourCreate = () => {
   const auth = useAuth()
   const navigate = useNavigate()
   const { triggerSuccessNotification } = useNotifications()
   const service = new ToursService(auth.token)
+  const throwError = useApiError()
 
   const tour: UpdateOrCreateTour = {
     name: '',
@@ -28,9 +30,13 @@ const TourCreate = () => {
   }
 
   const handleSave: handleSave<UpdateOrCreateTour> = async (tour: UpdateOrCreateTour) => {
-    const newTour = await service.create(tour) // todo: handle errors
-    triggerSuccessNotification('Created new tour!')
-    navigate(`/tours/${newTour.id}`)
+    const data = await service.create(tour) // todo: handle errors
+    if (data.success) {
+      triggerSuccessNotification('Created new tour!')
+      navigate(`/tours/${data.content!.id}`)
+    } else {
+      throwError(data)
+    }
   }
 
   return (

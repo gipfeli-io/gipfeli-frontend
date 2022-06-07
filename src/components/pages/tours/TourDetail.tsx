@@ -1,5 +1,4 @@
 import Typography from '@mui/material/Typography'
-import { plainToInstance } from 'class-transformer'
 import { Divider, Grid, Link as MuiLink } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -13,6 +12,7 @@ import MapWrapper from '../../shared/map/MapWrapper'
 import { Tour } from '../../../types/tour'
 import { Link } from 'react-router-dom'
 import Loader from '../../shared/Loader'
+import useApiError from '../../../hooks/use-api-error'
 
 const TourDetail = (): JSX.Element => {
   const navigate = useNavigate()
@@ -21,11 +21,16 @@ const TourDetail = (): JSX.Element => {
   const service = new ToursService(auth.token)
   const [tour, setTour] = useState<Tour | undefined>(undefined)
   const [open, setOpen] = useState(false)
+  const throwError = useApiError()
 
   useEffect(() => {
     async function fetchTour () {
-      const tour = await service.findOne(id!)
-      setTour(plainToInstance(Tour, tour))
+      const data = await service.findOne(id!)
+      if (data.success) {
+        setTour(data.content!)
+      } else {
+        throwError(data)
+      }
     }
 
     fetchTour()
