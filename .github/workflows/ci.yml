@@ -38,10 +38,10 @@ jobs:
 
       - name: Build container
         run: |
-          docker build
-          --build-arg PUBLIC_BACKEND_API
-          --build-arg SENTRY_ENVIRONMENT
-          --build-arg $SENTRY_DSN
+          docker build \
+          --build-arg PUBLIC_BACKEND_API \
+          --build-arg SENTRY_ENVIRONMENT \
+          --build-arg $SENTRY_DSN \
           . -t $IMAGE_NAME
 
       # We only push the image if we merge to stage/main to avoid cluttering our artifact repository.
