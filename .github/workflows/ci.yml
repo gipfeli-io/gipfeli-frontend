@@ -40,7 +40,9 @@ jobs:
         run: |
           docker build . \
           -t $IMAGE_NAME \
-          --build-arg SENTRY_DSN
+          --build-arg SENTRY_DSN \
+          --build-arg PUBLIC_BACKEND_API \
+          --build-arg SENTRY_ENVIRONMENT
 
       # We only push the image if we merge to stage/main to avoid cluttering our artifact repository.
       # This could be optimized by using the GitHub Artifact storage and push in the next step.
