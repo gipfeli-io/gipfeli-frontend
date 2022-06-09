@@ -1,8 +1,5 @@
 import React from 'react'
-
-export interface TourListContextProperties {
-  deleteEvent: (id: string) => void
-}
+import { TourListContextProperties } from '../../../types/contexts'
 
 /**
  * TourList wrapper that allows handling delete events triggered from deeply

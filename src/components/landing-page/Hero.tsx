@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography'
 import React from 'react'
 import useNotifications from '../../hooks/use-notifications'
 
-function Hero () {
+const Hero = () => {
   const { triggerSuccessNotification, triggerErrorNotification } = useNotifications()
 
   const success = () => {

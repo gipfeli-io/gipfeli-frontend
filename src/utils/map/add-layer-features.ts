@@ -11,7 +11,7 @@ import { GeoJSONPoint } from 'ol/format/GeoJSON'
 /**
  * Adds geojson points to an existing vector layer as markers
  */
-export default function addLayerFeatures (features: GeoJsonObject[], layer: VectorLayer<VectorSource<Geometry>>): number[] {
+const addLayerFeatures = (features: GeoJsonObject[], layer: VectorLayer<VectorSource<Geometry>>): number[] => {
   const jsonFeatures: Feature[] = []
   const mapConfigurationService: MapConfigurationService = new MapConfigurationService()
   const startIcon = mapConfigurationService.getStartIcon()
@@ -47,3 +47,5 @@ export default function addLayerFeatures (features: GeoJsonObject[], layer: Vect
 
   return extent
 }
+
+export default addLayerFeatures

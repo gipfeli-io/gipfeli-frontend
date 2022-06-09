@@ -1,7 +1,7 @@
 import { Alert, Snackbar } from '@mui/material'
 import React from 'react'
 import useNotifications from '../../hooks/use-notifications'
-import { NotificationType } from '../../enums/NotificationType'
+import { NotificationType } from '../../enums/notification-type'
 
 const NotificationSnackbar = () => {
   const { notification, resetNotification } = useNotifications()

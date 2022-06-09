@@ -18,6 +18,7 @@ import { Navigate } from 'react-router'
 import NotFound from './components/pages/NotFound'
 import NotificationProvider from './components/providers/NotificationProvider'
 import SwitchableThemeProvider from './components/providers/SwitchableThemeProvider'
+import ErrorBoundary from './components/shared/ErrorBoundary'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 
 const root = ReactDOM.createRoot(
@@ -25,10 +26,11 @@ const root = ReactDOM.createRoot(
 )
 root.render(
   <React.StrictMode>
-    <AuthenticationProvider>
-      <SwitchableThemeProvider>
-        <NotificationProvider>
-            <BrowserRouter>
+    <SwitchableThemeProvider>
+      <NotificationProvider>
+        <BrowserRouter>
+          <ErrorBoundary>
+            <AuthenticationProvider>
               <Routes>
                 <Route path="/" element={<MainLayout/>}>
                   <Route index element={<Home/>}/>
@@ -45,10 +47,11 @@ root.render(
                 <Route path="404" element={<NotFound/>}/>
                 <Route path="*" element={<Navigate to="/404" replace/>}/>
               </Routes>
-            </BrowserRouter>
-        </NotificationProvider>
-      </SwitchableThemeProvider>
-    </AuthenticationProvider>
+            </AuthenticationProvider>
+          </ErrorBoundary>
+        </BrowserRouter>
+      </NotificationProvider>
+    </SwitchableThemeProvider>
   </React.StrictMode>
 )
 

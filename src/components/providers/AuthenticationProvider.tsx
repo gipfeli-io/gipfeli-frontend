@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import AuthenticationContext, { AuthenticationContextType } from '../../contexts/AuthenticationContext'
+import React, { PropsWithChildren, useEffect, useState } from 'react'
+import AuthenticationContext from '../../contexts/authentication-context'
 import AuthService from '../../services/auth/auth-service'
 import LocalStorageService from '../../services/local-storage-service'
-import { LocalStorageKey } from '../../enums/LocalStorageKey'
+import { LocalStorageKey } from '../../enums/local-storage-key'
 import jwtDecode from 'jwt-decode'
 import Loader from '../shared/Loader'
 import { JwtToken } from '../../types/jwt-token'
+import useApiError from '../../hooks/use-api-error'
+import useNotifications from '../../hooks/use-notifications'
+import { AuthenticationContextType } from '../../types/contexts'
 
-const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => {
+const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const [username, setUsername] = useState<string | undefined>(undefined)
   const [token, setToken] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(true)
   const authService: AuthService = new AuthService()
   const localStorageService: LocalStorageService = new LocalStorageService()
+  const throwError = useApiError()
+  const { triggerErrorNotification } = useNotifications()
 
   // Check on page reload if we have a stored token and set it accordingly
   useEffect(() => {
@@ -31,14 +36,23 @@ const AuthenticationProvider = ({ children }: { children: React.ReactNode }) => 
 
   const signIn = async (username: string, password: string, callback: () => void) => {
     // todo: handle error
-    const { token } = await authService.login(
+    const data = await authService.login(
       username,
       password
     )
-    setUsername(username)
-    setToken(token)
 
-    callback()
+    if (data.success) {
+      const token = data.content!.access_token
+      localStorageService.addItem(LocalStorageKey.UserSession, token)
+      setUsername(username)
+      setToken(token)
+      callback()
+    } else if (data.statusCode === 404) {
+      triggerErrorNotification('Combination of password and user does not exist.')
+    } else {
+      throwError(data)
+      callback()
+    }
   }
 
   const signOut = async (callback: () => void) => {

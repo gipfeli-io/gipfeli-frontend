@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom'
-import APIService, { RequestBody } from '../../../src/services/api-service'
+import APIService from '../../../src/services/api-service'
+import { RequestBody } from '../../../src/types/api'
 
 /**
  * Wrapper class to test protected methods from APIService. These protected methods are not part of the public interface

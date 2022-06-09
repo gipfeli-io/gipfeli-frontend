@@ -5,7 +5,7 @@ import { GeoJSONLayer } from '../../types/map'
 /**
  * Creates a GeoJSON layer as VectorLayer
  */
-export default function createMarkerLayer (): GeoJSONLayer {
+const createMarkerLayer = (): GeoJSONLayer => {
   const vectorSource = new VectorSource()
   const extent: number[] = []
 
@@ -18,3 +18,5 @@ export default function createMarkerLayer (): GeoJSONLayer {
 
   return { extent, layer: vectorLayer }
 }
+
+export default createMarkerLayer

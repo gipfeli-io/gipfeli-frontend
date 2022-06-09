@@ -15,7 +15,7 @@ import { Layer } from 'ol/layer'
 import { DrawEvent } from 'ol/interaction/Draw'
 import { ModifyEvent } from 'ol/interaction/Modify'
 
-interface WayPointMarkerLayerProps {
+type WayPointMarkerLayerProps = {
     /** An array of GeoJSON Points that will be mapped to markers. */
     features: GeoJsonPoint[],
     type?: string,

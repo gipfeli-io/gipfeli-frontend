@@ -6,7 +6,7 @@ import { TileWMS } from 'ol/source'
 import styles from './MapWrapper.module.scss'
 import MapContext from './MapContext'
 
-const MapWrapper = ({ children }: PropsWithChildren<{}>) => {
+const MapWrapper = ({ children }: PropsWithChildren<any>) => {
   const mapContainerId = useId()
   const [map, setMap] = useState<Map | undefined>(undefined)
 

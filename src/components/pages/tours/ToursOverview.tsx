@@ -1,17 +1,18 @@
 import Typography from '@mui/material/Typography'
 import { Button, Grid } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import TourListContext, { TourListContextProperties } from '../../app/tour-list/TourListContext'
+import TourListContext from '../../app/tour-list/TourListContext'
 import { TourDeleteConfirmation } from '../../app/tour-list/TourDeleteConfirmation'
 import TourList from '../../app/tour-list/TourList'
 import ToursService from '../../../services/tours/tours-service'
 import { Tour } from '../../../types/tour'
 import useAuth from '../../../hooks/use-auth'
-import { plainToInstance } from 'class-transformer'
 import { Link } from 'react-router-dom'
 import useNotifications from '../../../hooks/use-notifications'
+import useApiError from '../../../hooks/use-api-error'
+import { TourListContextProperties } from '../../../types/contexts'
 
-const ToursOverview = (): JSX.Element => {
+const ToursOverview = () => {
   const { token } = useAuth()
   const { triggerSuccessNotification } = useNotifications()
   const service = new ToursService(token)
@@ -19,15 +20,16 @@ const ToursOverview = (): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
+  const throwError = useApiError()
 
   useEffect(() => {
     async function fetchTours () {
-      let tours = await service.findAll()
-      if (!tours) {
-        tours = []
+      const data = await service.findAll()
+      if (data.success) {
+        setTourList(data.content!)
+      } else {
+        throwError(data)
       }
-
-      setTourList(plainToInstance<Tour, Tour[]>(Tour, tours))
       setLoading(false)
     }
 
@@ -40,9 +42,13 @@ const ToursOverview = (): JSX.Element => {
   }
 
   const handleDelete = async () => {
-    await service.delete(deleteId!)
-    triggerSuccessNotification('Successfully deleted tour!')
-    setTourList(prevState => prevState.filter(tour => tour.id !== deleteId))
+    const data = await service.delete(deleteId!)
+    if (data.success) {
+      triggerSuccessNotification('Successfully deleted tour!')
+      setTourList(prevState => prevState.filter(tour => tour.id !== deleteId))
+    } else {
+      throwError(data)
+    }
     handleDeleteModalClose()
   }
 
