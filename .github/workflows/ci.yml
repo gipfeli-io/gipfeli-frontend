@@ -40,7 +40,7 @@ jobs:
         run: |
           docker build . \
           -t $IMAGE_NAME \
-          --build-arg SENTRY_DSN \
+          --build-arg SENTRY_DSN=$SENTRY_DSN \
           --build-arg PUBLIC_BACKEND_API \
           --build-arg SENTRY_ENVIRONMENT
 
