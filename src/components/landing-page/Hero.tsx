@@ -1,17 +1,10 @@
 import { Box, Button, Container, Stack } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import React from 'react'
-import useNotifications from '../../hooks/use-notifications'
 
 const Hero = () => {
-  const { triggerSuccessNotification, triggerErrorNotification } = useNotifications()
-
-  const success = () => {
-    triggerSuccessNotification('Success message!')
-  }
-
-  const error = () => {
-    triggerErrorNotification('Error message!')
+  const triggerSentry = () => {
+    throw new Error('Sentry works!')
   }
 
   return (
@@ -41,8 +34,7 @@ const Hero = () => {
         >
           <Button variant="contained">Sign up</Button>
           <Button variant="outlined">Learn more</Button>
-          <Button variant="contained" onClick={success}>Trigger notification</Button>
-          <Button variant="contained" onClick={error}>Trigger error</Button>
+          <Button onClick={triggerSentry}>Break the world</Button>
         </Stack>
       </Container>
     </Box>

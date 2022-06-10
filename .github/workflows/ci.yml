@@ -8,8 +8,9 @@ jobs:
     name: Run tests and build container
     runs-on: ubuntu-latest
     env:
-      Container_BASE_URL: gcr.io
+      CONTAINER_BASE_URL: gcr.io
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}:${{ github.sha }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     permissions:
       contents: read
       id-token: write
@@ -24,17 +25,24 @@ jobs:
           npm ci
           npm test
 
-      - name: Setup base URL environment variable
-        run: | 
+      - name: Setup environment variables
+        run: |
           if [[ ${{ github.ref }} == 'refs/heads/main' ]]; then
-            echo "REACT_APP_PUBLIC_BACKEND_API=https://api.gipfeli.io" >> $GITHUB_ENV
+            echo "SENTRY_ENVIRONMENT=production" >> $GITHUB_ENV
+            echo "PUBLIC_BACKEND_API=https://api.gipfeli.io" >> $GITHUB_ENV
           else
-            echo "REACT_APP_PUBLIC_BACKEND_API=https://staging-api.gipfeli.io" >> $GITHUB_ENV
+            echo "SENTRY_ENVIRONMENT=staging" >> $GITHUB_ENV
+            echo "PUBLIC_BACKEND_API=https://staging-api.gipfeli.io" >> $GITHUB_ENV
           fi
-        
+
 
       - name: Build container
-        run: docker build --build-arg REACT_APP_PUBLIC_BACKEND_API . -t $IMAGE_NAME
+        run: |
+          docker build . \
+          -t $IMAGE_NAME \
+          --build-arg SENTRY_DSN \
+          --build-arg PUBLIC_BACKEND_API \
+          --build-arg SENTRY_ENVIRONMENT
 
       # We only push the image if we merge to stage/main to avoid cluttering our artifact repository.
       # This could be optimized by using the GitHub Artifact storage and push in the next step.
@@ -60,7 +68,7 @@ jobs:
     if: github.ref == 'refs/heads/stage'
     runs-on: ubuntu-latest
     env:
-      Container_BASE_URL: gcr.io
+      CONTAINER_BASE_URL: gcr.io
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}:${{ github.sha }}
     permissions:
       contents: read

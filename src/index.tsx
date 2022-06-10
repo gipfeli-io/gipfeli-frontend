@@ -3,7 +3,7 @@ import 'reflect-metadata'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route } from 'react-router-dom'
 import Home from './components/pages/Home'
 import MainLayout from './components/pages/layouts/MainLayout'
 import AuthPageLayout from './components/pages/layouts/AuthPageLayout'
@@ -19,11 +19,15 @@ import NotFound from './components/pages/NotFound'
 import NotificationProvider from './components/providers/NotificationProvider'
 import SwitchableThemeProvider from './components/providers/SwitchableThemeProvider'
 import ErrorBoundary from './components/shared/ErrorBoundary'
+import initializeSentry from './utils/initialize-sentry'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
+
+const RoutesWrapper = initializeSentry(process.env.REACT_APP_SENTRY_DSN, process.env.REACT_APP_SENTRY_ENVIRONMENT)
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 )
+
 root.render(
   <React.StrictMode>
     <SwitchableThemeProvider>
@@ -31,7 +35,7 @@ root.render(
         <BrowserRouter>
           <ErrorBoundary>
             <AuthenticationProvider>
-              <Routes>
+              <RoutesWrapper>
                 <Route path="/" element={<MainLayout/>}>
                   <Route index element={<Home/>}/>
                   <Route path="tours" element={<AppPageLayout/>}>
@@ -46,7 +50,7 @@ root.render(
                 </Route>
                 <Route path="404" element={<NotFound/>}/>
                 <Route path="*" element={<Navigate to="/404" replace/>}/>
-              </Routes>
+              </RoutesWrapper>
             </AuthenticationProvider>
           </ErrorBoundary>
         </BrowserRouter>
