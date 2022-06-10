@@ -1,6 +1,7 @@
 import APIService from '../api-service'
 import { Tour, UpdateOrCreateTour } from '../../types/tour'
 import { ArrayApiResponse, SingleApiResponse } from '../../types/api'
+import { localDB } from '../../components/shared/local-database/local-db'
 
 export default class ToursService extends APIService {
   private prefix: string = 'tours'
@@ -16,12 +17,27 @@ export default class ToursService extends APIService {
       this.getRequestBody('GET', {}),
       Tour
     )
+    // todo: refactor to find more elegant implementation
+    console.log('result status', result.statusCode)
+    if (result.statusCode === 500) {
+      const wrapper = this.createResponseWrapper(true, 200, 'fetched from local local-database')
+      const tours = await localDB.tours.toArray()
+      console.log('local tours', tours)
+      return { content: tours, ...wrapper }
+    }
 
     if (!result.content) {
       result.content = []
     }
+    console.log('add tours to local local-database', result.content)
+    ToursService.addToursToLocalDatabase(result.content)
 
     return result
+  }
+
+  private static addToursToLocalDatabase (tourList: Tour[]): void {
+    localDB.tours.clear()
+    localDB.tours.bulkAdd(tourList)
   }
 
   public async findOne (id: string): Promise<SingleApiResponse<Tour>> {

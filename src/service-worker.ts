@@ -11,7 +11,6 @@
 import { clientsClaim } from 'workbox-core'
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
-import { NetworkFirst } from 'workbox-strategies'
 
 // eslint-disable-next-line no-undef
 declare const self: ServiceWorkerGlobalScope
@@ -51,11 +50,6 @@ registerRoute(
     return true
   },
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
-)
-// cache tour list
-registerRoute(
-  ({ url }) => url.pathname === '/tours',
-  new NetworkFirst()
 )
 
 // This allows the web app to trigger skipWaiting via
