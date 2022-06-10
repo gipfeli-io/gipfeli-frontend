@@ -1,3 +1,5 @@
+> :warning: **Deprecated**: This branch represents the application state before we removed next.js. It misses a lot of functionality and is only here for informational purposes.
+
 # gipfeli.io Frontend
 ![](https://github.com/gipfeli-io/gipfeli-frontend/actions/workflows/ci.yml/badge.svg?branch=stage)
 
