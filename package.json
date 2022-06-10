@@ -63,7 +63,8 @@
     "react-router-dom": "^6.3.0",
     "react-test-renderer": "^18.1.0",
     "sass": "^1.52.1",
-    "ts-jest": "^28.0.4"
+    "ts-jest": "^28.0.4",
+    "serve": "^13.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -71,7 +72,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "eject": "react-scripts eject",
-    "start:prod": "react-scripts build && serve -s build"
+    "start:prod": "react-scripts build && serve -s build -p 3001"
   },
   "eslintConfig": {
     "extends": [
