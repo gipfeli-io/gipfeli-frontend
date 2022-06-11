@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { ApiResponseWrapper } from '../types/api'
 import {
+  BadRequestError,
   ForbiddenError,
   GenericApiError,
   NonCriticalApiError,
@@ -27,6 +28,8 @@ const useApiError = () => {
 
   const getApiError: (statusCode: number, message: string) => (GenericApiError) = (statusCode: number, message: string) => {
     switch (statusCode) {
+      case 400:
+        return new BadRequestError(message)
       case 401:
         return new UnauthorizedError(message)
       case 403:
@@ -40,12 +43,15 @@ const useApiError = () => {
     }
   }
 
-  return useCallback((apiResponse: ApiResponseWrapper) => {
+  return useCallback((apiResponse: ApiResponseWrapper, redirect: boolean = true) => {
     const error = getApiError(apiResponse.statusCode, apiResponse.statusMessage)
 
     if (error instanceof NonCriticalApiError) {
       triggerErrorNotification(error.message)
-      navigate('/tours', { replace: true })
+
+      if (redirect) {
+        navigate('/tours', { replace: true })
+      }
     } else {
       setError(() => {
         throw error
