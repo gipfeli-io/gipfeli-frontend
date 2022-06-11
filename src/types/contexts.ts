@@ -6,9 +6,9 @@ export interface TourListContextProperties {
 }
 
 export interface AuthenticationContextType {
-  username: string | undefined;
+  email: string | undefined;
   token: string | undefined;
-  signIn: (username: string, password: string, callback: () => void) => void;
+  signIn: (email: string, password: string, callback: () => void) => void;
   signOut: (callback: () => void) => void;
 }
 

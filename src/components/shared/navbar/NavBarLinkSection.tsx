@@ -12,7 +12,7 @@ const NavBarUserSection = () => {
       <Typography variant="h6" component="div">
         gipfeli.io
       </Typography>
-      {auth.username &&
+      {auth.email &&
           <Typography variant="body1" component="div">
               <Button component={Link} to="tours" variant="text" color="inherit">My Tours</Button>
           </Typography>

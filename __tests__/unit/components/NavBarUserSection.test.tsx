@@ -10,7 +10,7 @@ import { render } from '@testing-library/react'
 const mockSignIn: jest.Mock = jest.fn()
 const mockSignOut: jest.Mock = jest.fn()
 const mockAuthenticationContext: any = {
-  username: null,
+  email: null,
   token: null,
   mockSignIn,
   mockSignOut
@@ -23,7 +23,7 @@ const mockUseLocationValue = {
   state: null
 }
 
-const mockUsername = 'test@gipfeli.io'
+const mockEmail = 'test@gipfeli.io'
 const mockToken = 'mockedToken'
 
 jest.mock('../../../src/hooks/use-auth', () => jest.fn().mockImplementation(() => mockAuthenticationContext))
@@ -39,7 +39,7 @@ describe('NavBarUserSection', () => {
   describe('test with logged in user', () => {
     beforeEach(() => {
       mockAuthenticationContext.token = mockToken
-      mockAuthenticationContext.username = mockUsername
+      mockAuthenticationContext.email = mockEmail
     })
 
     it('behaves consistently when logged in', () => {
@@ -49,10 +49,10 @@ describe('NavBarUserSection', () => {
       expect(tree).toMatchSnapshot()
     })
     it('shows logout button and name of user if logged in', async () => {
-      mockAuthenticationContext.username = mockUsername
+      mockAuthenticationContext.email = mockEmail
       mockAuthenticationContext.token = mockToken
       const { container, queryByText } = render(
-    <MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>
+        <MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>
       )
 
       const logoutButton = container.querySelector('#logout-button')
@@ -69,7 +69,7 @@ describe('NavBarUserSection', () => {
   describe('test with logged out user', () => {
     beforeEach(() => {
       mockAuthenticationContext.token = null
-      mockAuthenticationContext.username = null
+      mockAuthenticationContext.email = null
     })
 
     it('behaves consistently when not logged in', () => {

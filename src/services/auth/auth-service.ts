@@ -8,8 +8,8 @@ export default class AuthService extends APIService {
   private prefix: string = 'auth'
   private localStorageService: LocalStorageService = new LocalStorageService()
 
-  public async login (username: string, password: string): Promise<SingleApiResponse<AuthObject>> {
-    return await this.sendLoginRequest(username, password)
+  public async login (email: string, password: string): Promise<SingleApiResponse<AuthObject>> {
+    return await this.sendLoginRequest(email, password)
   }
 
   public async logout (): Promise<void> {
@@ -25,10 +25,10 @@ export default class AuthService extends APIService {
     )
   }
 
-  private async sendLoginRequest (username: string, password: string): Promise<SingleApiResponse<AuthObject>> {
+  private async sendLoginRequest (email: string, password: string): Promise<SingleApiResponse<AuthObject>> {
     return await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, 'login'),
-      this.getRequestBody('POST', { username, password }),
+      this.getRequestBody('POST', { email, password }),
       AuthObject
     )
   }
