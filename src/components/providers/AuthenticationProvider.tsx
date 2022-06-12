@@ -11,7 +11,7 @@ import useNotifications from '../../hooks/use-notifications'
 import { AuthenticationContextType } from '../../types/contexts'
 
 const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
-  const [username, setUsername] = useState<string | undefined>(undefined)
+  const [email, setEmail] = useState<string | undefined>(undefined)
   const [token, setToken] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(true)
   const authService: AuthService = new AuthService()
@@ -26,7 +26,7 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
       // todo: check with API if token is still valid
       const decoded: JwtToken = jwtDecode(storedToken)
       setToken(storedToken)
-      setUsername(decoded.username)
+      setEmail(decoded.email)
     }
 
     setLoading(false)
@@ -34,17 +34,17 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
 
   // Todo: periodically check for token validity?
 
-  const signIn = async (username: string, password: string, callback: () => void) => {
+  const signIn = async (email: string, password: string, callback: () => void) => {
     // todo: handle error
     const data = await authService.login(
-      username,
+      email,
       password
     )
 
     if (data.success) {
       const token = data.content!.access_token
       localStorageService.addItem(LocalStorageKey.UserSession, token)
-      setUsername(username)
+      setEmail(email)
       setToken(token)
       callback()
     } else if (data.statusCode === 404) {
@@ -58,16 +58,16 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const signOut = async (callback: () => void) => {
     // todo: handle error
     await authService.logout()
-    setUsername(undefined)
+    setEmail(undefined)
     setToken(undefined)
 
     callback()
   }
 
-  const value: AuthenticationContextType = { username, token, signIn, signOut }
+  const value: AuthenticationContextType = { email, token, signIn, signOut }
 
   if (loading) {
-    return <Loader />
+    return <Loader/>
   }
 
   return <AuthenticationContext.Provider value={value}>{children}</AuthenticationContext.Provider>

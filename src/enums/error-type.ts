@@ -5,4 +5,5 @@ export enum ErrorType {
   FORBIDDEN = 'Forbidden',
   SERVER_ERROR = 'Server Error',
   LOGIN_ERROR = 'Login Error',
+  BAD_REQUEST = 'Bad Request',
 }
