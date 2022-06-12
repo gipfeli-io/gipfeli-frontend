@@ -21,6 +21,7 @@ import SwitchableThemeProvider from './components/providers/SwitchableThemeProvi
 import ErrorBoundary from './components/shared/ErrorBoundary'
 import initializeSentry from './utils/initialize-sentry'
 import SignUp from './components/pages/SignUp'
+import ActivateUser from './components/pages/user/ActivateUser'
 
 const RoutesWrapper = initializeSentry(process.env.REACT_APP_SENTRY_DSN, process.env.REACT_APP_SENTRY_ENVIRONMENT)
 
@@ -48,6 +49,7 @@ root.render(
                 <Route path="/" element={<AuthPageLayout/>}>
                   <Route path="login" element={<Login/>}/>
                   <Route path="signup" element={<SignUp/>}/>
+                  <Route path="user/activate/:userId/:token" element={<ActivateUser/>}/>
                 </Route>
                 <Route path="404" element={<NotFound/>}/>
                 <Route path="*" element={<Navigate to="/404" replace/>}/>

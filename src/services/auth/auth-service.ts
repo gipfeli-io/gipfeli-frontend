@@ -17,6 +17,14 @@ export default class AuthService extends APIService {
     this.localStorageService.removeItem(LocalStorageKey.UserSession)
   }
 
+  public async activateUser (userId: string, token: string): Promise<SingleApiResponse<void>> {
+    return await this.fetchSingleDataFromApi(
+      this.getRequestUrl(this.prefix, 'activate'),
+      this.getRequestBody('POST', { userId, token }),
+      undefined
+    )
+  }
+
   public async signUp (email: string, firstName: string, lastName: string, password: string): Promise<SingleApiResponse<void>> {
     return await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, 'signup'),
