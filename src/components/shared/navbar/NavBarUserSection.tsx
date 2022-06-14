@@ -12,7 +12,7 @@ const NavBarUserSection = () => {
   if (!auth.email) {
     return (
       <Stack spacing={2} direction={'row'}>
-        <Button variant={'contained'} id={'join-button'}>Join</Button>
+        <Button component={Link} to="signup" variant={'contained'} id={'join-button'}>Join</Button>
         <Button component={Link} to="login" variant={'outlined'} color="inherit">Login</Button>
       </Stack>
     )
