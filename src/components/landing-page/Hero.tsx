@@ -1,12 +1,9 @@
 import { Box, Button, Container, Stack } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Hero = () => {
-  const triggerSentry = () => {
-    throw new Error('Sentry works!')
-  }
-
   return (
     <Box
       sx={{
@@ -32,9 +29,7 @@ const Hero = () => {
           spacing={2}
           justifyContent="center"
         >
-          <Button variant="contained">Sign up</Button>
-          <Button variant="outlined">Learn more</Button>
-          <Button onClick={triggerSentry}>Break the world</Button>
+          <Button component={Link} to="signup" variant="contained">Sign up</Button>
         </Stack>
       </Container>
     </Box>
