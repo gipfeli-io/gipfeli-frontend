@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { ApiResponseWrapper } from '../types/api'
+import { ApiResponseWrapper, ErrorContent } from '../types/api'
 import {
   BadRequestError,
   ForbiddenError,
@@ -26,26 +26,39 @@ const useApiError = () => {
   const { triggerErrorNotification } = useNotifications()
   const navigate = useNavigate()
 
-  const getApiError: (statusCode: number, message: string) => (GenericApiError) = (statusCode: number, message: string) => {
+  /**
+   * We extract the error type and generate the corresponding object. If we have more details, the message parameter on
+   * the ErrorContent object is set and we show this - otherwise, we just show the generic error type.
+   * @param statusCode
+   * @param error
+   * @param message
+   */
+  const getApiError: (statusCode: number, error: ErrorContent) => (GenericApiError) = (statusCode: number, {
+    error,
+    message
+  }: ErrorContent) => {
+    const displayMessage = message ?? error
+
     switch (statusCode) {
       case 400:
-        return new BadRequestError(message)
+        return new BadRequestError(displayMessage)
       case 401:
-        return new UnauthorizedError(message)
+        return new UnauthorizedError(displayMessage)
       case 403:
-        return new ForbiddenError(message)
+        return new ForbiddenError(displayMessage)
       case 404:
-        return new NotFoundError(message)
+        return new NotFoundError(displayMessage)
       case 500:
-        return new ServerError(message)
+        return new ServerError(displayMessage)
       default:
-        return new GenericApiError(message)
+        return new GenericApiError(displayMessage)
     }
   }
 
   return useCallback((apiResponse: ApiResponseWrapper, redirect: boolean = true) => {
-    const error = getApiError(apiResponse.statusCode, apiResponse.statusMessage)
-
+    // At this point, we know that we have an error, because we would not get here without it.
+    const error = getApiError(apiResponse.statusCode, apiResponse.error!)
+    console.log(apiResponse)
     if (error instanceof NonCriticalApiError) {
       triggerErrorNotification(error.message)
 
