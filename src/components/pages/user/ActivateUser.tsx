@@ -4,6 +4,7 @@ import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import AuthService from '../../../services/auth/auth-service'
 import Loader from '../../shared/Loader'
+import Typography from '@mui/material/Typography'
 
 const TourCreate = () => {
   const { userId, token } = useParams()
@@ -27,7 +28,12 @@ const TourCreate = () => {
     activateUser()
   }, [])
 
-  return <Loader></Loader>
+  return <>
+    <Loader></Loader>
+    <Typography component="h1" variant="h2">
+      Activating user...
+    </Typography>
+  </>
 }
 
 export default TourCreate

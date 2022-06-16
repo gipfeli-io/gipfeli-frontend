@@ -1,4 +1,11 @@
-import { ApiResponseWrapper, ArrayApiResponse, ClassCastHint, RequestBody, SingleApiResponse } from '../types/api'
+import {
+  ApiResponseWrapper,
+  ArrayApiResponse,
+  ClassCastHint,
+  ErrorContent,
+  RequestBody,
+  SingleApiResponse
+} from '../types/api'
 import { plainToInstance } from 'class-transformer'
 
 export default abstract class APIService {
@@ -49,7 +56,7 @@ export default abstract class APIService {
       return { content, ...wrapper }
     }
 
-    return wrapper
+    return this.returnErroneousReponse(wrapper, responseBody)
   }
 
   /**
@@ -72,6 +79,11 @@ export default abstract class APIService {
       return { content, ...wrapper }
     }
 
+    return this.returnErroneousReponse(wrapper, responseBody)
+  }
+
+  private returnErroneousReponse (wrapper: ApiResponseWrapper, { error, message }: ErrorContent): ApiResponseWrapper {
+    wrapper.error = { error, message }
     return wrapper
   }
 
