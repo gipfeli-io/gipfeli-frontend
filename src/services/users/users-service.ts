@@ -5,7 +5,7 @@ export default class UsersService extends APIService {
 
   constructor (token: string | any) {
     super()
-    this.token = token
+    this.accessToken = token
   }
 
   public async profile (): Promise<Response> {

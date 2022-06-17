@@ -31,7 +31,7 @@ describe('AuthService', () => {
 
   it('calls API and returns the response as JSON', async () => {
     const service = new AuthService()
-    const mockResponse = { access_token: mockedToken }
+    const mockResponse = { accessToken: mockedToken }
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
     const result = await service.login(mockUser, mockPassword)
 

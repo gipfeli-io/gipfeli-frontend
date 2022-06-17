@@ -1,20 +1,20 @@
 import APIService from '../api-service'
-import LocalStorageService from '../local-storage-service'
-import { LocalStorageKey } from '../../enums/local-storage-key'
 import { AuthObject } from '../../types/auth'
 import { SingleApiResponse } from '../../types/api'
 
 export default class AuthService extends APIService {
   private prefix: string = 'auth'
-  private localStorageService: LocalStorageService = new LocalStorageService()
 
   public async login (email: string, password: string): Promise<SingleApiResponse<AuthObject>> {
     return await this.sendLoginRequest(email, password)
   }
 
-  public async logout (): Promise<void> {
-    // todo: call api endpoint
-    this.localStorageService.removeItem(LocalStorageKey.UserSession)
+  public async refreshTokens (refreshToken: string): Promise<SingleApiResponse<AuthObject>> {
+    return this.fetchSingleDataFromApi(
+      this.getRequestUrl(this.prefix, 'refresh'),
+      this.getRequestBody('POST', null, refreshToken),
+      AuthObject
+    )
   }
 
   public async activateUser (userId: string, token: string): Promise<SingleApiResponse<void>> {
