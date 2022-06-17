@@ -9,7 +9,7 @@ import {
 import { plainToInstance } from 'class-transformer'
 
 export default abstract class APIService {
-  protected token?: string = undefined
+  protected accessToken?: string = undefined
   private baseUrl: string = process.env.REACT_APP_PUBLIC_BACKEND_API || 'http://localhost:3000'
 
   protected getRequestUrl (prefix: string, endpoint?: string): string {
@@ -17,7 +17,7 @@ export default abstract class APIService {
     return endpoint ? `${baseUrl}/${endpoint}` : baseUrl
   }
 
-  protected getRequestBody (method: 'GET' | 'POST' | 'PATCH' | 'DELETE', body?: any): RequestBody {
+  protected getRequestBody (method: 'GET' | 'POST' | 'PATCH' | 'DELETE', body?: any, overrideTokenHeader?: string): RequestBody {
     const requestBody: RequestBody = {
       method,
       headers: {
@@ -29,8 +29,9 @@ export default abstract class APIService {
       requestBody.body = body ? JSON.stringify(body) : ''
     }
 
-    if (this.token) {
-      requestBody.headers = { ...requestBody.headers, Authorization: this.extractBearerTokenFromSession() }
+    const useAuthHeader = overrideTokenHeader || this.accessToken
+    if (useAuthHeader) {
+      requestBody.headers = { ...requestBody.headers, Authorization: this.extractBearerTokenFromSession(useAuthHeader) }
     }
 
     return requestBody
@@ -122,7 +123,7 @@ export default abstract class APIService {
     }
   }
 
-  private extractBearerTokenFromSession (): string {
-    return `Bearer ${this.token}`
+  private extractBearerTokenFromSession (token: string): string {
+    return `Bearer ${token}`
   }
 }

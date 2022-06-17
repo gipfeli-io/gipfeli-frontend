@@ -9,7 +9,6 @@ const tokenNeedsRefresh: (token: JwtToken) => (boolean) = (token: JwtToken) => {
   const { exp } = token
   const expiryDate = dayjs.unix(exp)
   const currentDate = dayjs()
-
   return expiryDate.diff(currentDate, 'minutes') < 5
 }
 

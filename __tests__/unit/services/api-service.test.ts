@@ -9,7 +9,7 @@ import { RequestBody } from '../../../src/types/api'
 class ApiServiceWrapper extends APIService {
   constructor (accessToken?: string) {
     super()
-    this.token = accessToken
+    this.accessToken = accessToken
   }
 
   getRequestUrl (prefix: string, endpoint: string): string {

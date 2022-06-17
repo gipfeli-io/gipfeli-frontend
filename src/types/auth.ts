@@ -1,8 +1,44 @@
-/* eslint-disable camelcase */
 export class AuthObject {
-  access_token: string
+  accessToken: string
+  refreshToken: string
 
-  constructor (access_token: string) {
-    this.access_token = access_token
+  constructor (accessToken: string, refreshToken: string) {
+    this.accessToken = accessToken
+    this.refreshToken = refreshToken
   }
+}
+
+/**
+ * Basic JwtTokenPayload that is part of all JWTs.
+ */
+interface JwtTokenPayloadBase {
+  iat: number;
+  exp: number;
+}
+
+/**
+ * In tokens, this UserIdentifier is the payload.
+ */
+export interface UserIdentifier {
+  sub: string;
+  email: string;
+}
+
+/**
+ * In tokens, this SessionIdentifier is the payload.
+ */
+export interface SessionIdentifier {
+  sessionId: string;
+}
+
+/**
+ * RefreshToken contains a session ID that maps to a UserSession object.
+ */
+export interface RefreshToken extends JwtTokenPayloadBase, SessionIdentifier {
+}
+
+/**
+ * The main authtoken.
+ */
+export interface AccessToken extends JwtTokenPayloadBase, UserIdentifier {
 }
