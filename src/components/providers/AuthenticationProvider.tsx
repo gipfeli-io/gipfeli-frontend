@@ -9,6 +9,8 @@ import { JwtToken } from '../../types/jwt-token'
 import useApiError from '../../hooks/use-api-error'
 import useNotifications from '../../hooks/use-notifications'
 import { AuthenticationContextType } from '../../types/contexts'
+import useInterval from '../../hooks/use-interval'
+import tokenNeedsRefresh from '../../utils/token-needs-refresh'
 
 const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
@@ -18,21 +20,6 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const localStorageService: LocalStorageService = new LocalStorageService()
   const throwError = useApiError()
   const { triggerErrorNotification } = useNotifications()
-
-  // Check on page reload if we have a stored token and set it accordingly
-  useEffect(() => {
-    const storedToken = localStorageService.getItem(LocalStorageKey.UserSession)
-    if (storedToken && !token) {
-      // todo: check with API if token is still valid
-      const decoded: JwtToken = jwtDecode(storedToken)
-      setToken(storedToken)
-      setEmail(decoded.email)
-    }
-
-    setLoading(false)
-  }, [])
-
-  // Todo: periodically check for token validity?
 
   const signIn = async (email: string, password: string, callback: () => void) => {
     // todo: handle error
@@ -63,6 +50,38 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
 
     callback()
   }
+
+  const checkAndRefreshToken = () => {
+    console.log('check')
+    // We only check for the token if we actually have a token
+    if (!token) {
+      return
+    }
+    const decodedToken: JwtToken = jwtDecode(token)
+
+    if (tokenNeedsRefresh(decodedToken)) {
+      // todo: handle tokenrefresh
+      signOut(() => triggerErrorNotification('You have been signed out due to inactivity.'))
+    }
+  }
+  // Check on page reload if we have a stored token and set it accordingly
+  useEffect(() => {
+    const storedToken = localStorageService.getItem(LocalStorageKey.UserSession)
+    if (storedToken && !token) {
+      const decoded: JwtToken = jwtDecode(storedToken)
+      if (tokenNeedsRefresh(decoded)) {
+        // todo: handle tokenrefresh
+        signOut(() => triggerErrorNotification('You have been signed out due to inactivity.'))
+      } else {
+        setToken(storedToken)
+        setEmail(decoded.email)
+      }
+    }
+
+    setLoading(false)
+  }, [])
+
+  useInterval(checkAndRefreshToken, 2000)
 
   const value: AuthenticationContextType = { email, token, signIn, signOut }
 
