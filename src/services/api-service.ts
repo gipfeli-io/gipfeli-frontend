@@ -57,7 +57,7 @@ export default abstract class APIService {
       return { content, ...wrapper }
     }
 
-    return this.returnErroneousReponse(wrapper, responseBody)
+    return this.getErrorResponse(wrapper, responseBody)
   }
 
   /**
@@ -80,10 +80,10 @@ export default abstract class APIService {
       return { content, ...wrapper }
     }
 
-    return this.returnErroneousReponse(wrapper, responseBody)
+    return this.getErrorResponse(wrapper, responseBody)
   }
 
-  private returnErroneousReponse (wrapper: ApiResponseWrapper, { error, message }: ErrorContent): ApiResponseWrapper {
+  private getErrorResponse (wrapper: ApiResponseWrapper, { error, message }: ErrorContent): ApiResponseWrapper {
     wrapper.error = { error, message }
     return wrapper
   }
