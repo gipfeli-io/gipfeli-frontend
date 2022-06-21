@@ -40,11 +40,12 @@ exports[`NavBarUserSection test with logged out user behaves consistently when n
 <div
   className="css-e53awj-MuiStack-root"
 >
-  <button
+  <a
     className="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root  css-sghohy-MuiButtonBase-root-MuiButton-root"
-    disabled={false}
+    href={[MockFunction]}
     id="join-button"
     onBlur={[Function]}
+    onClick={[Function]}
     onContextMenu={[Function]}
     onDragLeave={[Function]}
     onFocus={[Function]}
@@ -57,13 +58,12 @@ exports[`NavBarUserSection test with logged out user behaves consistently when n
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={0}
-    type="button"
   >
     Join
     <span
       className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
     />
-  </button>
+  </a>
   <a
     className="MuiButton-root MuiButton-outlined MuiButton-outlinedInherit MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInherit MuiButtonBase-root  css-sbfmij-MuiButtonBase-root-MuiButton-root"
     href={[MockFunction]}

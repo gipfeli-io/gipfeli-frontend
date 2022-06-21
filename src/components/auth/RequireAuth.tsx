@@ -6,7 +6,7 @@ const RequireAuth = ({ children }: PropsWithChildren<any>) => {
   const auth = useAuth()
   const location = useLocation()
 
-  if (!auth.username) {
+  if (!auth.email) {
     return <Navigate to="/login" state={{ from: location }} replace/>
   }
 

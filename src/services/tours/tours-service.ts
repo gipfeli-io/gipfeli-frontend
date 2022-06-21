@@ -8,7 +8,7 @@ export default class ToursService extends APIService {
 
   constructor (token: string | undefined) {
     super()
-    this.token = token
+    this.accessToken = token
   }
 
   public async findAll (): Promise<ArrayApiResponse<Tour>> {

@@ -9,43 +9,47 @@ import { JwtToken } from '../../types/jwt-token'
 import useApiError from '../../hooks/use-api-error'
 import useNotifications from '../../hooks/use-notifications'
 import { AuthenticationContextType } from '../../types/contexts'
+import useInterval from '../../hooks/use-interval'
+import tokenNeedsRefresh from '../../utils/token-needs-refresh'
+import { AccessToken, AuthObject } from '../../types/auth'
+import { useNavigate } from 'react-router'
 
 const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
-  const [username, setUsername] = useState<string | undefined>(undefined)
-  const [token, setToken] = useState<string | undefined>(undefined)
+  const [email, setEmail] = useState<string | undefined>(undefined)
+  const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
+  const [refreshToken, setRefreshToken] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(true)
   const authService: AuthService = new AuthService()
   const localStorageService: LocalStorageService = new LocalStorageService()
   const throwError = useApiError()
   const { triggerErrorNotification } = useNotifications()
+  const navigate = useNavigate()
 
-  // Check on page reload if we have a stored token and set it accordingly
-  useEffect(() => {
-    const storedToken = localStorageService.getItem(LocalStorageKey.UserSession)
-    if (storedToken && !token) {
-      // todo: check with API if token is still valid
-      const decoded: JwtToken = jwtDecode(storedToken)
-      setToken(storedToken)
-      setUsername(decoded.username)
-    }
+  const setTokensInLocalStorageAndState = (tokens: AuthObject) => {
+    const { accessToken, refreshToken } = tokens
+    localStorageService.addItem(LocalStorageKey.AccessToken, accessToken)
+    localStorageService.addItem(LocalStorageKey.RefreshToken, refreshToken)
+    setAccessToken(accessToken)
+    setRefreshToken(refreshToken)
+    setEmail(jwtDecode<AccessToken>(accessToken).email)
+  }
 
-    setLoading(false)
-  }, [])
+  const unsetTokensInLocalStorageAndState = () => {
+    localStorageService.removeItem(LocalStorageKey.AccessToken)
+    localStorageService.removeItem(LocalStorageKey.RefreshToken)
+    setAccessToken(undefined)
+    setRefreshToken(undefined)
+    setEmail(undefined)
+  }
 
-  // Todo: periodically check for token validity?
-
-  const signIn = async (username: string, password: string, callback: () => void) => {
-    // todo: handle error
+  const signIn = async (email: string, password: string, callback: () => void) => {
     const data = await authService.login(
-      username,
+      email,
       password
     )
 
     if (data.success) {
-      const token = data.content!.access_token
-      localStorageService.addItem(LocalStorageKey.UserSession, token)
-      setUsername(username)
-      setToken(token)
+      setTokensInLocalStorageAndState(data.content!)
       callback()
     } else if (data.statusCode === 404) {
       triggerErrorNotification('Combination of password and user does not exist.')
@@ -56,18 +60,88 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   }
 
   const signOut = async (callback: () => void) => {
-    // todo: handle error
-    await authService.logout()
-    setUsername(undefined)
-    setToken(undefined)
-
+    // Todo: do we need a signout request at all?
+    unsetTokensInLocalStorageAndState()
     callback()
   }
 
-  const value: AuthenticationContextType = { username, token, signIn, signOut }
+  const forceLogOut = () => {
+    unsetTokensInLocalStorageAndState()
+    triggerErrorNotification('You have been logged out due to inactivity.')
+    navigate('/login')
+  }
+
+  /**
+   * Create a request to refresh our tokens - or force logout.
+   * @param refreshToken
+   */
+  const fetchNewTokens = async (refreshToken: string) => {
+    const data = await authService.refreshTokens(refreshToken)
+
+    if (data.success) {
+      setTokensInLocalStorageAndState(data.content!)
+    } else {
+      forceLogOut()
+    }
+  }
+
+  /**
+   * Checks whether a token is still valid and handles its refresh or force logout.
+   */
+  const checkAndRefreshToken = () => {
+    // We only check for the token if we actually have a token
+    if (!accessToken) {
+      return
+    }
+    const decodedToken: JwtToken = jwtDecode(accessToken)
+
+    if (tokenNeedsRefresh(decodedToken)) {
+      if (refreshToken) {
+        const refresh = async () => {
+          await fetchNewTokens(refreshToken)
+        }
+
+        refresh()
+      } else {
+        forceLogOut()
+      }
+    }
+  }
+
+  /**
+   * Handle a new page load and check whether we still have a session or not.
+   */
+  useEffect(() => {
+    const accessToken = localStorageService.getItem(LocalStorageKey.AccessToken)
+    const refreshToken = localStorageService.getItem(LocalStorageKey.RefreshToken)
+
+    if (accessToken && refreshToken) {
+      const decodedAccessToken: JwtToken = jwtDecode<AccessToken>(accessToken)
+      if (tokenNeedsRefresh(decodedAccessToken)) {
+        const refresh = async () => {
+          await fetchNewTokens(refreshToken)
+          setLoading(false)
+        }
+
+        refresh()
+      } else {
+        setTokensInLocalStorageAndState({ accessToken, refreshToken })
+        setLoading(false)
+      }
+    } else {
+      setLoading(false)
+    }
+  }, [])
+
+  /**
+   * Register our refresh token interval.
+   */
+  useInterval(checkAndRefreshToken, 2000)
+
+  const value: AuthenticationContextType = { email, token: accessToken, signIn, signOut }
 
   if (loading) {
-    return <Loader />
+    return <Loader/>
   }
 
   return <AuthenticationContext.Provider value={value}>{children}</AuthenticationContext.Provider>

@@ -58,6 +58,16 @@ export class UnauthorizedError extends NonCriticalApiError {
 }
 
 /**
+ * Statuscode: 400
+ */
+export class BadRequestError extends NonCriticalApiError {
+  constructor (message: string) {
+    super(message)
+    this.name = ErrorType.BAD_REQUEST
+  }
+}
+
+/**
  * Displayed on login if either password or user or both are wrong
  */
 export class LoginError extends NonCriticalApiError {
