@@ -1,6 +1,5 @@
 import { Point } from 'geojson'
-import { Expose, Transform, Type } from 'class-transformer'
-import dayjs, { Dayjs } from 'dayjs'
+import { Expose, Type } from 'class-transformer'
 
 export class Tour {
   @Expose()
@@ -19,14 +18,12 @@ export class Tour {
     description: string
 
   @Type(() => Date)
-  @Transform(({ value }) => dayjs(value), { toClassOnly: true })
-    createdAt: Dayjs
+    createdAt: Date
 
   @Type(() => Date)
-  @Transform(({ value }) => dayjs(value), { toClassOnly: true })
-    updatedAt: Dayjs
+    updatedAt: Date
 
-  constructor (id: string, name: string, startLocation: Point, endLocation: Point, description: string, createdAt: Dayjs, updatedAt: Dayjs) {
+  constructor (id: string, name: string, startLocation: Point, endLocation: Point, description: string, createdAt: Date, updatedAt: Date) {
     this.id = id
     this.name = name
     this.startLocation = startLocation

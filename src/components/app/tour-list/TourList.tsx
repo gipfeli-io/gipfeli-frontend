@@ -1,7 +1,9 @@
 import { Tour } from '../../../types/tour'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid'
 import TourListActions from './TourListActions'
 import React from 'react'
+import dayjs from 'dayjs'
+import { dateTimeFormat } from '../../../utils/constants'
 
 type TourListProps = {
   rows: Tour[],
@@ -14,8 +16,20 @@ function getActions (params: GridValueGetterParams<Tour, Tour>): JSX.Element {
 
 const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', flex: 2 },
-  { field: 'createdAt', headerName: 'Created at', type: 'dateTime', flex: 1 },
-  { field: 'updatedAt', headerName: 'Updated at', type: 'dateTime', flex: 1 },
+  {
+    field: 'createdAt',
+    headerName: 'Created at',
+    type: 'dateTime',
+    valueFormatter: (params: GridValueFormatterParams) => { return dayjs(params.value).format(dateTimeFormat) },
+    flex: 1
+  },
+  {
+    field: 'updatedAt',
+    headerName: 'Updated at',
+    type: 'dateTime',
+    valueFormatter: (params: GridValueFormatterParams) => { return dayjs(params.value).format(dateTimeFormat) },
+    flex: 1
+  },
   { field: 'actions', headerName: 'Actions', flex: 0.5, renderCell: getActions }
 ]
 
