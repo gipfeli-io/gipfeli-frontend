@@ -6,7 +6,7 @@ import AuthService from '../../../services/auth/auth-service'
 import Loader from '../../shared/Loader'
 import Typography from '@mui/material/Typography'
 
-const TourCreate = () => {
+const ActivateUser = () => {
   const { userId, token } = useParams()
   const navigate = useNavigate()
   const { triggerSuccessNotification } = useNotifications()
@@ -36,4 +36,4 @@ const TourCreate = () => {
   </>
 }
 
-export default TourCreate
+export default ActivateUser
