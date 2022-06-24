@@ -13,6 +13,8 @@ import { Tour } from '../../../types/tour'
 import { Link } from 'react-router-dom'
 import Loader from '../../shared/Loader'
 import useApiError from '../../../hooks/use-api-error'
+import { dateTimeFormat } from '../../../utils/constants'
+import dayjs from 'dayjs'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -27,7 +29,7 @@ const TourDetail = () => {
     async function fetchTour () {
       const data = await service.findOne(id!)
       if (data.success) {
-        setTour(data.content!)
+        setTour(data.content)
       } else {
         throwError(data)
       }
@@ -59,12 +61,12 @@ const TourDetail = () => {
         <Grid container mb={2} direction={'row'} spacing={5}>
           <Grid item>
             <Typography variant="subtitle1" gutterBottom component="div">
-              Created at: {tour.createdAt.format('DD.MM.YYYY hh:mm')}
+              Created at: {dayjs(tour.createdAt).format(dateTimeFormat)}
             </Typography>
           </Grid>
           <Grid item>
             <Typography variant="subtitle1" gutterBottom component="div">
-              Last updated at: {tour.updatedAt.format('DD.MM.YYYY hh:mm')}
+              Last updated at: {dayjs(tour.updatedAt).format(dateTimeFormat)}
             </Typography>
           </Grid>
         </Grid>

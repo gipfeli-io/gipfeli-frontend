@@ -20,6 +20,7 @@ import NotificationProvider from './components/providers/NotificationProvider'
 import SwitchableThemeProvider from './components/providers/SwitchableThemeProvider'
 import ErrorBoundary from './components/shared/ErrorBoundary'
 import initializeSentry from './utils/initialize-sentry'
+import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import SignUp from './components/pages/SignUp'
 import ActivateUser from './components/pages/user/ActivateUser'
 
@@ -66,3 +67,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()
+serviceWorkerRegistration.register()
