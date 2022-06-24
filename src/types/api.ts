@@ -41,9 +41,9 @@ export type ClassCastHint<T> = (new (...args: any[]) => T) | void
  */
 export interface RequestBody {
   headers: {
-    'Content-Type': string
+    'Content-Type'?: string
     'Authorization'?: string
   };
   method: string
-  body?: string
+  body?: string | FormData
 }

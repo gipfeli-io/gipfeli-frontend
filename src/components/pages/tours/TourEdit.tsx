@@ -44,6 +44,10 @@ const EditTour = () => {
     }
   }
 
+  const handleImageUpload: handleSave<File[]> = async (images: File[]) => {
+    console.log('xx')
+  }
+
   if (!tour) {
     return (<Loader/>)
   }
@@ -53,7 +57,7 @@ const EditTour = () => {
       <Typography variant="h2" gutterBottom component="div">
         Edit Tour
       </Typography>
-      <TourForm tour={tour} saveHandler={updateTour} type={'Edit'}/>
+      <TourForm tour={tour} saveHandler={updateTour} handleImageUpload={handleImageUpload} type={'Edit'}/>
     </>
   )
 }
