@@ -1,14 +1,16 @@
 import APIService from '../api-service'
 import { Tour, UpdateOrCreateTour } from '../../types/tour'
 import { ArrayApiResponse, SingleApiResponse } from '../../types/api'
-import { localDB } from '../../components/shared/local-database/local-db'
+import LocalDatabaseService from '../local-database-service'
 
 export default class ToursService extends APIService {
   private prefix: string = 'tours'
+  private localDatabaseService: LocalDatabaseService
 
   constructor (token: string | undefined) {
     super()
     this.accessToken = token
+    this.localDatabaseService = new LocalDatabaseService()
   }
 
   public async findAll (): Promise<ArrayApiResponse<Tour>> {
@@ -18,24 +20,7 @@ export default class ToursService extends APIService {
       Tour
     )
 
-    // todo: refactor to find more elegant implementation
-    if (result.statusCode === 500) {
-      const wrapper = this.createResponseWrapper(true, 200, 'fetched from local database')
-      const tours = await localDB.tours.toArray()
-      return { content: tours, ...wrapper }
-    }
-
-    if (!result.content) {
-      result.content = []
-    }
-    ToursService.addToursToLocalDatabase(result.content)
-
-    return result
-  }
-
-  private static addToursToLocalDatabase (tourList: Tour[]): void {
-    localDB.tours.clear()
-    localDB.tours.bulkAdd(tourList)
+    return this.handleTourListResult(result)
   }
 
   public async findOne (id: string): Promise<SingleApiResponse<Tour>> {
@@ -66,5 +51,18 @@ export default class ToursService extends APIService {
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('DELETE', {})
     )
+  }
+
+  private async handleTourListResult (result: ArrayApiResponse<Tour>): Promise<ArrayApiResponse<Tour>> {
+    if (result.statusCode === 500) {
+      const wrapper = this.createResponseWrapper(true, 200, 'serve data from local database')
+      const tours = await this.localDatabaseService.findAllTours()
+      return { content: tours, ...wrapper }
+    }
+    if (!result.content) {
+      result.content = []
+    }
+    await this.localDatabaseService.addTourList(result.content)
+    return result
   }
 }
