@@ -1,6 +1,6 @@
 import APIService from '../api-service'
 import { Tour, UpdateOrCreateTour } from '../../types/tour'
-import { ArrayApiResponse, SingleApiResponse } from '../../types/api'
+import { ApiResponseWrapper, ArrayApiResponse, SingleApiResponse } from '../../types/api'
 import LocalDatabaseService from '../local-database-service'
 import dayjs from 'dayjs'
 
@@ -25,11 +25,13 @@ export default class ToursService extends APIService {
   }
 
   public async findOne (id: string): Promise<SingleApiResponse<Tour>> {
-    return this.fetchSingleDataFromApi(
+    const result = await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('GET', {}),
       Tour
     )
+
+    return this.handleGetOneResult(result, id)
   }
 
   public async create (tour: UpdateOrCreateTour): Promise<SingleApiResponse<Tour>> {
@@ -55,14 +57,40 @@ export default class ToursService extends APIService {
     )
   }
 
+  private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string): Promise<SingleApiResponse<Tour>> {
+    const localTour = await this.localDatabaseService.getOne(tourId)
+    if (result.statusCode === 500 || result.statusCode === 404) {
+      if (localTour) {
+        const wrapper = this.getSuccessWrapper('got data from local database')
+        return { content: localTour, ...wrapper }
+      }
+
+      if (result.statusCode === 500) {
+        // todo: refactor
+        result.statusCode = 404
+        result.statusMessage = 'Could not find tour'
+      }
+    }
+
+    if (!localTour && result.statusCode === 200) {
+      await this.localDatabaseService.putTour(result.content!)
+    }
+
+    return result
+  }
+
+  private getSuccessWrapper (message: string): ApiResponseWrapper {
+    return this.createResponseWrapper(true, 200, message)
+  }
+
   private async handleTourAddResult (tour: UpdateOrCreateTour, result: SingleApiResponse<Tour>): Promise<SingleApiResponse<Tour>> {
     if (result.statusCode === 500) {
-      const wrapper = this.createResponseWrapper(true, 200, 'added data to local database')
+      const wrapper = this.getSuccessWrapper('added data to local database')
       const localTour = ToursService.createLocalTour(tour)
-      await this.localDatabaseService.addTour(localTour)
+      await this.localDatabaseService.putTour(localTour)
       return { content: localTour, ...wrapper }
     } else if (result.statusCode === 201) {
-      await this.localDatabaseService.addTour(result.content!)
+      await this.localDatabaseService.putTour(result.content!)
     }
 
     return result
@@ -83,7 +111,7 @@ export default class ToursService extends APIService {
 
   private async handleTourListResult (result: ArrayApiResponse<Tour>): Promise<ArrayApiResponse<Tour>> {
     if (result.statusCode === 500) {
-      const wrapper = this.createResponseWrapper(true, 200, 'serve data from local database')
+      const wrapper = this.getSuccessWrapper('serve data from local database')
       const tours = await this.localDatabaseService.findAllTours()
       return { content: tours, ...wrapper }
     } else {

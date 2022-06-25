@@ -10,7 +10,16 @@ export default class LocalDatabaseService {
     return localDB.tours.toArray()
   }
 
-  public async addTour (tour: Tour): Promise<void> {
-    await localDB.tours.add(tour)
+  /**
+   * If a tour does not exist in the table it will be created
+   * If it exists it will be updated
+   * @param tour
+   */
+  public async putTour (tour: Tour): Promise<void> {
+    await localDB.tours.put(tour)
+  }
+
+  public async getOne (id: string): Promise<Tour|undefined> {
+    return localDB.tours.get(id)
   }
 }
