@@ -2,7 +2,6 @@ import APIService from '../api-service'
 import { Tour, UpdateOrCreateTour } from '../../types/tour'
 import { ApiResponseWrapper, ArrayApiResponse, SingleApiResponse } from '../../types/api'
 import LocalDatabaseService from '../local-database-service'
-import dayjs from 'dayjs'
 
 export default class ToursService extends APIService {
   private prefix: string = 'tours'
@@ -43,11 +42,20 @@ export default class ToursService extends APIService {
     return this.handleTourAddResult(tour, result)
   }
 
-  public async update (id: string, tour: UpdateOrCreateTour): Promise<SingleApiResponse<void>> {
-    return this.fetchSingleDataFromApi(
+  public async update (id: string, tour: UpdateOrCreateTour): Promise<SingleApiResponse<unknown>> {
+    const localTour = await this.localDatabaseService.getOne(id)
+
+    if (localTour && !localTour.isSynced) {
+      const updatedTour = this.localDatabaseService.updateLocalTour(localTour, tour)
+      await this.localDatabaseService.putTour(updatedTour)
+      return { content: undefined, ...this.getSuccessWrapper('updated unsynced tour in local database') }
+    }
+
+    const result = await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('PATCH', tour)
     )
+    return this.handleTourUpdateResult(result, tour, localTour)
   }
 
   public async delete (id: string): Promise<SingleApiResponse<void>> {
@@ -55,6 +63,20 @@ export default class ToursService extends APIService {
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('DELETE', {})
     )
+  }
+
+  private async handleTourUpdateResult (result: SingleApiResponse<unknown>, tour: UpdateOrCreateTour, localTour: Tour | undefined): Promise<SingleApiResponse<unknown>> {
+    if (result.statusCode === 500) {
+      let updatedTour
+      if (!localTour) { // todo: will this ever happen?
+        updatedTour = this.localDatabaseService.createLocalTour(tour)
+      } else {
+        updatedTour = this.localDatabaseService.updateLocalTour(localTour, tour)
+      }
+      await this.localDatabaseService.putTour(updatedTour)
+      return { ...this.getSuccessWrapper('updated tour in local database') }
+    }
+    return result
   }
 
   private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string): Promise<SingleApiResponse<Tour>> {
@@ -76,6 +98,11 @@ export default class ToursService extends APIService {
       await this.localDatabaseService.putTour(result.content!)
     }
 
+    // if the tour hasn't been synced yet serve the tour saved in the local db
+    if (!localTour?.isSynced) {
+      result.content = localTour
+    }
+
     return result
   }
 
@@ -86,7 +113,7 @@ export default class ToursService extends APIService {
   private async handleTourAddResult (tour: UpdateOrCreateTour, result: SingleApiResponse<Tour>): Promise<SingleApiResponse<Tour>> {
     if (result.statusCode === 500) {
       const wrapper = this.getSuccessWrapper('added data to local database')
-      const localTour = ToursService.createLocalTour(tour)
+      const localTour = this.localDatabaseService.createLocalTour(tour)
       await this.localDatabaseService.putTour(localTour)
       return { content: localTour, ...wrapper }
     } else if (result.statusCode === 201) {
@@ -94,19 +121,6 @@ export default class ToursService extends APIService {
     }
 
     return result
-  }
-
-  private static createLocalTour (tour: UpdateOrCreateTour): Tour {
-    const id = crypto.randomUUID().toString()
-    const localTour = new Tour(id, tour.name, {
-      type: 'Point',
-      coordinates: []
-    }, {
-      type: 'Point',
-      coordinates: []
-    }, tour.description, dayjs().toDate(), dayjs().toDate())
-    localTour.isSynced = false
-    return localTour
   }
 
   private async handleTourListResult (result: ArrayApiResponse<Tour>): Promise<ArrayApiResponse<Tour>> {
