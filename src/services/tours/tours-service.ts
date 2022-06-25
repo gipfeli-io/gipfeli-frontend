@@ -58,7 +58,7 @@ export default class ToursService extends APIService {
   private async handleTourAddResult (tour: UpdateOrCreateTour, result: SingleApiResponse<Tour>): Promise<SingleApiResponse<Tour>> {
     if (result.statusCode === 500) {
       const wrapper = this.createResponseWrapper(true, 200, 'added data to local database')
-      const localTour = this.createLocalTour(tour)
+      const localTour = ToursService.createLocalTour(tour)
       await this.localDatabaseService.addTour(localTour)
       return { content: localTour, ...wrapper }
     } else if (result.statusCode === 201) {
@@ -68,9 +68,15 @@ export default class ToursService extends APIService {
     return result
   }
 
-  private createLocalTour (tour: UpdateOrCreateTour): Tour {
+  private static createLocalTour (tour: UpdateOrCreateTour): Tour {
     const id = crypto.randomUUID().toString()
-    const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, dayjs().toDate(), dayjs().toDate())
+    const localTour = new Tour(id, tour.name, {
+      type: 'Point',
+      coordinates: []
+    }, {
+      type: 'Point',
+      coordinates: []
+    }, tour.description, dayjs().toDate(), dayjs().toDate())
     localTour.isSynced = false
     return localTour
   }
@@ -85,6 +91,8 @@ export default class ToursService extends APIService {
         result.content = []
       }
       await this.localDatabaseService.addTourList(result.content)
+      result.content = await this.localDatabaseService.findAllTours()
+
       return result
     }
   }
