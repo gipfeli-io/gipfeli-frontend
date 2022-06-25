@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography'
-import { UpdateOrCreateTour } from '../../../types/tour'
+import { BaseTour, UpdateOrCreateTour } from '../../../types/tour'
 import TourForm from '../../../components/app/TourForm'
 import ToursService from '../../../services/tours/tours-service'
 import { handleSave } from '../../../types/handle-save'
@@ -15,7 +15,7 @@ const EditTour = () => {
   const { id } = useParams()
   const auth = useAuth()
   const { triggerSuccessNotification } = useNotifications()
-  const [tour, setTour] = useState<UpdateOrCreateTour | undefined>(undefined)
+  const [tour, setTour] = useState<BaseTour | undefined>(undefined)
   const service = new ToursService(auth.token)
   const throwError = useApiError()
 
@@ -23,8 +23,8 @@ const EditTour = () => {
     async function fetchTour () {
       const data = await service.findOne(id!)
       if (data.success) {
-        const { description, endLocation, startLocation, name } = data.content!
-        setTour({ description, endLocation, startLocation, name })
+        const { description, endLocation, startLocation, name, isSynced } = data.content!
+        setTour({ description, endLocation, startLocation, name, isSynced })
       } else {
         throwError(data)
       }
@@ -33,8 +33,9 @@ const EditTour = () => {
     fetchTour()
   }, [])
 
-  const handleSave: handleSave<UpdateOrCreateTour> = async (tour: UpdateOrCreateTour) => {
-    const data = await service.update(id!, tour)
+  const updateTour: handleSave<BaseTour> = async (baseTour: BaseTour) => {
+    const tourToSave: UpdateOrCreateTour = { name: baseTour.name, startLocation: baseTour.startLocation, endLocation: baseTour.endLocation, description: baseTour.description }
+    const data = await service.update(id!, tourToSave)
     if (data.success) {
       triggerSuccessNotification('Successfully updated tour!')
       navigate(`/tours/${id}`)
@@ -52,7 +53,7 @@ const EditTour = () => {
       <Typography variant="h2" gutterBottom component="div">
         Edit Tour
       </Typography>
-      <TourForm tour={tour} handleSave={handleSave} type={'Edit'}/>
+      <TourForm tour={tour} saveHandler={updateTour} type={'Edit'}/>
     </>
   )
 }

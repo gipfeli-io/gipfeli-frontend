@@ -1,10 +1,7 @@
 import { Point } from 'geojson'
-import { Expose, Type } from 'class-transformer'
+import { Exclude, Expose, Type } from 'class-transformer'
 
-export class Tour {
-  @Expose()
-    id: string
-
+export class BaseTour {
   @Expose()
     name: string
 
@@ -17,6 +14,26 @@ export class Tour {
   @Expose()
     description: string
 
+  /**
+   * This is a frontend property only and is not saved/fetched to/from the database
+   * It is only needed to find out which entries are in the local database only and
+   * need to be synced
+   */
+  @Exclude()
+    isSynced: boolean = true
+
+  constructor (name: string, startLocation: Point, endLocation: Point, description: string) {
+    this.name = name
+    this.startLocation = startLocation
+    this.endLocation = endLocation
+    this.description = description
+  }
+}
+
+export class Tour extends BaseTour {
+  @Expose()
+    id: string
+
   @Type(() => Date)
     createdAt: Date
 
@@ -24,11 +41,8 @@ export class Tour {
     updatedAt: Date
 
   constructor (id: string, name: string, startLocation: Point, endLocation: Point, description: string, createdAt: Date, updatedAt: Date) {
+    super(name, startLocation, endLocation, description)
     this.id = id
-    this.name = name
-    this.startLocation = startLocation
-    this.endLocation = endLocation
-    this.description = description
     this.createdAt = createdAt
     this.updatedAt = updatedAt
   }
