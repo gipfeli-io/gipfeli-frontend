@@ -1,5 +1,6 @@
-import { Tour } from '../types/tour'
+import { Tour, UpdateOrCreateTour } from '../types/tour'
 import { localDB } from '../components/shared/local-database/local-db'
+import dayjs from 'dayjs'
 
 export default class LocalDatabaseService {
   public async addTourList (tours: Tour[]): Promise<void> {
@@ -21,5 +22,22 @@ export default class LocalDatabaseService {
 
   public async getOne (id: string): Promise<Tour|undefined> {
     return localDB.tours.get(id)
+  }
+
+  public createLocalTour (tour: UpdateOrCreateTour): Tour {
+    const id = crypto.randomUUID().toString()
+    const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, dayjs().toDate(), dayjs().toDate())
+    localTour.isSynced = false
+    return localTour
+  }
+
+  public updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour): Tour {
+    localTour.name = updatedTour.name
+    localTour.startLocation = updatedTour.startLocation
+    localTour.endLocation = updatedTour.endLocation
+    localTour.description = updatedTour.description
+    localTour.updatedAt = dayjs().toDate()
+    localTour.isSynced = false
+    return localTour
   }
 }
