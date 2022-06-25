@@ -98,6 +98,11 @@ export default class ToursService extends APIService {
       await this.localDatabaseService.putTour(result.content!)
     }
 
+    // if the tour hasn't been synced yet serve the tour saved in the local db
+    if (!localTour?.isSynced) {
+      result.content = localTour
+    }
+
     return result
   }
 

@@ -4,7 +4,14 @@ import dayjs from 'dayjs'
 
 export default class LocalDatabaseService {
   public async addTourList (tours: Tour[]): Promise<void> {
-    await localDB.tours.bulkPut(tours)
+    for (const tour of tours) {
+      const localTour = await localDB.tours.get(tour.id)
+      // only update/add tour to indexed db if it is
+      // not yet added or if it is marked as synced
+      if (!localTour || localTour?.isSynced) {
+        await localDB.tours.put(tour)
+      }
+    }
   }
 
   public async findAllTours (): Promise<Tour[]> {
