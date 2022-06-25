@@ -1,4 +1,4 @@
-import { UpdateOrCreateTour } from '../../types/tour'
+import { BaseTour } from '../../types/tour'
 import { Button, Grid, TextField } from '@mui/material'
 import React, { ChangeEvent, useCallback, useState } from 'react'
 import { handleSave } from '../../types/handle-save'
@@ -8,12 +8,12 @@ import WayPointMarkerLayer from '../shared/map/layers/WayPointMarkerLayer'
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
 
 type TourFormProps = {
-  tour: UpdateOrCreateTour
-  handleSave: handleSave<UpdateOrCreateTour>
+  tour: BaseTour
+  saveHandler: handleSave<BaseTour>
   type: string
 }
 
-export default function TourForm ({ tour, handleSave, type }: TourFormProps) {
+export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
   const navigate = useNavigate()
   const [currentTour, setCurrentTour] = useState(tour)
 
@@ -22,7 +22,7 @@ export default function TourForm ({ tour, handleSave, type }: TourFormProps) {
   const saveTour = async (event: any) => {
     event.preventDefault()
     // todo: perform validation
-    handleSave(currentTour)
+    saveHandler(currentTour)
   }
 
   const handleSetMarker = useCallback((coordinates: number[], id: number) => {
