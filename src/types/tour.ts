@@ -17,10 +17,20 @@ export class BaseTour {
   /**
    * This is a frontend property only and is not saved/fetched to/from the database
    * It is only needed to find out which entries are in the local database only and
-   * need to be synced
+   * need to be synced.
+   * IMPORTANT: As dexie cannot index boolean values the type number is the best option
    */
   @Exclude()
-    isSynced: boolean = true
+    isSynced: number = 1
+
+  /**
+   * This is a frontend property only and is not saved/fetched to/from the database
+   * It is only needed to find out which entries were deleted while offline and
+   * sync them respectively.
+   * IMPORTANT: As dexie cannot index boolean values the type number is the best option
+   */
+  @Exclude()
+    isDeleted: number = 0
 
   constructor (name: string, startLocation: Point, endLocation: Point, description: string) {
     this.name = name

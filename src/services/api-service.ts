@@ -70,7 +70,6 @@ export default abstract class APIService {
    */
   protected async fetchSingleDataFromApi<T> (url: string, body: RequestBody, responseClass: ClassCastHint<T> = undefined): Promise<SingleApiResponse<T>> {
     const [wrapper, responseBody] = await this.fetchDataFromApi(url, body)
-
     if (wrapper.success) {
       let content
       if (responseClass !== undefined) {
