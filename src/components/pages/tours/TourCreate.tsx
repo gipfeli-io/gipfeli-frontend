@@ -10,6 +10,8 @@ import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import MediaService from '../../../services/media/media-service'
 import { ImageUpload } from '../../../types/media'
+import ImageUploadContext from '../../app/image-upload/image-upload-context'
+import { ImageUploadContextType } from '../../../types/contexts'
 
 const TourCreate = () => {
   const auth = useAuth()
@@ -56,12 +58,24 @@ const TourCreate = () => {
       }
     }, [images])
 
+  const removeItem = useCallback((id: string) => {
+    setImages(prevState => prevState.filter((element) => element.id !== id))
+  }, [images])
+
+  const imageContextProps: ImageUploadContextType = {
+    save: handleImageUpload,
+    files: images,
+    remove: removeItem
+  }
+
   return (
     <>
       <Typography variant="h2" gutterBottom component="div">
         Create Tour
       </Typography>
-      <TourForm tour={tour} saveHandler={saveTour} handleImageUpload={handleImageUpload} type={'Create'}/>
+      <ImageUploadContext.Provider value={imageContextProps}>
+        <TourForm tour={tour} saveHandler={saveTour} type={'Create'}/>
+      </ImageUploadContext.Provider>
     </>
   )
 }

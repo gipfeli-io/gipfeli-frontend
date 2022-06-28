@@ -6,16 +6,15 @@ import { useNavigate } from 'react-router'
 import MapWrapper from '../shared/map/MapWrapper'
 import WayPointMarkerLayer from '../shared/map/layers/WayPointMarkerLayer'
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
-import ImageUpload from './ImageUpload'
+import ImageUpload from './image-upload/ImageUpload'
 
 type TourFormProps = {
   tour: BaseTour
   saveHandler: handleSave<BaseTour>
-  handleImageUpload: handleSave<File[]>
   type: string
 }
 
-export default function TourForm ({ tour, saveHandler, handleImageUpload, type }: TourFormProps) {
+export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
   const navigate = useNavigate()
   const [currentTour, setCurrentTour] = useState(tour)
 
@@ -25,10 +24,6 @@ export default function TourForm ({ tour, saveHandler, handleImageUpload, type }
     event.preventDefault()
     // todo: perform validation
     saveHandler(currentTour)
-  }
-
-  const saveImages = async (images: File[]) => {
-    handleImageUpload(images)
   }
 
   const handleSetMarker = useCallback((coordinates: number[], id: number) => {
@@ -83,7 +78,7 @@ export default function TourForm ({ tour, saveHandler, handleImageUpload, type }
       </Grid>
 
       <Grid item xs={12}>
-        <ImageUpload handleUpload={saveImages}/>
+        <ImageUpload/>
       </Grid>
     </Grid>
     <Grid container spacing={2} mt={2} direction={'row'} alignItems={'center'} justifyContent={'center'}>

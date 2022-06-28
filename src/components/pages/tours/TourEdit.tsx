@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../../shared/Loader'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
+import { Button } from '@mui/material'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -62,8 +63,9 @@ const EditTour = () => {
     <>
       <Typography variant="h2" gutterBottom component="div">
         Edit Tour
+        <Button onClick={() => handleImageUpload([])}></Button>
       </Typography>
-      <TourForm tour={tour} saveHandler={updateTour} handleImageUpload={handleImageUpload} type={'Edit'}/>
+      <TourForm tour={tour} saveHandler={updateTour} type={'Edit'}/>
     </>
   )
 }
