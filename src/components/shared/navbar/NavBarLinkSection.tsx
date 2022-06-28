@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography'
 import { Button, Stack } from '@mui/material'
 import { Link } from 'react-router-dom'
 
-const NavBarUserSection = () => {
+const NavBarLinkSection = () => {
   const auth = useAuth()
 
   return <>
@@ -22,4 +22,4 @@ const NavBarUserSection = () => {
   </>
 }
 
-export default NavBarUserSection
+export default NavBarLinkSection
