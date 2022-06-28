@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useDropzone } from 'react-dropzone'
 import styles from './ImageUpload.module.scss'
 
@@ -7,9 +7,10 @@ type ImageUploadProps = {
 }
 
 const ImageUpload = ({ handleUpload }: ImageUploadProps) => {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDrop = (acceptedFiles: File[]) => {
     handleUpload(acceptedFiles)
-  }, [])
+  }
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   return (

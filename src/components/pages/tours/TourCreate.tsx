@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 import useAuth from '../../../hooks/use-auth'
 import ToursService from '../../../services/tours/tours-service'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { BaseTour, UpdateOrCreateTour } from '../../../types/tour'
 import { handleSave } from '../../../types/handle-save'
 import Typography from '@mui/material/Typography'
@@ -9,6 +9,7 @@ import TourForm from '../../app/TourForm'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import MediaService from '../../../services/media/media-service'
+import { ImageUpload } from '../../../types/media'
 
 const TourCreate = () => {
   const auth = useAuth()
@@ -17,6 +18,7 @@ const TourCreate = () => {
   const toursService = new ToursService(auth.token)
   const mediaService = new MediaService(auth.token)
   const throwError = useApiError()
+  const [images, setImages] = useState<ImageUpload[]>([])
 
   const tour: BaseTour = new BaseTour('', { // Todo: make empty and add points in edit
     type: 'Point',
@@ -27,7 +29,13 @@ const TourCreate = () => {
   }, '')
 
   const saveTour: handleSave<BaseTour> = async (baseTour: BaseTour) => {
-    const tourToSave: UpdateOrCreateTour = { name: baseTour.name, startLocation: baseTour.startLocation, endLocation: baseTour.endLocation, description: baseTour.description }
+    const tourToSave: UpdateOrCreateTour = {
+      name: baseTour.name,
+      startLocation: baseTour.startLocation,
+      endLocation: baseTour.endLocation,
+      description: baseTour.description,
+      images
+    }
     const data = await toursService.create(tourToSave) // todo: handle errors
     if (data.success) {
       triggerSuccessNotification('Created new tour!')
@@ -37,11 +45,16 @@ const TourCreate = () => {
     }
   }
 
-  const handleImageUpload: handleSave<File[]> = async (images: File[]) => {
-    for (const image of images) {
-      await mediaService.uploadImage(image) // todo: handle errors
-    }
-  }
+  const handleImageUpload: handleSave<File[]> = useCallback(
+    async (uploadedImages: File[]) => {
+      for (const uploadedImage of uploadedImages) {
+        const data = await mediaService.uploadImage(uploadedImage)
+
+        if (data.success) {
+          setImages(prevState => [...prevState, data.content!])
+        }
+      }
+    }, [images])
 
   return (
     <>

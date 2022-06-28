@@ -1,6 +1,6 @@
 import APIService from '../api-service'
-import { Tour } from '../../types/tour'
 import { RequestBody, SingleApiResponse } from '../../types/api'
+import { ImageUpload } from '../../types/media'
 
 export default class MediaService extends APIService {
   private prefix: string = 'media'
@@ -10,11 +10,11 @@ export default class MediaService extends APIService {
     this.accessToken = token
   }
 
-  public async uploadImage (image: File): Promise<SingleApiResponse<Tour>> {
+  public async uploadImage (image: File): Promise<SingleApiResponse<ImageUpload>> {
     return this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, 'upload-image'),
       this.getRequestBody('POST', image, 'image'),
-      Tour
+      ImageUpload
     )
   }
 

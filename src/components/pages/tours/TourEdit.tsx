@@ -24,7 +24,7 @@ const EditTour = () => {
       const data = await service.findOne(id!)
       if (data.success) {
         const { description, endLocation, startLocation, name, isSynced } = data.content!
-        setTour({ description, endLocation, startLocation, name, isSynced })
+        setTour({ description, endLocation, startLocation, name, isSynced, images: [] })
       } else {
         throwError(data)
       }
@@ -34,7 +34,13 @@ const EditTour = () => {
   }, [])
 
   const updateTour: handleSave<BaseTour> = async (baseTour: BaseTour) => {
-    const tourToSave: UpdateOrCreateTour = { name: baseTour.name, startLocation: baseTour.startLocation, endLocation: baseTour.endLocation, description: baseTour.description }
+    const tourToSave: UpdateOrCreateTour = {
+      name: baseTour.name,
+      startLocation: baseTour.startLocation,
+      endLocation: baseTour.endLocation,
+      description: baseTour.description,
+      images: []
+    }
     const data = await service.update(id!, tourToSave)
     if (data.success) {
       triggerSuccessNotification('Successfully updated tour!')
