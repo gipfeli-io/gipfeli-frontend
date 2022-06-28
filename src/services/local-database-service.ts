@@ -8,14 +8,14 @@ export default class LocalDatabaseService {
       const localTour = await localDB.tours.get(tour.id)
       // only update/add tour to indexed db if it is
       // not yet added or if it is marked as synced
-      if (!localTour || localTour?.isSynced) {
+      if (!localTour || localTour?.isSynced === 1) {
         await localDB.tours.put(tour)
       }
     }
   }
 
   public async findAllTours (): Promise<Tour[]> {
-    return localDB.tours.toArray()
+    return localDB.tours.where('isDeleted').equals(0).toArray()
   }
 
   /**
@@ -31,10 +31,23 @@ export default class LocalDatabaseService {
     return localDB.tours.get(id)
   }
 
+  public async markTourAsDeleted (tour: Tour): Promise<void> {
+    const localTour = await localDB.tours.get(tour.id)
+    if (localTour) {
+      localTour.isDeleted = 1
+      localTour.isSynced = 0
+      await localDB.tours.put(localTour)
+    }
+  }
+
+  public async deleteTour (id: string): Promise<void> {
+    await localDB.tours.delete(id)
+  }
+
   public createLocalTour (tour: UpdateOrCreateTour): Tour {
     const id = crypto.randomUUID().toString()
     const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, dayjs().toDate(), dayjs().toDate())
-    localTour.isSynced = false
+    localTour.isSynced = 0
     return localTour
   }
 
@@ -44,7 +57,7 @@ export default class LocalDatabaseService {
     localTour.endLocation = updatedTour.endLocation
     localTour.description = updatedTour.description
     localTour.updatedAt = dayjs().toDate()
-    localTour.isSynced = false
+    localTour.isSynced = 0
     return localTour
   }
 }

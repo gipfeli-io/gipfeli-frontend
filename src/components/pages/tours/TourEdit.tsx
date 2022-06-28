@@ -23,8 +23,8 @@ const EditTour = () => {
     async function fetchTour () {
       const data = await service.findOne(id!)
       if (data.success) {
-        const { description, endLocation, startLocation, name, isSynced } = data.content!
-        setTour({ description, endLocation, startLocation, name, isSynced })
+        const { description, endLocation, startLocation, name, isSynced, isDeleted } = data.content!
+        setTour({ description, endLocation, startLocation, name, isSynced, isDeleted })
       } else {
         throwError(data)
       }
