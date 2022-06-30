@@ -19,7 +19,7 @@ const getName = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
   const fieldValue: JSX.Element =
     params.row.isSynced === 1
       ? <>{params.row.name}</>
-      : <><span title="This entry is not synchronized with the database."><OfflineBolt sx={{ mr: 1 }}/></span>{params.row.name} </>
+      : <><span title="This tour is not synchronized with the database."><OfflineBolt sx={{ mr: 1 }}/></span>{params.row.name} </>
   return fieldValue
 }
 

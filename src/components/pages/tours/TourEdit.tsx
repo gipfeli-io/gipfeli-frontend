@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../../shared/Loader'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
+import { OfflineBoltOutlined } from '@mui/icons-material'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -50,8 +51,10 @@ const EditTour = () => {
 
   return (
     <>
-      <Typography variant="h2" gutterBottom component="div">
+      <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
         Edit Tour
+        { !tour.isSynced &&
+            <span title={'This tour is not synchronized with the database.'}><OfflineBoltOutlined color={'warning'} sx={{ ml: 2 }}/></span>}
       </Typography>
       <TourForm tour={tour} saveHandler={updateTour} type={'Edit'}/>
     </>

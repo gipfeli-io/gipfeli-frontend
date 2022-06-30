@@ -53,7 +53,7 @@ const TourDetail = () => {
   }
   return (
       <>
-        <Typography variant="h2" gutterBottom component="div">
+        <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
           {tour.name}
             <MuiLink component={Link} to='edit'><EditIcon/></MuiLink>
           <MuiLink href="#" onClick={() => setOpen(true)}><DeleteIcon/></MuiLink>
