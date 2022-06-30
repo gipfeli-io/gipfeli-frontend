@@ -4,18 +4,27 @@ import TourListActions from './TourListActions'
 import React from 'react'
 import dayjs from 'dayjs'
 import { dateTimeFormat } from '../../../utils/constants'
+import { OfflineBolt } from '@mui/icons-material'
 
 type TourListProps = {
   rows: Tour[],
   loading: boolean,
 }
 
-function getActions (params: GridValueGetterParams<Tour, Tour>): JSX.Element {
+const getActions = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
   return <TourListActions id={params.row.id} />
 }
 
+const getName = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
+  const fieldValue: JSX.Element =
+    params.row.isSynced === 1
+      ? <>{params.row.name}</>
+      : <><span title="This entry is not synchronized with the database."><OfflineBolt sx={{ mr: 1 }}/></span>{params.row.name} </>
+  return fieldValue
+}
+
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Name', flex: 2 },
+  { field: 'name', headerName: 'Name', flex: 2, renderCell: getName },
   {
     field: 'createdAt',
     headerName: 'Created at',
@@ -33,8 +42,8 @@ const columns: GridColDef[] = [
   { field: 'actions', headerName: 'Actions', flex: 0.5, renderCell: getActions }
 ]
 
-export default function TourList ({ loading, rows }: TourListProps): JSX.Element {
-  return <div style={{ width: '100%' }}>
+const TourList = ({ loading, rows }: TourListProps): JSX.Element => (
+  <div style={{ width: '100%' }}>
     <DataGrid
       loading={loading}
       autoHeight
@@ -43,4 +52,5 @@ export default function TourList ({ loading, rows }: TourListProps): JSX.Element
       rows={rows}
       columns={columns}/>
   </div>
-}
+)
+export default TourList

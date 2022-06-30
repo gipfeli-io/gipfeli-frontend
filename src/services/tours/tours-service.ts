@@ -135,8 +135,6 @@ export default class ToursService extends APIService {
   }
 
   private async handleTourListResult (result: ArrayApiResponse<Tour>): Promise<ArrayApiResponse<Tour>> {
-    console.log('result content handle tour list: ', result.content)
-
     if (result.statusCode === 500) {
       const wrapper = this.getSuccessWrapper('serve data from local database')
       const tours = await this.localDatabaseService.findAllTours()

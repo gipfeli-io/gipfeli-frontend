@@ -5,7 +5,7 @@ type BannerProps = {
   bannerContent: JSX.Element | null
 }
 
-const Banner = ({ bannerContent }: BannerProps) => {
+const Banner = ({ bannerContent }: BannerProps) : JSX.Element | null => {
   if (!bannerContent) {
     return null
   }
