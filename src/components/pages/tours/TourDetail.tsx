@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography'
-import { Divider, Grid, Link as MuiLink } from '@mui/material'
+import { Divider, Grid, ImageList, ImageListItem, Link as MuiLink } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import React, { useEffect, useState } from 'react'
@@ -49,45 +49,70 @@ const TourDetail = () => {
   }
 
   if (!tour) {
-    return (<Loader />)
+    return (<Loader/>)
   }
   return (
-      <>
-        <Typography variant="h2" gutterBottom component="div">
-          {tour.name}
-            <MuiLink component={Link} to='edit'><EditIcon/></MuiLink>
-          <MuiLink href="#" onClick={() => setOpen(true)}><DeleteIcon/></MuiLink>
-        </Typography>
-        <Grid container mb={2} direction={'row'} spacing={5}>
-          <Grid item>
-            <Typography variant="subtitle1" gutterBottom component="div">
-              Created at: {dayjs(tour.createdAt).format(dateTimeFormat)}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle1" gutterBottom component="div">
-              Last updated at: {dayjs(tour.updatedAt).format(dateTimeFormat)}
-            </Typography>
-          </Grid>
+    <>
+      <Typography variant="h2" gutterBottom component="div">
+        {tour.name}
+        <MuiLink component={Link} to="edit"><EditIcon/></MuiLink>
+        <MuiLink href="#" onClick={() => setOpen(true)}><DeleteIcon/></MuiLink>
+      </Typography>
+      <Grid container mb={2} direction={'row'} spacing={5}>
+        <Grid item>
+          <Typography variant="subtitle1" gutterBottom component="div">
+            Created at: {dayjs(tour.createdAt).format(dateTimeFormat)}
+          </Typography>
         </Grid>
-        <Divider/>
-        <MapWrapper>
-          <WayPointMarkerLayer features={[tour.startLocation, tour.endLocation]}/>
-        </MapWrapper>
-        <Grid container mb={2} mt={2} direction={'column'}>
-          <Grid item>
-            <Typography variant="h5" gutterBottom component="div">
-              Tour description
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body1" gutterBottom component="div" whiteSpace={'pre-wrap'}>
-              {tour.description}
-            </Typography>
-          </Grid>
+        <Grid item>
+          <Typography variant="subtitle1" gutterBottom component="div">
+            Last updated at: {dayjs(tour.updatedAt).format(dateTimeFormat)}
+          </Typography>
         </Grid>
-        <TourDeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
-      </>
+      </Grid>
+      <Divider/>
+      <MapWrapper>
+        <WayPointMarkerLayer features={[tour.startLocation, tour.endLocation]}/>
+      </MapWrapper>
+      <Grid container mb={2} mt={2} direction={'column'}>
+        <Grid item>
+          <Typography variant="h5" gutterBottom component="div">
+            Tour description
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="body1" gutterBottom component="div" whiteSpace={'pre-wrap'}>
+            {tour.description}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid container mb={2} mt={2} direction={'column'}>
+        <Grid item>
+          <Typography variant="h5" gutterBottom component="div">
+            Tour images
+          </Typography>
+          <Typography variant="h5" align="center" color="text.secondary" paragraph>
+            Something short and leading about the collection below—its contents,
+            the creator, etc. Make it short and sweet, but not too short so folks
+            don&apos;t simply skip over it entirely.
+          </Typography>
+        </Grid>
+        <Grid item>
+          <ImageList cols={6} gap={8}>
+            {tour.images.map((item, index) => (
+              <ImageListItem key={index}>
+                <img
+                  src={`${process.env.REACT_APP_STORAGE_BUCKET_BASE_URL + item.identifier}`}
+                  alt={item.identifier}
+                  loading="lazy"
+                />
+              </ImageListItem>
+            ))}
+          </ImageList>
+        </Grid>
+      </Grid>
+      <TourDeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
+    </>
   )
 }
 
