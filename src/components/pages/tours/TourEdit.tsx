@@ -14,6 +14,7 @@ import ImageUploadContext from '../../shared/images/upload/image-upload-context'
 import { ImageUploadContextType } from '../../../types/contexts'
 import { ImageUpload } from '../../../types/media'
 import MediaService from '../../../services/media/media-service'
+import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -25,6 +26,7 @@ const EditTour = () => {
   const mediaService = new MediaService(auth.token)
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
+  const handleImageUpload = useHandleImageUpload(mediaService, images, setImages)
 
   useEffect(() => {
     async function fetchTour () {
@@ -57,19 +59,6 @@ const EditTour = () => {
       throwError(data)
     }
   }
-
-  const handleImageUpload: handleSave<File[]> = useCallback(
-    async (uploadedImages: File[]) => {
-      for (const uploadedImage of uploadedImages) {
-        const data = await mediaService.uploadImage(uploadedImage)
-
-        if (data.success) {
-          setImages(prevState => [...prevState, data.content!])
-        } else {
-          throwError(data, false)
-        }
-      }
-    }, [images])
 
   const removeItem = useCallback((id: string) => {
     setImages(prevState => prevState.filter((element) => element.id !== id))

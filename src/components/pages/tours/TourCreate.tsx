@@ -12,6 +12,7 @@ import MediaService from '../../../services/media/media-service'
 import { ImageUpload } from '../../../types/media'
 import { ImageUploadContextType } from '../../../types/contexts'
 import ImageUploadContext from '../../shared/images/upload/image-upload-context'
+import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 
 const TourCreate = () => {
   const auth = useAuth()
@@ -21,6 +22,7 @@ const TourCreate = () => {
   const mediaService = new MediaService(auth.token)
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
+  const handleImageUpload = useHandleImageUpload(mediaService, images, setImages)
 
   const tour: BaseTour = new BaseTour('', { // Todo: make empty and add points in edit
     type: 'Point',
@@ -46,19 +48,6 @@ const TourCreate = () => {
       throwError(data)
     }
   }
-
-  const handleImageUpload: handleSave<File[]> = useCallback(
-    async (uploadedImages: File[]) => {
-      for (const uploadedImage of uploadedImages) {
-        const data = await mediaService.uploadImage(uploadedImage)
-
-        if (data.success) {
-          setImages(prevState => [...prevState, data.content!])
-        } else {
-          throwError(data, false)
-        }
-      }
-    }, [images])
 
   const removeItem = useCallback((id: string) => {
     setImages(prevState => prevState.filter((element) => element.id !== id))
