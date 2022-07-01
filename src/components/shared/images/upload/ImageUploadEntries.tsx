@@ -2,6 +2,7 @@ import React from 'react'
 import useImageUpload from '../../../../hooks/use-image-upload'
 import { IconButton, ImageList, ImageListItem, ImageListItemBar } from '@mui/material'
 import { Delete } from '@mui/icons-material'
+import Typography from '@mui/material/Typography'
 
 const ImageUploadEntries = () => {
   const { files, remove } = useImageUpload()
@@ -12,7 +13,9 @@ const ImageUploadEntries = () => {
 
   return (
     <>
-      Uploaded Images:
+      <Typography variant="h6" gutterBottom component="div">
+        Currently uploaded images:
+      </Typography>
       <ImageList cols={6} gap={8}>
         {files.map((item, index) => (
           <ImageListItem key={index}>

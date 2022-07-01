@@ -54,6 +54,8 @@ const TourCreate = () => {
 
         if (data.success) {
           setImages(prevState => [...prevState, data.content!])
+        } else {
+          throwError(data, false)
         }
       }
     }, [images])

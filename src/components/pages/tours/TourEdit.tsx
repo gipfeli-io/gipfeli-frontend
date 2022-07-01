@@ -5,11 +5,15 @@ import ToursService from '../../../services/tours/tours-service'
 import { handleSave } from '../../../types/handle-save'
 import { useNavigate, useParams } from 'react-router'
 import useAuth from '../../../hooks/use-auth'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Loader from '../../shared/Loader'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import { Button } from '@mui/material'
+import ImageUploadContext from '../../shared/images/upload/image-upload-context'
+import { ImageUploadContextType } from '../../../types/contexts'
+import { ImageUpload } from '../../../types/media'
+import MediaService from '../../../services/media/media-service'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -18,14 +22,17 @@ const EditTour = () => {
   const { triggerSuccessNotification } = useNotifications()
   const [tour, setTour] = useState<BaseTour | undefined>(undefined)
   const service = new ToursService(auth.token)
+  const mediaService = new MediaService(auth.token)
   const throwError = useApiError()
+  const [images, setImages] = useState<ImageUpload[]>([])
 
   useEffect(() => {
     async function fetchTour () {
       const data = await service.findOne(id!)
       if (data.success) {
-        const { description, endLocation, startLocation, name, isSynced } = data.content!
+        const { description, endLocation, startLocation, name, isSynced, images } = data.content!
         setTour({ description, endLocation, startLocation, name, isSynced, images: [] })
+        setImages(images)
       } else {
         throwError(data)
       }
@@ -40,7 +47,7 @@ const EditTour = () => {
       startLocation: baseTour.startLocation,
       endLocation: baseTour.endLocation,
       description: baseTour.description,
-      images: []
+      images
     }
     const data = await service.update(id!, tourToSave)
     if (data.success) {
@@ -51,8 +58,27 @@ const EditTour = () => {
     }
   }
 
-  const handleImageUpload: handleSave<File[]> = async (images: File[]) => {
-    console.log('xx')
+  const handleImageUpload: handleSave<File[]> = useCallback(
+    async (uploadedImages: File[]) => {
+      for (const uploadedImage of uploadedImages) {
+        const data = await mediaService.uploadImage(uploadedImage)
+
+        if (data.success) {
+          setImages(prevState => [...prevState, data.content!])
+        } else {
+          throwError(data, false)
+        }
+      }
+    }, [images])
+
+  const removeItem = useCallback((id: string) => {
+    setImages(prevState => prevState.filter((element) => element.id !== id))
+  }, [images])
+
+  const imageContextProps: ImageUploadContextType = {
+    save: handleImageUpload,
+    files: images,
+    remove: removeItem
   }
 
   if (!tour) {
@@ -65,7 +91,9 @@ const EditTour = () => {
         Edit Tour
         <Button onClick={() => handleImageUpload([])}></Button>
       </Typography>
-      <TourForm tour={tour} saveHandler={updateTour} type={'Edit'}/>
+      <ImageUploadContext.Provider value={imageContextProps}>
+        <TourForm tour={tour} saveHandler={updateTour} type={'Edit'}/>
+      </ImageUploadContext.Provider>
     </>
   )
 }

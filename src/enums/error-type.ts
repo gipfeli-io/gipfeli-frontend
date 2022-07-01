@@ -6,4 +6,5 @@ export enum ErrorType {
   SERVER_ERROR = 'Server Error',
   LOGIN_ERROR = 'Login Error',
   BAD_REQUEST = 'Bad Request',
+  PAYLOAD_TOO_LARGE = 'Payload too large',
 }

@@ -87,19 +87,21 @@ const TourDetail = () => {
           </Typography>
         </Grid>
       </Grid>
-      <Grid container mb={2} mt={2} direction={'column'}>
-        <Grid item>
-          <Typography variant="h5" gutterBottom component="div">
-            Tour images
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom component="div">
-            Click on an image to open its fullscreen original.
-          </Typography>
-        </Grid>
-        <Grid item>
-          <ImageGallery images={tour.images}/>
-        </Grid>
-      </Grid>
+      {tour.images.length > 0 &&
+          <Grid container mb={2} mt={2} direction={'column'}>
+              <Grid item>
+                  <Typography variant="h5" gutterBottom component="div">
+                      Tour images
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom component="div">
+                      Click on an image to open its fullscreen original.
+                  </Typography>
+              </Grid>
+              <Grid item>
+                  <ImageGallery images={tour.images}/>
+              </Grid>
+          </Grid>
+      }
       <TourDeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
     </>
   )

@@ -28,6 +28,16 @@ export abstract class NonCriticalApiError extends GenericApiError {
 }
 
 /**
+ * Statuscode: 413
+ */
+export class PayLoadTooLarge extends NonCriticalApiError {
+  constructor (message: string) {
+    super(message)
+    this.name = ErrorType.PAYLOAD_TOO_LARGE
+  }
+}
+
+/**
  * Statuscode: 404
  */
 export class NotFoundError extends NonCriticalApiError {
