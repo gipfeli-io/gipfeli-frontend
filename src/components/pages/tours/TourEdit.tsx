@@ -32,6 +32,7 @@ const EditTour = () => {
       if (data.success) {
         const { description, endLocation, startLocation, name, isSynced, isDeleted, images } = data.content!
         setTour({ description, endLocation, startLocation, name, isSynced, isDeleted, images: [] })
+        setImages(images)
       } else {
         throwError(data)
       }
