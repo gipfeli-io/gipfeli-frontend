@@ -1,5 +1,5 @@
 import React from 'react'
-import useImageUpload from '../../../hooks/use-image-upload'
+import useImageUpload from '../../../../hooks/use-image-upload'
 import { IconButton, ImageList, ImageListItem, ImageListItemBar } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 

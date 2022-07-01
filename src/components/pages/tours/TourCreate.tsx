@@ -10,8 +10,8 @@ import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import MediaService from '../../../services/media/media-service'
 import { ImageUpload } from '../../../types/media'
-import ImageUploadContext from '../../app/image-upload/image-upload-context'
 import { ImageUploadContextType } from '../../../types/contexts'
+import ImageUploadContext from '../../shared/images/upload/image-upload-context'
 
 const TourCreate = () => {
   const auth = useAuth()

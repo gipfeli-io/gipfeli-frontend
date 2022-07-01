@@ -1,5 +1,5 @@
-import ImageUploadContext from '../components/app/image-upload/image-upload-context'
 import { useContext } from 'react'
+import ImageUploadContext from '../components/shared/images/upload/image-upload-context'
 
 const useImageUpload = () => useContext(ImageUploadContext)
 

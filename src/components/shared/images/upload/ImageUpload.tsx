@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDropzone } from 'react-dropzone'
 import styles from './ImageUpload.module.scss'
-import useImageUpload from '../../../hooks/use-image-upload'
+import useImageUpload from '../../../../hooks/use-image-upload'
 import ImageUploadEntries from './ImageUploadEntries'
 
 const ImageUpload = () => {

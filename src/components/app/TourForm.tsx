@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router'
 import MapWrapper from '../shared/map/MapWrapper'
 import WayPointMarkerLayer from '../shared/map/layers/WayPointMarkerLayer'
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
-import ImageUpload from './image-upload/ImageUpload'
+import ImageUpload from '../shared/images/upload/ImageUpload'
 
 type TourFormProps = {
   tour: BaseTour

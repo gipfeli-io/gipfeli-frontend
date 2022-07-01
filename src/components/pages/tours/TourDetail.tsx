@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography'
-import { Divider, Grid, ImageList, ImageListItem, Link as MuiLink } from '@mui/material'
+import { Divider, Grid, Link as MuiLink } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import React, { useEffect, useState } from 'react'
@@ -15,6 +15,7 @@ import Loader from '../../shared/Loader'
 import useApiError from '../../../hooks/use-api-error'
 import { dateTimeFormat } from '../../../utils/constants'
 import dayjs from 'dayjs'
+import ImageGallery from '../../shared/images/gallery/ImageGallery'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -91,24 +92,12 @@ const TourDetail = () => {
           <Typography variant="h5" gutterBottom component="div">
             Tour images
           </Typography>
-          <Typography variant="h5" align="center" color="text.secondary" paragraph>
-            Something short and leading about the collection below—its contents,
-            the creator, etc. Make it short and sweet, but not too short so folks
-            don&apos;t simply skip over it entirely.
+          <Typography variant="subtitle1" gutterBottom component="div">
+            Click on an image to open its fullscreen original.
           </Typography>
         </Grid>
         <Grid item>
-          <ImageList cols={6} gap={8}>
-            {tour.images.map((item, index) => (
-              <ImageListItem key={index}>
-                <img
-                  src={`${process.env.REACT_APP_STORAGE_BUCKET_BASE_URL + item.identifier}`}
-                  alt={item.identifier}
-                  loading="lazy"
-                />
-              </ImageListItem>
-            ))}
-          </ImageList>
+          <ImageGallery images={tour.images}/>
         </Grid>
       </Grid>
       <TourDeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
