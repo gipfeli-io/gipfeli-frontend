@@ -1,5 +1,6 @@
 import { Point } from 'geojson'
 import { Exclude, Expose, Type } from 'class-transformer'
+import { ImageUpload } from './media'
 
 export class BaseTour {
   @Expose()
@@ -13,6 +14,9 @@ export class BaseTour {
 
   @Expose()
     description: string
+
+  @Expose()
+    images: ImageUpload[]
 
   /**
    * This is a frontend property only and is not saved/fetched to/from the database
@@ -32,11 +36,12 @@ export class BaseTour {
   @Exclude()
     isDeleted: number = 0
 
-  constructor (name: string, startLocation: Point, endLocation: Point, description: string) {
+  constructor (name: string, startLocation: Point, endLocation: Point, description: string, images: ImageUpload[] = []) {
     this.name = name
     this.startLocation = startLocation
     this.endLocation = endLocation
     this.description = description
+    this.images = images
   }
 }
 
@@ -58,4 +63,4 @@ export class Tour extends BaseTour {
   }
 }
 
-export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation'>
+export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images'>

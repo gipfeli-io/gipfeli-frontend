@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router'
 import MapWrapper from '../shared/map/MapWrapper'
 import WayPointMarkerLayer from '../shared/map/layers/WayPointMarkerLayer'
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
+import ImageUpload from '../shared/images/upload/ImageUpload'
 
 type TourFormProps = {
   tour: BaseTour
@@ -74,6 +75,10 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
                    value={currentTour.description}
                    onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
                      setCurrentTour({ ...currentTour, description: event.target.value })}/>
+      </Grid>
+
+      <Grid item xs={12}>
+        <ImageUpload/>
       </Grid>
     </Grid>
     <Grid container spacing={2} mt={2} direction={'row'} alignItems={'center'} justifyContent={'center'}>

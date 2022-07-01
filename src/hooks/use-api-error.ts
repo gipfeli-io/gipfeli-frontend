@@ -6,6 +6,7 @@ import {
   GenericApiError,
   NonCriticalApiError,
   NotFoundError,
+  PayLoadTooLarge,
   ServerError,
   UnauthorizedError
 } from '../types/errors'
@@ -48,6 +49,8 @@ const useApiError = () => {
         return new ForbiddenError(displayMessage)
       case 404:
         return new NotFoundError(displayMessage)
+      case 413:
+        return new PayLoadTooLarge(displayMessage)
       case 500:
         return new ServerError(displayMessage)
       default:

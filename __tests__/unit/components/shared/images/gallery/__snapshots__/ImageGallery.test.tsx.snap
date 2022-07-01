@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImageGallery behaves consistently 1`] = `
+<ul
+  className="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
+  style={
+    Object {
+      "gap": 8,
+      "gridTemplateColumns": "repeat(6, 1fr)",
+    }
+  }
+/>
+`;
