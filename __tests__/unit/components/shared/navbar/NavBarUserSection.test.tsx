@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import React from 'react'
 // @ts-ignore
 import renderer from 'react-test-renderer'
-import NavBarUserSection from '../../../src/components/shared/navbar/NavBarUserSection'
+import NavBarUserSection from '../../../../../src/components/shared/navbar/NavBarUserSection'
 import { MemoryRouter } from 'react-router'
 import { render } from '@testing-library/react'
 
@@ -26,7 +26,7 @@ const mockUseLocationValue = {
 const mockEmail = 'test@gipfeli.io'
 const mockToken = 'mockedToken'
 
-jest.mock('../../../src/hooks/use-auth', () => jest.fn().mockImplementation(() => mockAuthenticationContext))
+jest.mock('../../../../../src/hooks/use-auth', () => jest.fn().mockImplementation(() => mockAuthenticationContext))
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router') as any,

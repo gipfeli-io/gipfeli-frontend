@@ -17,11 +17,12 @@ const ImageUpload = () => {
     <>
       <div {...getRootProps({ className: styles.dropzone })}>
         <input {...getInputProps()} />
-        {
+        <p>{
           isDragActive
-            ? <p>Drop the images here ...</p>
-            : <p>Drag n drop some files here, or click to select files</p>
+            ? 'Drop the images here ...'
+            : 'Drag and drop some files here, or click to select files'
         }
+        </p>
       </div>
 
       <ImageUploadEntries/>
