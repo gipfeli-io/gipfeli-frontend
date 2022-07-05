@@ -1,7 +1,7 @@
 {
   "name": "gipfeli-frontend",
   "version": "0.1.0",
-  "private": true,
+  "license": "MIT",
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
