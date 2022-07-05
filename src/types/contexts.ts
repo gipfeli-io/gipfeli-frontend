@@ -1,5 +1,7 @@
 import { Notification } from './notifications'
 import { AppTheme } from './theme'
+import { handleSave } from './handle-save'
+import { ImageUpload } from './media'
 
 export interface TourListContextProperties {
   deleteEvent: (id: string) => void
@@ -22,4 +24,10 @@ export interface NotificationContextType {
 export interface ThemeContextType {
   activeTheme: AppTheme;
   toggleTheme: () => void;
+}
+
+export interface ImageUploadContextType {
+  files: ImageUpload[];
+  save: handleSave<File[]>;
+  remove: (id: string) => void;
 }

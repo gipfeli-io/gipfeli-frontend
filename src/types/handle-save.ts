@@ -1,4 +1,4 @@
 /**
- * Handler function that is called when a form is saved
+ * Handler function that is used to trigger API savings in nested components
  */
-export type handleSave<T> = (dto: T) => void
+export type handleSave<T> = (obj: T) => void

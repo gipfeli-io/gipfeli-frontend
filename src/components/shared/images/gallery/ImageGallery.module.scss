@@ -1,0 +1,7 @@
+.image {
+  &:hover {
+    cursor: pointer;
+    outline: 4px solid black;
+    outline-offset: -10px;
+  }
+}
