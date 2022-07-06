@@ -12,6 +12,7 @@ export const OnlineStatusProvider = ({ children }: PropsWithChildren<any>) => {
       const request = await fetch(requestUrl + '/robots.txt')
       if (request.status < 500) {
         setOnlineStatus(true)
+        // todo: synchronize not synced data to backend
       } else {
         setOnlineStatus(false)
       }

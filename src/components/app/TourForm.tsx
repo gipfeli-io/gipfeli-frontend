@@ -7,6 +7,7 @@ import MapWrapper from '../shared/map/MapWrapper'
 import WayPointMarkerLayer from '../shared/map/layers/WayPointMarkerLayer'
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
 import ImageUpload from '../shared/images/upload/ImageUpload'
+import useOnlineStatus from '../../hooks/use-online-status'
 
 type TourFormProps = {
   tour: BaseTour
@@ -17,6 +18,7 @@ type TourFormProps = {
 export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
   const navigate = useNavigate()
   const [currentTour, setCurrentTour] = useState(tour)
+  const isOnline = useOnlineStatus()
 
   const cancel = () => navigate(-1)
 
@@ -61,11 +63,13 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
         />
       </Grid>
       <Grid item xs={12}>
-        <MapWrapper>
-          <FullScreenControl/>
-          <WayPointMarkerLayer handleSetMarker={handleSetMarker}
-                               features={[currentTour.startLocation, currentTour.endLocation]} type={type}/>
-        </MapWrapper>
+        {isOnline &&
+            <MapWrapper>
+                <FullScreenControl/>
+                <WayPointMarkerLayer handleSetMarker={handleSetMarker}
+                                     features={[currentTour.startLocation, currentTour.endLocation]} type={type}/>
+            </MapWrapper>
+        }
       </Grid>
       <Grid item xs={12}>
         <TextField fullWidth
@@ -78,7 +82,9 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
       </Grid>
 
       <Grid item xs={12}>
-        <ImageUpload/>
+        {isOnline &&
+            <ImageUpload/>
+        }
       </Grid>
     </Grid>
     <Grid container spacing={2} mt={2} direction={'row'} alignItems={'center'} justifyContent={'center'}>

@@ -1,6 +1,7 @@
 import { Tour, UpdateOrCreateTour } from '../types/tour'
-import { localDB } from '../components/shared/local-database/local-db'
+import { localDB } from '../utils/local-database/local-db'
 import dayjs from 'dayjs'
+import { TourStatusType } from '../enums/tour-status-type'
 
 export default class LocalDatabaseService {
   public async addTourList (tours: Tour[]): Promise<void> {
@@ -8,14 +9,14 @@ export default class LocalDatabaseService {
       const localTour = await localDB.tours.get(tour.id)
       // only update/add tour to indexed db if it is
       // not yet added or if it is marked as synced
-      if (!localTour || localTour?.isSynced === 1) {
+      if (!localTour || localTour?.status === TourStatusType.SYNCED) {
         await localDB.tours.put(tour)
       }
     }
   }
 
   public async findAllTours (): Promise<Tour[]> {
-    return localDB.tours.where('isDeleted').equals(0).toArray()
+    return localDB.tours.where('status').notEqual(TourStatusType.DELETED).toArray()
   }
 
   /**
@@ -34,8 +35,7 @@ export default class LocalDatabaseService {
   public async markTourAsDeleted (tour: Tour): Promise<void> {
     const localTour = await localDB.tours.get(tour.id)
     if (localTour) {
-      localTour.isDeleted = 1
-      localTour.isSynced = 0
+      localTour.status = TourStatusType.DELETED
       await localDB.tours.put(localTour)
     }
   }
@@ -47,7 +47,7 @@ export default class LocalDatabaseService {
   public createLocalTour (tour: UpdateOrCreateTour): Tour {
     const id = crypto.randomUUID().toString()
     const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, dayjs().toDate(), dayjs().toDate())
-    localTour.isSynced = 0
+    localTour.status = TourStatusType.CREATED
     return localTour
   }
 
@@ -57,7 +57,7 @@ export default class LocalDatabaseService {
     localTour.endLocation = updatedTour.endLocation
     localTour.description = updatedTour.description
     localTour.updatedAt = dayjs().toDate()
-    localTour.isSynced = 0
+    localTour.status = TourStatusType.UPDATED
     return localTour
   }
 }

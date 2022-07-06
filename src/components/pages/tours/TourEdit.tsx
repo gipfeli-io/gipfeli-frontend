@@ -16,6 +16,7 @@ import { ImageUploadContextType } from '../../../types/contexts'
 import { ImageUpload } from '../../../types/media'
 import MediaService from '../../../services/media/media-service'
 import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
+import { TourStatusType } from '../../../enums/tour-status-type'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -33,8 +34,8 @@ const EditTour = () => {
     async function fetchTour () {
       const data = await service.findOne(id!)
       if (data.success) {
-        const { description, endLocation, startLocation, name, isSynced, isDeleted, images } = data.content!
-        setTour({ description, endLocation, startLocation, name, isSynced, isDeleted, images: [] })
+        const { description, endLocation, startLocation, name, status, images } = data.content!
+        setTour({ description, endLocation, startLocation, name, status, images: [] })
         setImages(images)
       } else {
         throwError(data)
@@ -61,8 +62,8 @@ const EditTour = () => {
     }
   }
 
-  const removeItem = useCallback((id: string) => {
-    setImages(prevState => prevState.filter((element) => element.id !== id))
+  const removeItem = useCallback((tourId: string) => {
+    setImages(prevState => prevState.filter((element) => element.id !== tourId))
   }, [images])
 
   const imageContextProps: ImageUploadContextType = {
@@ -79,9 +80,9 @@ const EditTour = () => {
     <>
       <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
         Edit Tour
-        { !tour.isSynced &&
+        { tour.status !== TourStatusType.SYNCED &&
             <span title={'This tour is not synchronized with the database.'}><OfflineBoltOutlined color={'warning'} sx={{ ml: 2 }}/></span>}
-        <Button onClick={() => handleImageUpload([])}></Button>
+        <Button onClick={() => handleImageUpload([])}/>
       </Typography>
       <ImageUploadContext.Provider value={imageContextProps}>
         <TourForm tour={tour} saveHandler={updateTour} type={'Edit'}/>

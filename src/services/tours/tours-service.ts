@@ -2,6 +2,7 @@ import APIService from '../api-service'
 import { Tour, UpdateOrCreateTour } from '../../types/tour'
 import { ApiResponseWrapper, ArrayApiResponse, SingleApiResponse } from '../../types/api'
 import LocalDatabaseService from '../local-database-service'
+import { TourStatusType } from '../../enums/tour-status-type'
 
 export default class ToursService extends APIService {
   private prefix: string = 'tours'
@@ -45,7 +46,7 @@ export default class ToursService extends APIService {
   public async update (id: string, tour: UpdateOrCreateTour): Promise<SingleApiResponse<unknown>> {
     const localTour = await this.localDatabaseService.getOne(id)
 
-    if (localTour && localTour.isSynced === 0) {
+    if (localTour && localTour.status === TourStatusType.SYNCED) {
       const updatedTour = this.localDatabaseService.updateLocalTour(localTour, tour)
       await this.localDatabaseService.putTour(updatedTour)
       return { content: undefined, ...this.getSuccessWrapper('updated unsynced tour in local database') }
@@ -68,7 +69,7 @@ export default class ToursService extends APIService {
 
   private async handleTourDeleteResult (result: SingleApiResponse<unknown>, id: string): Promise<SingleApiResponse<unknown>> {
     const localTour = await this.localDatabaseService.getOne(id)
-    if (result.statusCode === 500 || !localTour?.isSynced) {
+    if (result.statusCode === 500 || localTour?.status !== TourStatusType.SYNCED) {
       await this.localDatabaseService.markTourAsDeleted(localTour!)
       return { ...this.getSuccessWrapper('marked tour as deleted in local database') }
     }
@@ -110,7 +111,7 @@ export default class ToursService extends APIService {
     }
 
     // if the tour hasn't been synced yet serve the tour saved in the local db
-    if (!localTour?.isSynced) {
+    if (localTour?.status !== TourStatusType.SYNCED) {
       result.content = localTour
     }
 

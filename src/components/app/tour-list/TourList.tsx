@@ -5,6 +5,7 @@ import React from 'react'
 import dayjs from 'dayjs'
 import { dateTimeFormat } from '../../../utils/constants'
 import { OfflineBolt } from '@mui/icons-material'
+import { TourStatusType } from '../../../enums/tour-status-type'
 
 type TourListProps = {
   rows: Tour[],
@@ -17,7 +18,7 @@ const getActions = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
 
 const getName = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
   const fieldValue: JSX.Element =
-    params.row.isSynced === 1
+    params.row.status === TourStatusType.SYNCED
       ? <>{params.row.name}</>
       : <><span title="This tour is not synchronized with the database."><OfflineBolt sx={{ mr: 1 }}/></span>{params.row.name} </>
   return fieldValue
