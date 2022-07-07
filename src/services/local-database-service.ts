@@ -60,4 +60,8 @@ export default class LocalDatabaseService {
     localTour.status = TourStatusType.UPDATED
     return localTour
   }
+
+  public async getToursToSynchronize (): Promise<Tour[]> {
+    return localDB.tours.where('status').notEqual(TourStatusType.SYNCED).toArray()
+  }
 }
