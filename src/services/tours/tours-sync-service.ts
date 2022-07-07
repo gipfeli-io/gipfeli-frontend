@@ -1,5 +1,5 @@
 import LocalDatabaseService from '../local-database-service'
-import { Tour } from '../../types/tour'
+import { Tour, UpdateOrCreateTour } from '../../types/tour'
 import { TourStatusType } from '../../enums/tour-status-type'
 import ToursService from './tours-service'
 
@@ -24,16 +24,32 @@ export default class ToursSyncService {
     const status = tour.status
     switch (status) {
       case TourStatusType.UPDATED:
-        console.log('update tour: ', tour.name)
-        break
-      case TourStatusType.CREATED:
-        console.log('create new tour', tour.name)
+        console.log('updated:', tour.name)
+        await this.handleUpdatedTourSync(tour)
         break
       case TourStatusType.DELETED:
-        console.log('delete tour', tour.name)
+        console.log('deleted', tour.name)
+        await this.tourService.delete(tour.id)
         break
       default:
         console.log('could not find status type. should notify user.')
     }
+  }
+
+  private async handleUpdatedTourSync (tour: Tour): Promise<void> {
+    const result = await this.tourService.findOne(tour.id)
+    // todo: error handling
+    const mergedTour = this.mergeTour(tour, result.content!)
+    await this.tourService.update(tour.id, mergedTour)
+  }
+
+  private mergeTour (tour: Tour, remoteTour: Tour): UpdateOrCreateTour {
+    return {
+      name: tour.name,
+      description: tour.description,
+      endLocation: remoteTour.endLocation,
+      startLocation: remoteTour.startLocation,
+      images: remoteTour.images ? remoteTour.images : []
+    } as UpdateOrCreateTour
   }
 }

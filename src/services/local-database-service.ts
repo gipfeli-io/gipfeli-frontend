@@ -62,6 +62,6 @@ export default class LocalDatabaseService {
   }
 
   public async getToursToSynchronize (): Promise<Tour[]> {
-    return localDB.tours.where('status').notEqual(TourStatusType.SYNCED).toArray()
+    return localDB.tours.where('status').anyOf(TourStatusType.UPDATED, TourStatusType.DELETED).toArray()
   }
 }

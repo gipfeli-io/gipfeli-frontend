@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import { dateTimeFormat } from '../../../utils/constants'
 import { OfflineBolt } from '@mui/icons-material'
 import { TourStatusType } from '../../../enums/tour-status-type'
+import useOnlineStatus from '../../../hooks/use-online-status'
 
 type TourListProps = {
   rows: Tour[],
@@ -17,10 +18,13 @@ const getActions = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
 }
 
 const getName = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
+  const isOnline = useOnlineStatus()
   const fieldValue: JSX.Element =
     params.row.status === TourStatusType.SYNCED
       ? <>{params.row.name}</>
-      : <><span title="This tour is not synchronized with the database."><OfflineBolt sx={{ mr: 1 }}/></span>{params.row.name} </>
+      : <><span title="This tour is not synchronized with the database."><OfflineBolt sx={{ mr: 1 }}/></span>
+        {params.row.name} {(params.row.status === TourStatusType.CREATED && isOnline) && <span className="tour-create-sync-message">To synchronize please complete the tour.</span>}
+      </>
   return fieldValue
 }
 
