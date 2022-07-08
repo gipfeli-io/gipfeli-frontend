@@ -23,7 +23,7 @@ export default class MapConfigurationService {
    * Icon used for images with GPS coordinates.
    * Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-camera&size=50&hoffset=0&voffset=-1&background=03cafc
    */
-  public static getImageIcon (): any {
+  public static getImageIcon (): string {
     return pinImage
   }
 
