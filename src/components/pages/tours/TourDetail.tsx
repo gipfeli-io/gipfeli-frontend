@@ -33,7 +33,6 @@ const TourDetail = () => {
     async function fetchTour () {
       const data = await service.findOne(id!)
       if (data.success) {
-        console.log(data.content)
         setTour(data.content)
       } else {
         throwError(data)

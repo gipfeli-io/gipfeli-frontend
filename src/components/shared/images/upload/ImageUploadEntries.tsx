@@ -3,6 +3,7 @@ import useImageUpload from '../../../../hooks/use-image-upload'
 import { IconButton, ImageList, ImageListItem, ImageListItemBar } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import Typography from '@mui/material/Typography'
+import getCloudStorageUrlForIdentifier from '../../../../utils/storage-helper'
 
 const ImageUploadEntries = () => {
   const { files, remove } = useImageUpload()
@@ -20,7 +21,7 @@ const ImageUploadEntries = () => {
         {files.map((item, index) => (
           <ImageListItem key={index}>
             <img
-              src={`${process.env.REACT_APP_STORAGE_BUCKET_BASE_URL + item.identifier}`}
+              src={getCloudStorageUrlForIdentifier(item.identifier)}
               alt={item.identifier}
               loading="lazy"
             />

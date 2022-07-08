@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ImageUpload } from '../../../../types/media'
 import { ImageList, ImageListItem } from '@mui/material'
 import styles from './ImageGallery.module.scss'
+import getCloudStorageUrlForIdentifier from '../../../../utils/storage-helper'
 
 type ImageGalleryProps = {
   images: ImageUpload[]
@@ -17,7 +18,7 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
 
   useEffect(() => {
     const mappedImages: ImageLink[] = images.map((item) => ({
-      url: `${process.env.REACT_APP_STORAGE_BUCKET_BASE_URL + item.identifier}`,
+      url: getCloudStorageUrlForIdentifier(item.identifier),
       identifier: item.identifier
     }))
 
