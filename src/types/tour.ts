@@ -63,4 +63,5 @@ export class Tour extends BaseTour {
   }
 }
 
+// todo: switch to baseTour
 export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images'>

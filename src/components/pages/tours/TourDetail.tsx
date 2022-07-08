@@ -16,6 +16,8 @@ import useApiError from '../../../hooks/use-api-error'
 import { dateTimeFormat } from '../../../utils/constants'
 import dayjs from 'dayjs'
 import ImageGallery from '../../shared/images/gallery/ImageGallery'
+import { ImageUpload } from '../../../types/media'
+import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -24,6 +26,7 @@ const TourDetail = () => {
   const service = new ToursService(auth.token)
   const [tour, setTour] = useState<Tour | undefined>(undefined)
   const [open, setOpen] = useState(false)
+  const [geoReferencedImages, setGeoReferencedImages] = useState<ImageUpload[]>([])
   const throwError = useApiError()
 
   useEffect(() => {
@@ -38,6 +41,12 @@ const TourDetail = () => {
 
     fetchTour()
   }, [])
+
+  useEffect(() => {
+    if (tour && tour.images.length > 0) {
+      setGeoReferencedImages(tour.images.filter((image) => image.location))
+    }
+  }, [tour])
 
   const handleDeleteModalClose = () => {
     setOpen(false)
@@ -74,6 +83,7 @@ const TourDetail = () => {
       <Divider/>
       <MapWrapper>
         <WayPointMarkerLayer features={[tour.startLocation, tour.endLocation]}/>
+        <GpsImageMarkerLayer features={geoReferencedImages.filter((image) => image.location).map((image) => image.location!)}/>
       </MapWrapper>
       <Grid container mb={2} mt={2} direction={'column'}>
         <Grid item>

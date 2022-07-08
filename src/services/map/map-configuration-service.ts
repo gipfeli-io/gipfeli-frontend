@@ -1,13 +1,17 @@
 export default class MapConfigurationService {
-  public getStartIcon (): string {
+  public static getStartIcon (): string {
     return 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-play&size=50&hoffset=0&voffset=-1'
   }
 
-  public getEndIcon (): string {
+  public static getEndIcon (): string {
     return 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-flag-checkered&size=50&hoffset=0&voffset=-1'
   }
 
-  public getMaxMarkerCount (): number {
+  public static getImageIcon (): string {
+    return 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-camera&size=50&hoffset=0&voffset=-1'
+  }
+
+  public static getMaxMarkerCount (): number {
     return 2
   }
 }

@@ -14,12 +14,13 @@ import VectorLayer from 'ol/layer/Vector'
 import { Layer } from 'ol/layer'
 import { DrawEvent } from 'ol/interaction/Draw'
 import { ModifyEvent } from 'ol/interaction/Modify'
+import { StyleSelector } from '../../../../types/map'
 
 type WayPointMarkerLayerProps = {
-    /** An array of GeoJSON Points that will be mapped to markers. */
-    features: GeoJsonPoint[],
-    type?: string,
-    handleSetMarker?: (coordinates: number[], id: number) => void
+  /** An array of GeoJSON Points that will be mapped to markers. */
+  features: GeoJsonPoint[],
+  type?: string,
+  handleSetMarker?: (coordinates: number[], id: number) => void
 }
 
 /**
@@ -28,16 +29,24 @@ type WayPointMarkerLayerProps = {
 const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
+  const maxMarkerCount = MapConfigurationService.getMaxMarkerCount()
+  const startIcon = MapConfigurationService.getStartIcon()
+  const endIcon = MapConfigurationService.getEndIcon()
+
+  const iconSelector: StyleSelector = (index, objects) => {
+    return new Style({
+      image: new Icon(({
+        anchor: [0.5, 1],
+        src: index === objects.length - 1 ? endIcon : startIcon
+      }))
+    })
+  }
+
   useEffect(() => {
     // if map or features are not set do nothing
     if (!map || !features) {
       return
     }
-
-    const mapConfigurationService = new MapConfigurationService()
-    const maxMarkerCount = mapConfigurationService.getMaxMarkerCount()
-    const startIcon = mapConfigurationService.getStartIcon()
-    const endIcon = mapConfigurationService.getEndIcon()
 
     const setupMarkerLayer = (): VectorLayer<VectorSource> => {
       let markerLayer = map!.getAllLayers().find((layer: Layer) => layer.getProperties().name === 'marker_layer') as VectorLayer<VectorSource>
@@ -46,16 +55,16 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
       if (!markerLayer) {
         const { layer } = createMarkerLayer()
         markerLayer = layer as VectorLayer<VectorSource>
-        layerExtent = addLayerFeatures(features, markerLayer as VectorLayer<VectorSource>)
-                map!.addLayer(markerLayer)
+        layerExtent = addLayerFeatures(features, markerLayer as VectorLayer<VectorSource>, iconSelector)
+        map!.addLayer(markerLayer)
       } else {
         markerLayer.getSource()?.clear(true)
-        layerExtent = addLayerFeatures(features, markerLayer as VectorLayer<VectorSource>)
+        layerExtent = addLayerFeatures(features, markerLayer as VectorLayer<VectorSource>, iconSelector)
       }
 
       // if no features were added the extent is set to an empty array
       if (layerExtent!.length !== 0) {
-                map!.getView().fit(layerExtent!, { size: map!.getSize(), padding: [100, 100, 100, 100] })
+        map!.getView().fit(layerExtent!, { size: map!.getSize(), padding: [100, 100, 100, 100] })
       }
 
       return markerLayer
@@ -86,9 +95,9 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
 
     const addModifyInteraction = (source: VectorSource): void => {
       const modifyInteraction = new Modify({ source })
-            map!.addInteraction(modifyInteraction)
+      map!.addInteraction(modifyInteraction)
 
-            initModifyListener(modifyInteraction)
+      initModifyListener(modifyInteraction)
     }
 
     const setupDrawInteraction = (source: VectorSource, markerId: number): void => {
@@ -103,9 +112,9 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
         })
       })
 
-            map!.addInteraction(drawInteraction)
+      map!.addInteraction(drawInteraction)
 
-            initDrawListener(drawInteraction, markerId)
+      initDrawListener(drawInteraction, markerId)
     }
 
     const layer = setupMarkerLayer()
