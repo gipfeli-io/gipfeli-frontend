@@ -1,4 +1,4 @@
-import { BaseTour } from '../../types/tour'
+import { BaseTour, TourPoint } from '../../types/tour'
 import { Button, Grid, TextField } from '@mui/material'
 import React, { ChangeEvent, useCallback, useState } from 'react'
 import { handleSave } from '../../types/handle-save'
@@ -64,7 +64,7 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
         <MapWrapper>
           <FullScreenControl/>
           <WayPointMarkerLayer handleSetMarker={handleSetMarker}
-                               features={[currentTour.startLocation, currentTour.endLocation]} type={type}/>
+                               features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]} type={type}/>
         </MapWrapper>
       </Grid>
       <Grid item xs={12}>

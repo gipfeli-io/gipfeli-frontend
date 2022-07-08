@@ -6,7 +6,6 @@ import VectorSource from 'ol/source/Vector'
 import { Icon, Style } from 'ol/style'
 import { Geometry } from 'ol/geom'
 import Point from 'ol/geom/Point'
-import { Point as GeoJsonPoint } from 'geojson'
 import { Feature } from 'ol'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
 import addLayerFeatures from '../../../../utils/map/add-layer-features'
@@ -16,10 +15,11 @@ import { DrawEvent } from 'ol/interaction/Draw'
 import { ModifyEvent } from 'ol/interaction/Modify'
 import { StyleSelector } from '../../../../types/map'
 import { MapLayers } from '../../../../enums/map-layers'
+import { TourPoint } from '../../../../types/tour'
 
 type WayPointMarkerLayerProps = {
   /** An array of GeoJSON Points that will be mapped to markers. */
-  features: GeoJsonPoint[],
+  features: TourPoint[],
   type?: string,
   handleSetMarker?: (coordinates: number[], id: number) => void
 }
@@ -34,7 +34,7 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
   const startIcon = MapConfigurationService.getStartIcon()
   const endIcon = MapConfigurationService.getEndIcon()
 
-  const iconSelector: StyleSelector = (index, objects) => {
+  const iconSelector: StyleSelector<TourPoint> = (index, objects) => {
     return new Style({
       image: new Icon(({
         anchor: [0.5, 1],
@@ -56,11 +56,11 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
       if (!markerLayer) {
         const { layer } = createVectorLayer(MapLayers.WAYPOINT_MARKER)
         markerLayer = layer as VectorLayer<VectorSource>
-        layerExtent = addLayerFeatures(features, markerLayer as VectorLayer<VectorSource>, iconSelector)
+        layerExtent = addLayerFeatures<TourPoint>(features, markerLayer as VectorLayer<VectorSource>, iconSelector)
         map!.addLayer(markerLayer)
       } else {
         markerLayer.getSource()?.clear(true)
-        layerExtent = addLayerFeatures(features, markerLayer as VectorLayer<VectorSource>, iconSelector)
+        layerExtent = addLayerFeatures<TourPoint>(features, markerLayer as VectorLayer<VectorSource>, iconSelector)
       }
 
       // if no features were added the extent is set to an empty array

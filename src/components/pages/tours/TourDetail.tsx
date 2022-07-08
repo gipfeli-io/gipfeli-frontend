@@ -9,7 +9,7 @@ import WayPointMarkerLayer from '../../shared/map/layers/WayPointMarkerLayer'
 import ToursService from '../../../services/tours/tours-service'
 import { TourDeleteConfirmation } from '../../app/tour-list/TourDeleteConfirmation'
 import MapWrapper from '../../shared/map/MapWrapper'
-import { Tour } from '../../../types/tour'
+import { Tour, TourPoint } from '../../../types/tour'
 import { Link } from 'react-router-dom'
 import Loader from '../../shared/Loader'
 import useApiError from '../../../hooks/use-api-error'
@@ -33,6 +33,7 @@ const TourDetail = () => {
     async function fetchTour () {
       const data = await service.findOne(id!)
       if (data.success) {
+        console.log(data.content)
         setTour(data.content)
       } else {
         throwError(data)
@@ -82,8 +83,8 @@ const TourDetail = () => {
       </Grid>
       <Divider/>
       <MapWrapper>
-        <WayPointMarkerLayer features={[tour.startLocation, tour.endLocation]}/>
-        <GpsImageMarkerLayer features={geoReferencedImages.filter((image) => image.location).map((image) => image.location!)}/>
+        <WayPointMarkerLayer features={[new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]}/>
+        <GpsImageMarkerLayer features={geoReferencedImages}/>
       </MapWrapper>
       <Grid container mb={2} mt={2} direction={'column'}>
         <Grid item>

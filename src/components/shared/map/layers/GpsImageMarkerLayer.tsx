@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react'
 import MapContext from '../MapContext'
 import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import VectorSource from 'ol/source/Vector'
-import { Point as GeoJsonPoint } from 'geojson'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
 import addLayerFeatures from '../../../../utils/map/add-layer-features'
 import VectorLayer from 'ol/layer/Vector'
@@ -13,10 +12,10 @@ import { MapLayers } from '../../../../enums/map-layers'
 import FixedPopup from 'ol-ext/overlay/FixedPopup'
 import { Select } from 'ol/interaction'
 import 'ol-ext/dist/ol-ext.css'
+import { ImageUpload } from '../../../../types/media'
 
 type GpsMarkerLayerProps = {
-  /** An array of GeoJSON Points that will be mapped to markers. */
-  features: GeoJsonPoint[],
+  features: ImageUpload[],
 }
 
 /**
@@ -25,7 +24,7 @@ type GpsMarkerLayerProps = {
 const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
-  const iconSelector: StyleSelector = (index, objects) => {
+  const iconSelector: StyleSelector<ImageUpload> = (index, objects) => {
     return new Style({
       image: new Icon(({
         anchor: [0.5, 1],
@@ -43,14 +42,15 @@ const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
     const setupMarkerLayer = (): VectorLayer<VectorSource> => {
       // todo: extract layers as properties
       let imageLayer = map.getAllLayers().find((layer: Layer) => layer.getProperties().name === 'image_layer') as VectorLayer<VectorSource>
+
       if (!imageLayer) {
         const { layer } = createVectorLayer(MapLayers.IMAGE_MARKER)
         imageLayer = layer as VectorLayer<VectorSource>
-        addLayerFeatures(features, imageLayer, iconSelector)
+        addLayerFeatures<ImageUpload>(features, imageLayer, iconSelector)
         map.addLayer(imageLayer)
       } else {
         imageLayer.getSource()?.clear(true)
-        addLayerFeatures(features, imageLayer, iconSelector)
+        addLayerFeatures<ImageUpload>(features, imageLayer, iconSelector)
       }
 
       return imageLayer
@@ -76,7 +76,7 @@ const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
         const feature = e.element
         let content = ''
         content += '<img src=\'' + feature.get('img') + '\'/>'
-        content += feature.get('text')
+        content += feature.get('x')
         content += '<br/><i>powered by <a href="https://github.com/Viglino/ol-ext" target="ol">ol-ext</a></i>'
 
         popup.show(feature.getGeometry().getFirstCoordinate(), content)

@@ -17,4 +17,13 @@ export interface GeoJSONLayer {
  * feature. It takes the index of the current element in the array as well as the total array and allows for custom
  * logic in assigning the feature style.
  */
-export type StyleSelector = (index: number, features: GeoJsonObject[]) => Style
+export type StyleSelector<T> = (index: number, features: T[]) => Style
+
+/**
+ * Abstract class which can be used to add a GeoJsonObject to the map. Each class that has a geometry (e.g. a Point or
+ * a Line) should extend this class. This allows various helper functions to run properly because they have a unified
+ * interface to access any objects geometry.
+ */
+export abstract class GeometryObject {
+  public abstract getGeometry() : GeoJsonObject | null
+}

@@ -1,6 +1,7 @@
-import { Point } from 'geojson'
+import { GeoJsonObject, Point } from 'geojson'
 import { Exclude, Expose, Type } from 'class-transformer'
 import { ImageUpload } from './media'
+import { GeometryObject } from './map'
 
 export class BaseTour {
   @Expose()
@@ -16,6 +17,7 @@ export class BaseTour {
     description: string
 
   @Expose()
+  @Type(() => ImageUpload)
     images: ImageUpload[]
 
   /**
@@ -65,3 +67,19 @@ export class Tour extends BaseTour {
 
 // todo: switch to baseTour
 export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images'>
+
+/**
+ * A generic tourpoint which extends from GeometryObject and can be added to the map.
+ */
+export class TourPoint extends GeometryObject {
+  private readonly location: Point
+
+  constructor (location: Point) {
+    super()
+    this.location = location
+  }
+
+  getGeometry (): GeoJsonObject | null {
+    return this.location
+  }
+}
