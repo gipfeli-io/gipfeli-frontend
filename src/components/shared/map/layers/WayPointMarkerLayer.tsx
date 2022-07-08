@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react'
 import MapContext from '../MapContext'
-import createMarkerLayer from '../../../../utils/map/create-marker-layer'
+import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import { Draw, Modify } from 'ol/interaction'
 import VectorSource from 'ol/source/Vector'
 import { Icon, Style } from 'ol/style'
@@ -15,6 +15,7 @@ import { Layer } from 'ol/layer'
 import { DrawEvent } from 'ol/interaction/Draw'
 import { ModifyEvent } from 'ol/interaction/Modify'
 import { StyleSelector } from '../../../../types/map'
+import { MapLayers } from '../../../../enums/map-layers'
 
 type WayPointMarkerLayerProps = {
   /** An array of GeoJSON Points that will be mapped to markers. */
@@ -53,7 +54,7 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
       let layerExtent: number[]
 
       if (!markerLayer) {
-        const { layer } = createMarkerLayer()
+        const { layer } = createVectorLayer(MapLayers.WAYPOINT_MARKER)
         markerLayer = layer as VectorLayer<VectorSource>
         layerExtent = addLayerFeatures(features, markerLayer as VectorLayer<VectorSource>, iconSelector)
         map!.addLayer(markerLayer)

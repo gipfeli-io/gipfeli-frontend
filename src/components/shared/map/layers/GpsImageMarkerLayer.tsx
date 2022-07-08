@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react'
 import MapContext from '../MapContext'
-import createMarkerLayer from '../../../../utils/map/create-marker-layer'
+import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import VectorSource from 'ol/source/Vector'
 import { Point as GeoJsonPoint } from 'geojson'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
@@ -9,6 +9,7 @@ import VectorLayer from 'ol/layer/Vector'
 import { Layer } from 'ol/layer'
 import { StyleSelector } from '../../../../types/map'
 import { Icon, Style } from 'ol/style'
+import { MapLayers } from '../../../../enums/map-layers'
 
 type GpsMarkerLayerProps = {
   /** An array of GeoJSON Points that will be mapped to markers. */
@@ -40,7 +41,7 @@ const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
       // todo: extract layers as properties
       let imageLayer = map.getAllLayers().find((layer: Layer) => layer.getProperties().name === 'image_layer') as VectorLayer<VectorSource>
       if (!imageLayer) {
-        const { layer } = createMarkerLayer()
+        const { layer } = createVectorLayer(MapLayers.IMAGE_MARKER)
         imageLayer = layer as VectorLayer<VectorSource>
         addLayerFeatures(features, imageLayer, iconSelector)
         map.addLayer(imageLayer)
