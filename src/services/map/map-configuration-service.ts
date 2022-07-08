@@ -11,6 +11,10 @@ export default class MapConfigurationService {
     return 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-camera&size=50&hoffset=0&voffset=-1'
   }
 
+  public static getSelectedImageIcon (): string {
+    return 'https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-camera&size=60&hoffset=0&voffset=-1'
+  }
+
   public static getMaxMarkerCount (): number {
     return 2
   }

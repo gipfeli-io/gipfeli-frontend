@@ -10,6 +10,9 @@ import { Layer } from 'ol/layer'
 import { StyleSelector } from '../../../../types/map'
 import { Icon, Style } from 'ol/style'
 import { MapLayers } from '../../../../enums/map-layers'
+import FixedPopup from 'ol-ext/overlay/FixedPopup'
+import { Select } from 'ol/interaction'
+import 'ol-ext/dist/ol-ext.css'
 
 type GpsMarkerLayerProps = {
   /** An array of GeoJSON Points that will be mapped to markers. */
@@ -53,8 +56,41 @@ const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
       return imageLayer
     }
 
-    setupMarkerLayer()
-  }, [map, features])
+    const setupPopups = (selectableLayer: VectorLayer<VectorSource>) => {
+      const popup = new FixedPopup({ popupClass: 'default', closeBox: true })
+      map.addOverlay(popup)
+
+      const select = new Select({
+        layers: [selectableLayer],
+        style: new Style({
+          image: new Icon(({
+            anchor: [0.5, 1],
+            src: MapConfigurationService.getSelectedImageIcon()
+          }))
+        })
+      })
+      map.addInteraction(select)
+
+      select.getFeatures().on(['add'], function (e): void {
+        // @ts-ignore
+        const feature = e.element
+        let content = ''
+        content += '<img src=\'' + feature.get('img') + '\'/>'
+        content += feature.get('text')
+        content += '<br/><i>powered by <a href="https://github.com/Viglino/ol-ext" target="ol">ol-ext</a></i>'
+
+        popup.show(feature.getGeometry().getFirstCoordinate(), content)
+      })
+
+      select.getFeatures().on(['remove'], function (e) {
+        popup.hide()
+      })
+    }
+
+    const selectableLayer = setupMarkerLayer()
+    setupPopups(selectableLayer)
+  }, [map, features]
+  )
   return null
 }
 
