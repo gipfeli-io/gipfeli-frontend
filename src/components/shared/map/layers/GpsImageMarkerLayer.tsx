@@ -9,11 +9,11 @@ import { Layer } from 'ol/layer'
 import { GeoJsonPropertySetter, StyleSelector } from '../../../../types/map'
 import { Icon, Style } from 'ol/style'
 import { MapLayers } from '../../../../enums/map-layers'
-import FixedPopup from 'ol-ext/overlay/FixedPopup'
 import { Select } from 'ol/interaction'
 import 'ol-ext/dist/ol-ext.css'
 import { ImageUpload } from '../../../../types/media'
 import getCloudStorageUrlForIdentifier from '../../../../utils/storage-helper'
+import Popup from 'ol-ext/overlay/Popup'
 
 type GpsMarkerLayerProps = {
   features: ImageUpload[],
@@ -68,7 +68,7 @@ const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
     }
 
     const setupPopups = (layer: VectorLayer<VectorSource>) => {
-      const popup = new FixedPopup({ popupClass: 'default', closeBox: true })
+      const popup = new Popup({ popupClass: 'default', closeBox: true, positioning: 'auto', autoPan: true, offset: [0, -40] })
       map.addOverlay(popup)
 
       const select = new Select({
