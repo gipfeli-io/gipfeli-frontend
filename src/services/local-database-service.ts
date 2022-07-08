@@ -35,8 +35,7 @@ export default class LocalDatabaseService {
   public async markTourAsDeleted (tour: Tour): Promise<void> {
     const localTour = await localDB.tours.get(tour.id)
     if (localTour) {
-      localTour.status = TourStatusType.DELETED
-      await localDB.tours.put(localTour)
+      await this.updateTourStatus(localTour, TourStatusType.DELETED)
     }
   }
 
@@ -63,5 +62,10 @@ export default class LocalDatabaseService {
 
   public async getToursToSynchronize (): Promise<Tour[]> {
     return localDB.tours.where('status').anyOf(TourStatusType.UPDATED, TourStatusType.DELETED).toArray()
+  }
+
+  public async updateTourStatus (tour: Tour, status: TourStatusType): Promise<void> {
+    tour.status = status
+    await localDB.tours.put(tour)
   }
 }

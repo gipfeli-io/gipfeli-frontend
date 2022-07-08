@@ -25,13 +25,20 @@ export default class ToursService extends APIService {
   }
 
   public async findOne (id: string): Promise<SingleApiResponse<Tour>> {
+    const localTour = await this.localDatabaseService.getOne(id)
+    // no need to make an api call if the tour was only created locally
+    if (localTour?.status === TourStatusType.CREATED) {
+      const wrapper = this.getSuccessWrapper('got data from local database')
+      return { content: localTour, ...wrapper }
+    }
+
     const result = await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('GET', {}),
       Tour
     )
 
-    return this.handleGetOneResult(result, id)
+    return this.handleGetOneResult(result, id, localTour)
   }
 
   public async create (tour: UpdateOrCreateTour): Promise<SingleApiResponse<Tour>> {
@@ -91,31 +98,47 @@ export default class ToursService extends APIService {
     return result
   }
 
-  private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string): Promise<SingleApiResponse<Tour>> {
-    const localTour = await this.localDatabaseService.getOne(tourId)
-    if (result.statusCode === 500 || result.statusCode === 404) {
+  private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string, localTour: Tour|undefined): Promise<SingleApiResponse<Tour>> {
+    if (this.isOffline(result.statusCode)) {
       if (localTour) {
-        const wrapper = this.getSuccessWrapper('got data from local database')
-        return { content: localTour, ...wrapper }
-      }
-
-      if (result.statusCode === 500) {
-        // todo: refactor
+        return this.getLocalTourResponse(localTour, 'got data from local database')
+      } else { // tour could not be found in local database
         result.statusCode = 404
         result.statusMessage = 'Could not find tour'
+        return result
       }
     }
 
-    if (!localTour && result.statusCode === 200) {
+    if (result.statusCode === 404) {
+      if (localTour) {
+        await this.localDatabaseService.deleteTour(tourId)
+        const wrapper = this.createResponseWrapper(false, 404, 'Tour was deleted in database. Removing local copy.')
+        return { ...wrapper }
+      }
+    }
+
+    if (result.statusCode === 200) {
+      if (localTour!.status === TourStatusType.SYNCING) {
+        return result
+      } else if (localTour!.status !== TourStatusType.SYNCED) {
+        // serve local tour assuming these are the most recent changes
+        result.content = localTour
+      }
+      // only update the tour in the database if it was already synced
+      // otherwise we could overwrite local changes!
       await this.localDatabaseService.putTour(result.content!)
     }
 
-    // if the tour hasn't been synced yet serve the tour saved in the local db
-    if (localTour?.status !== TourStatusType.SYNCED) {
-      result.content = localTour
-    }
-
     return result
+  }
+
+  private isOffline (statusCode: number): boolean {
+    return statusCode === 500
+  }
+
+  private async getLocalTourResponse (localTour: Tour, message: string): Promise<SingleApiResponse<Tour>> {
+    const wrapper = this.getSuccessWrapper(message)
+    return { content: localTour, ...wrapper }
   }
 
   private getSuccessWrapper (message: string): ApiResponseWrapper {

@@ -2,6 +2,7 @@ import LocalDatabaseService from '../local-database-service'
 import { Tour, UpdateOrCreateTour } from '../../types/tour'
 import { TourStatusType } from '../../enums/tour-status-type'
 import ToursService from './tours-service'
+import { SingleApiResponse } from '../../types/api'
 
 export default class ToursSyncService {
   private localDatabaseService: LocalDatabaseService
@@ -20,23 +21,27 @@ export default class ToursSyncService {
     }
   }
 
+  public async synchronizeCreatedTour (id: string, tour: UpdateOrCreateTour): Promise<SingleApiResponse<Tour>> {
+    await this.localDatabaseService.deleteTour(id)
+    return this.tourService.create(tour)
+  }
+
   private async handleTourSync (tour: Tour): Promise<void> {
     const status = tour.status
     switch (status) {
       case TourStatusType.UPDATED:
-        console.log('updated:', tour.name)
         await this.handleUpdatedTourSync(tour)
         break
       case TourStatusType.DELETED:
-        console.log('deleted', tour.name)
         await this.tourService.delete(tour.id)
         break
       default:
-        console.log('could not find status type. should notify user.')
+        console.log('could not find status type. should notify user.') // todo: show error notification
     }
   }
 
   private async handleUpdatedTourSync (tour: Tour): Promise<void> {
+    await this.localDatabaseService.updateTourStatus(tour, TourStatusType.SYNCING)
     const result = await this.tourService.findOne(tour.id)
     // todo: error handling
     const mergedTour = this.mergeTour(tour, result.content!)
