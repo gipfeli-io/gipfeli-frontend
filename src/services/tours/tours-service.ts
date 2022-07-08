@@ -61,7 +61,7 @@ export default class ToursService extends APIService {
 
   private async handleTourDeleteResult (result: SingleApiResponse<unknown>, id: string): Promise<SingleApiResponse<unknown>> {
     const localTour = await this.localDatabaseService.getOne(id)
-    if (result.statusCode === 500 || localTour?.status !== TourStatusType.SYNCED) {
+    if (result.statusCode === 500) {
       await this.localDatabaseService.markTourAsDeleted(localTour!)
       return { ...this.getSuccessWrapper('marked tour as deleted in local database') }
     }

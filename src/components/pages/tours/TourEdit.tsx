@@ -72,6 +72,8 @@ const EditTour = () => {
     remove: removeItem
   }
 
+  const tourType: string = tour?.status === TourStatusType.CREATED ? 'Create' : 'Edit'
+
   if (!tour) {
     return (<Loader/>)
   }
@@ -85,7 +87,7 @@ const EditTour = () => {
         <Button onClick={() => handleImageUpload([])}/>
       </Typography>
       <ImageUploadContext.Provider value={imageContextProps}>
-        <TourForm tour={tour} saveHandler={updateTour} type={'Edit'}/>
+        <TourForm tour={tour} saveHandler={updateTour} type={tourType}/>
       </ImageUploadContext.Provider>
     </>
   )
