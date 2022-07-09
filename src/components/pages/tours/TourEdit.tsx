@@ -26,7 +26,7 @@ const EditTour = () => {
   const mediaService = new MediaService(auth.token)
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
-  const handleImageUpload = useHandleImageUpload(mediaService, images, setImages)
+  const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
 
   useEffect(() => {
     async function fetchTour () {
@@ -67,7 +67,8 @@ const EditTour = () => {
   const imageContextProps: ImageUploadContextType = {
     save: handleImageUpload,
     files: images,
-    remove: removeItem
+    remove: removeItem,
+    currentUploads
   }
 
   if (!tour) {

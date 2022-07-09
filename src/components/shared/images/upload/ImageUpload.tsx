@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone'
 import styles from './ImageUpload.module.scss'
 import useImageUpload from '../../../../hooks/use-image-upload'
 import ImageUploadEntries from './ImageUploadEntries'
+import ImageUploadProgress from './ImageUploadProgress'
 
 const ImageUpload = () => {
   const { save } = useImageUpload()
@@ -24,7 +25,7 @@ const ImageUpload = () => {
         }
         </p>
       </div>
-
+      <ImageUploadProgress />
       <ImageUploadEntries/>
     </>
   )

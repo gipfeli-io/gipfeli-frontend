@@ -22,7 +22,7 @@ const TourCreate = () => {
   const mediaService = new MediaService(auth.token)
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
-  const handleImageUpload = useHandleImageUpload(mediaService, images, setImages)
+  const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
 
   const tour: BaseTour = new BaseTour('', { // Todo: make empty and add points in edit
     type: 'Point',
@@ -56,7 +56,8 @@ const TourCreate = () => {
   const imageContextProps: ImageUploadContextType = {
     save: handleImageUpload,
     files: images,
-    remove: removeItem
+    remove: removeItem,
+    currentUploads
   }
 
   return (

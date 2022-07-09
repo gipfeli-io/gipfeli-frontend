@@ -30,4 +30,5 @@ export interface ImageUploadContextType {
   files: ImageUpload[];
   save: handleSave<File[]>;
   remove: (id: string) => void;
+  currentUploads: string[];
 }
