@@ -135,9 +135,9 @@ export default class ToursService extends APIService {
 
   private async handleGetTour (result: SingleApiResponse<Tour>, localTour: Tour | undefined): Promise<SingleApiResponse<Tour>> {
     if (result.statusCode === 200) {
-      if (localTour!.status === TourStatusType.SYNCING) {
+      if (localTour?.status === TourStatusType.SYNCING) {
         return result
-      } else if (localTour!.status !== TourStatusType.SYNCED) {
+      } else if (localTour?.status !== TourStatusType.SYNCED) {
         // serve local tour assuming these are the most recent changes
         result.content = localTour
       }
