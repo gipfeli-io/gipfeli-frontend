@@ -34,11 +34,11 @@ const EditTour = () => {
 
   useEffect(() => {
     async function fetchTour () {
-      const data = await toursService.findOne(id!)
+      const data = await toursService.findOne(id)
       if (data.success) {
-        const { description, endLocation, startLocation, name, status, images } = data.content!
+        const { description, endLocation, startLocation, name, status, images: imageList } = data.content!
         setTour({ description, endLocation, startLocation, name, status, images: [] })
-        setImages(images)
+        setImages(imageList)
       } else {
         throwError(data)
       }
@@ -57,10 +57,10 @@ const EditTour = () => {
     }
     let data
     if (baseTour.status === TourStatusType.CREATED) {
-      data = await toursSyncService.synchronizeCreatedTour(id!, tourToSave)
+      data = await toursSyncService.synchronizeCreatedTour(id, tourToSave)
       id = data.content!.id
     } else {
-      data = await toursService.update(id!, tourToSave)
+      data = await toursService.update(id, tourToSave)
     }
 
     if (data.success) {

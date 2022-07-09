@@ -21,7 +21,8 @@ export default class ToursSyncService {
     }
   }
 
-  public async synchronizeCreatedTour (id: string, tour: UpdateOrCreateTour): Promise<SingleApiResponse<Tour>> {
+  public async synchronizeCreatedTour (id: string | undefined, tour: UpdateOrCreateTour): Promise<SingleApiResponse<Tour>> {
+    // we can delete the local tour here as it gets freshly added (incl. correct id if successful)
     await this.localDatabaseService.deleteTour(id)
     return this.tourService.create(tour)
   }
@@ -44,11 +45,11 @@ export default class ToursSyncService {
     await this.localDatabaseService.updateTourStatus(tour, TourStatusType.SYNCING)
     const result = await this.tourService.findOne(tour.id)
     // todo: error handling
-    const mergedTour = this.mergeTour(tour, result.content!)
+    const mergedTour = ToursSyncService.mergeTour(tour, result.content!)
     await this.tourService.update(tour.id, mergedTour)
   }
 
-  private mergeTour (tour: Tour, remoteTour: Tour): UpdateOrCreateTour {
+  private static mergeTour (tour: Tour, remoteTour: Tour): UpdateOrCreateTour {
     return {
       name: tour.name,
       description: tour.description,

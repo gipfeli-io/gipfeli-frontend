@@ -28,8 +28,8 @@ export default class LocalDatabaseService {
     await localDB.tours.put(tour)
   }
 
-  public async getOne (id: string): Promise<Tour|undefined> {
-    return localDB.tours.get(id)
+  public async getOne (id: string | undefined): Promise<Tour|undefined> {
+    return localDB.tours.get(id!)
   }
 
   public async markTourAsDeleted (tour: Tour): Promise<void> {
@@ -39,8 +39,8 @@ export default class LocalDatabaseService {
     }
   }
 
-  public async deleteTour (id: string): Promise<void> {
-    await localDB.tours.delete(id)
+  public async deleteTour (id: string | undefined): Promise<void> {
+    await localDB.tours.delete(id!)
   }
 
   public createLocalTour (tour: UpdateOrCreateTour): Tour {

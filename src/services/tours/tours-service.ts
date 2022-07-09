@@ -24,7 +24,7 @@ export default class ToursService extends APIService {
     return this.handleTourListResult(result)
   }
 
-  public async findOne (id: string): Promise<SingleApiResponse<Tour>> {
+  public async findOne (id: string | undefined): Promise<SingleApiResponse<Tour>> {
     const localTour = await this.localDatabaseService.getOne(id)
     // no need to make an api call if the tour was only created locally
     if (localTour?.status === TourStatusType.CREATED) {
@@ -50,7 +50,7 @@ export default class ToursService extends APIService {
     return this.handleTourAddResult(tour, result)
   }
 
-  public async update (id: string, tour: UpdateOrCreateTour): Promise<SingleApiResponse<unknown>> {
+  public async update (id: string | undefined, tour: UpdateOrCreateTour): Promise<SingleApiResponse<unknown>> {
     const localTour = await this.localDatabaseService.getOne(id)
     // no need to make an api call if the tour was only created locally
     if (localTour?.status === TourStatusType.CREATED) {
@@ -109,7 +109,7 @@ export default class ToursService extends APIService {
     return { ...this.getSuccessWrapper('updated tour in local database') }
   }
 
-  private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string, localTour: Tour|undefined): Promise<SingleApiResponse<Tour>> {
+  private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string | undefined, localTour: Tour|undefined): Promise<SingleApiResponse<Tour>> {
     if (ToursService.isOffline(result.statusCode)) {
       if (localTour) {
         return this.getLocalTourResponse(localTour, 'got data from local database')
@@ -149,7 +149,7 @@ export default class ToursService extends APIService {
     return result
   }
 
-  private async handleTourNotFoundStatus (tourId: string): Promise<SingleApiResponse<Tour>> {
+  private async handleTourNotFoundStatus (tourId: string | undefined): Promise<SingleApiResponse<Tour>> {
     await this.localDatabaseService.deleteTour(tourId)
     const wrapper = this.createResponseWrapper(false, 404, 'Tour was deleted in database. Removing local copy.')
     return { ...wrapper }
