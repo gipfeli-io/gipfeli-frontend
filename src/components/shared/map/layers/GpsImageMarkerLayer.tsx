@@ -1,9 +1,6 @@
 import { useContext, useEffect } from 'react'
 import MapContext from '../MapContext'
-import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import VectorSource from 'ol/source/Vector'
-import MapConfigurationService from '../../../../services/map/map-configuration-service'
-import addLayerFeatures from '../../../../utils/map/add-layer-features'
 import VectorLayer from 'ol/layer/Vector'
 import { Layer } from 'ol/layer'
 import { GeoJsonPropertySetter, StyleSelector } from '../../../../types/map'
@@ -18,6 +15,9 @@ import Popup from 'ol-ext/overlay/Popup'
 import BaseEvent from 'ol/events/Event'
 import { CollectionEvent } from 'ol/Collection'
 import { click, pointerMove } from 'ol/events/condition'
+import MapConfigurationService from '../../../../services/map/map-configuration-service'
+import addLayerFeatures from '../../../../utils/map/add-layer-features'
+import createVectorLayer from '../../../../utils/map/create-vector-layer'
 
 type GpsMarkerLayerProps = {
   features: ImageUpload[],
@@ -64,7 +64,7 @@ const GpsMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
         .find((layer: Layer) => layer.getProperties().name === MapLayers.IMAGE_MARKER) as VectorLayer<VectorSource>
 
       if (!imageLayer) {
-        const { layer } = createVectorLayer(MapLayers.IMAGE_MARKER)
+        const layer = createVectorLayer(MapLayers.IMAGE_MARKER)
         imageLayer = layer as VectorLayer<VectorSource>
         addLayerFeatures<ImageUpload>(features, imageLayer, iconSelector, propertySetter)
         map.addLayer(imageLayer)

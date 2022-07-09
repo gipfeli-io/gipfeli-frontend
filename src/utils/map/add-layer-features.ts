@@ -5,6 +5,7 @@ import VectorLayer from 'ol/layer/Vector'
 import { Geometry } from 'ol/geom'
 import { GeoJSONPoint } from 'ol/format/GeoJSON'
 import { GeoJsonPropertySetter, GeometryObject, StyleSelector } from '../../types/map'
+import { CoordinateSystems } from '../../enums/coordinate-systems'
 
 /**
  * Adds geojson points to an existing vector layer as markers. Takes a StyleSelector callback to style all items and an
@@ -18,8 +19,8 @@ const addLayerFeatures = <T extends GeometryObject>(features: T[], layer: Vector
     const geometry = feature.getGeometry()
     if (geometry && Object.keys(geometry).length !== 0 && (geometry as GeoJSONPoint).coordinates.length !== 0) {
       const jsonFeature = new GeoJSON().readFeature(geometry, {
-        dataProjection: 'EPSG:4326',
-        featureProjection: 'EPSG:3857'
+        dataProjection: CoordinateSystems.DATA,
+        featureProjection: CoordinateSystems.MAP
       })
 
       const style = styleSelector(idx, objects)
