@@ -50,13 +50,14 @@ export default class LocalDatabaseService {
     return localTour
   }
 
-  public updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour): Tour {
+  public updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Tour {
     localTour.name = updatedTour.name
     localTour.startLocation = updatedTour.startLocation
     localTour.endLocation = updatedTour.endLocation
     localTour.description = updatedTour.description
+    localTour.images = updatedTour.images
     localTour.updatedAt = dayjs().toDate()
-    localTour.status = TourStatusType.UPDATED
+    localTour.status = statusType
     return localTour
   }
 
