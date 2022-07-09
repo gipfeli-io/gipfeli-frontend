@@ -85,13 +85,16 @@ const TourDetail = () => {
       </Grid>
       <Divider/>
       {isOnline &&
-        <MapWrapper>
-          <WayPointMarkerLayer features={[tour.startLocation, tour.endLocation]}/>
-            <GpsImageMarkerLayer features={geoReferencedImages} isEditable={false}/>
-        </MapWrapper>
-        <Typography variant="caption" component="div">
-        Click on a <CameraIcon fontSize='inherit' sx={{ verticalAlign: 'middle' }}/> pin to show its image, and click on the image to open its original.
-        </Typography>
+          <>
+              <MapWrapper>
+                  <WayPointMarkerLayer features={[new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]}/>
+                  <GpsImageMarkerLayer features={geoReferencedImages} isEditable={false}/>
+              </MapWrapper>
+              <Typography variant="caption" component="div">
+                  Click on a <CameraIcon fontSize="inherit" sx={{ verticalAlign: 'middle' }}/> pin to show its image, and
+                  click on the image to open its original.
+              </Typography>
+          </>
       }
       <Grid container mb={2} mt={2} direction={'column'}>
         <Grid item>

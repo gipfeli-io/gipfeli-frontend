@@ -69,15 +69,17 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
       </Grid>
       <Grid item xs={12}>
         {isOnline &&
-            <MapWrapper>
-                <FullScreenControl/>
-                <WayPointMarkerLayer handleSetMarker={handleSetMarker}
-                                     features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]} type={type}/>
-                <GpsImageMarkerLayer features={files} isEditable />
-            </MapWrapper>
-          <Typography variant="caption" component="div">
-          Hover over a <CameraIcon fontSize='inherit' sx={{ verticalAlign: 'middle' }}/> pin to show its image.
-          </Typography>
+            <>
+                <MapWrapper>
+                    <FullScreenControl/>
+                    <WayPointMarkerLayer handleSetMarker={handleSetMarker}
+                                         features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]} type={type}/>
+                    <GpsImageMarkerLayer features={files} isEditable />
+                </MapWrapper>
+                <Typography variant="caption" component="div">
+                    Hover over a <CameraIcon fontSize='inherit' sx={{ verticalAlign: 'middle' }}/> pin to show its image.
+                </Typography>
+            </>
         }
       </Grid>
       <Grid item xs={12}>
