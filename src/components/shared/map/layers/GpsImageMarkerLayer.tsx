@@ -17,9 +17,11 @@ import getCloudStorageUrlForIdentifier from '../../../../utils/storage-helper'
 import Popup from 'ol-ext/overlay/Popup'
 import BaseEvent from 'ol/events/Event'
 import { CollectionEvent } from 'ol/Collection'
+import { click, pointerMove } from 'ol/events/condition'
 
 type GpsMarkerLayerProps = {
   features: ImageUpload[],
+  isEditable: boolean
 }
 
 type PopupContent = {
@@ -29,7 +31,7 @@ type PopupContent = {
 /**
  * Adds a layer which can display georeferenced images on the map.
  */
-const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
+const GpsMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
   const iconSelector: StyleSelector<ImageUpload> = (_index, _objects) => {
@@ -84,6 +86,7 @@ const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
       map.addOverlay(popup)
 
       const select = new Select({
+        condition: isEditable ? pointerMove : click,
         layers: [layer],
         style: new Style({
           image: new Icon(({
@@ -95,7 +98,7 @@ const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
       })
       map.addInteraction(select)
 
-      select.getFeatures().on(['add'], function (e: BaseEvent | Event): void {
+      select.getFeatures().on('add', function (e: BaseEvent | Event): void {
         // Somehow, the typing of OL are wrong. We get a CollectionEvent here, which is neither BaseEvent nor Event...
         const castedEvent = e as CollectionEvent
         const feature = castedEvent.element
@@ -103,7 +106,7 @@ const GpsMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
         popup.show(feature.getGeometry().getFirstCoordinate(), popupContent)
       })
 
-      select.getFeatures().on(['remove'], function (_e: BaseEvent | Event) {
+      select.getFeatures().on('remove', function (_e: BaseEvent | Event) {
         popup.hide()
       })
 

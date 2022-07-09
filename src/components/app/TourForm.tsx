@@ -7,6 +7,10 @@ import MapWrapper from '../shared/map/MapWrapper'
 import WayPointMarkerLayer from '../shared/map/layers/WayPointMarkerLayer'
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
 import ImageUpload from '../shared/images/upload/ImageUpload'
+import GpsImageMarkerLayer from '../shared/map/layers/GpsImageMarkerLayer'
+import useImageUpload from '../../hooks/use-image-upload'
+import Typography from '@mui/material/Typography'
+import CameraIcon from '@mui/icons-material/PhotoCamera'
 
 type TourFormProps = {
   tour: BaseTour
@@ -17,6 +21,7 @@ type TourFormProps = {
 export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
   const navigate = useNavigate()
   const [currentTour, setCurrentTour] = useState(tour)
+  const { files } = useImageUpload()
 
   const cancel = () => navigate(-1)
 
@@ -65,7 +70,11 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
           <FullScreenControl/>
           <WayPointMarkerLayer handleSetMarker={handleSetMarker}
                                features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]} type={type}/>
+          <GpsImageMarkerLayer features={files} isEditable />
         </MapWrapper>
+        <Typography variant="caption" component="div">
+          Hover over a <CameraIcon fontSize='inherit' sx={{ verticalAlign: 'middle' }}/> pin to show its image.
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <TextField fullWidth
