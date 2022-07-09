@@ -62,7 +62,7 @@ const TourCreate = () => {
 
   return (
     <>
-      <Typography variant="h2" gutterBottom component="div">
+      <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
         Create Tour
       </Typography>
       <ImageUploadContext.Provider value={imageContextProps}>

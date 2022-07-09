@@ -24,7 +24,7 @@ const GeoReferenceIndicator = ({ isGeoReferenced }:GeoReferenceIndicatorProps) =
 const ImageUploadEntries = () => {
   const { files, remove } = useImageUpload()
 
-  if (files.length === 0) {
+  if (!files || files.length === 0) {
     return <></>
   }
 

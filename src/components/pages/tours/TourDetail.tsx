@@ -17,6 +17,7 @@ import useApiError from '../../../hooks/use-api-error'
 import { dateTimeFormat } from '../../../utils/constants'
 import dayjs from 'dayjs'
 import ImageGallery from '../../shared/images/gallery/ImageGallery'
+import useOnlineStatus from '../../../hooks/use-online-status'
 import { ImageUpload } from '../../../types/media'
 import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
 
@@ -29,6 +30,7 @@ const TourDetail = () => {
   const [open, setOpen] = useState(false)
   const [geoReferencedImages, setGeoReferencedImages] = useState<ImageUpload[]>([])
   const throwError = useApiError()
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     async function fetchTour () {
@@ -82,13 +84,15 @@ const TourDetail = () => {
         </Grid>
       </Grid>
       <Divider/>
-      <MapWrapper>
-        <WayPointMarkerLayer features={[new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]}/>
-        <GpsImageMarkerLayer features={geoReferencedImages} isEditable={false}/>
-      </MapWrapper>
-      <Typography variant="caption" component="div">
+      {isOnline &&
+        <MapWrapper>
+          <WayPointMarkerLayer features={[tour.startLocation, tour.endLocation]}/>
+            <GpsImageMarkerLayer features={geoReferencedImages} isEditable={false}/>
+        </MapWrapper>
+        <Typography variant="caption" component="div">
         Click on a <CameraIcon fontSize='inherit' sx={{ verticalAlign: 'middle' }}/> pin to show its image, and click on the image to open its original.
-      </Typography>
+        </Typography>
+      }
       <Grid container mb={2} mt={2} direction={'column'}>
         <Grid item>
           <Typography variant="h5" gutterBottom component="div">
@@ -101,7 +105,7 @@ const TourDetail = () => {
           </Typography>
         </Grid>
       </Grid>
-      {tour.images.length > 0 &&
+      {isOnline && tour.images && tour.images.length > 0 &&
           <Grid container mb={2} mt={2} direction={'column'}>
               <Grid item>
                   <Typography variant="h5" gutterBottom component="div">

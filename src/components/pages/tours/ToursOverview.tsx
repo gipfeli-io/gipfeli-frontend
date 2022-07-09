@@ -61,7 +61,7 @@ const ToursOverview = () => {
 
   return (
     <>
-      <Typography variant="h2" gutterBottom component="div">
+      <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
         My Tours
       </Typography>
       <Grid container mb={2} direction={'row'} justifyContent="flex-end">

@@ -1,13 +1,13 @@
 import Dexie, { Table } from 'dexie'
-import { Tour } from '../../../types/tour'
+import { Tour } from '../../types/tour'
 
 class LocalDB extends Dexie {
   tours!: Table<Tour>
 
   constructor () {
     super('localDB')
-    this.version(2).stores({
-      tours: '++id, isDeleted, isSynced'
+    this.version(1).stores({
+      tours: '++id, status'
     })
     this.tours.mapToClass(Tour)
   }
