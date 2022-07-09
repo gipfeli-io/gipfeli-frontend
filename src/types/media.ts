@@ -28,3 +28,11 @@ export class ImageUpload extends GeometryObject implements MediaObject {
     return this.location ?? null
   }
 }
+
+export interface UploadError {
+  reason: string;
+}
+export interface CurrentUpload {
+  name: string
+  error?: UploadError
+}

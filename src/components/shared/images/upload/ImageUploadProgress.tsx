@@ -1,26 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import useImageUpload from '../../../../hooks/use-image-upload'
-import { CircularProgress, Stack } from '@mui/material'
-import Typography from '@mui/material/Typography'
+import { Stack } from '@mui/material'
+import ImageUploadErrorList, { ImageUploadErrorListItem } from './ImageUploadErrorList'
+import ImageUploadIndicator from './ImageUploadIndicator'
 
 const ImageUploadProgress = () => {
   const { currentUploads } = useImageUpload()
-  // todo: fix alignment of loader
+  const [uploadErrors, setUploadErrors] = useState<ImageUploadErrorListItem[]>([])
+
+  useEffect(() => {
+    const errors: ImageUploadErrorListItem[] = currentUploads
+      .filter((item) => item.error?.reason)
+      .map((error) => ({ file: error.name, reason: error.error!.reason }))
+    setUploadErrors(() => errors)
+  }, [currentUploads])
+
   return (
-    <Stack direction={'row'} gap={1}>
-      {
-        currentUploads.map((upload) => {
-          return (
-          <Stack key={upload} direction={'row'} gap={1}>
-            <CircularProgress size={'1vh'}/>
-            <Typography variant="caption" component="span">
-              {upload}
-            </Typography>
-          </Stack>
-          )
-        })
+    <>
+      {uploadErrors.length > 0 &&
+          <ImageUploadErrorList uploadErrors={uploadErrors}/>
       }
-    </Stack>
+      <Stack>
+        {
+          currentUploads.map((upload) => {
+            return !upload.error ? <ImageUploadIndicator key={upload.name} upload={upload}/> : ''
+          })
+        }
+      </Stack>
+    </>
   )
 }
 
