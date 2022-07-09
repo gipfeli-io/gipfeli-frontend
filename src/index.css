@@ -15,21 +15,3 @@ body {
 .not-found-illustration {
   width: 100%;
 }
-
-/* popup style */
-.ol-popup {
-  max-width:300px;
-  min-width:100px;
-  min-height:1em;
-}
-/* Image on popup */
-.ol-popup img {
-  float: left;
-  margin: 0 0.5em 0 0;
-  max-width: 100px;
-  max-height: 100px;
-}
-/* no image content tooltips */
-.ol-popup.tooltips img {
-  display:none;
-}
