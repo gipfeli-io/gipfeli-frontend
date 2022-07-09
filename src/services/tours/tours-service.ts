@@ -2,6 +2,7 @@ import APIService from '../api-service'
 import { Tour, UpdateOrCreateTour } from '../../types/tour'
 import { ApiResponseWrapper, ArrayApiResponse, SingleApiResponse } from '../../types/api'
 import LocalDatabaseService from '../local-database-service'
+import { TourStatusType } from '../../enums/tour-status-type'
 
 export default class ToursService extends APIService {
   private prefix: string = 'tours'
@@ -23,14 +24,21 @@ export default class ToursService extends APIService {
     return this.handleTourListResult(result)
   }
 
-  public async findOne (id: string): Promise<SingleApiResponse<Tour>> {
+  public async findOne (id: string | undefined): Promise<SingleApiResponse<Tour>> {
+    const localTour = await this.localDatabaseService.getOne(id)
+    // no need to make an api call if the tour was only created locally
+    if (localTour?.status === TourStatusType.CREATED) {
+      const wrapper = this.getSuccessWrapper('got data from local database')
+      return { content: localTour, ...wrapper }
+    }
+
     const result = await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('GET', {}),
       Tour
     )
 
-    return this.handleGetOneResult(result, id)
+    return this.handleGetOneResult(result, id, localTour)
   }
 
   public async create (tour: UpdateOrCreateTour): Promise<SingleApiResponse<Tour>> {
@@ -42,13 +50,11 @@ export default class ToursService extends APIService {
     return this.handleTourAddResult(tour, result)
   }
 
-  public async update (id: string, tour: UpdateOrCreateTour): Promise<SingleApiResponse<unknown>> {
+  public async update (id: string | undefined, tour: UpdateOrCreateTour): Promise<SingleApiResponse<unknown>> {
     const localTour = await this.localDatabaseService.getOne(id)
-
-    if (localTour && localTour.isSynced === 0) {
-      const updatedTour = this.localDatabaseService.updateLocalTour(localTour, tour)
-      await this.localDatabaseService.putTour(updatedTour)
-      return { content: undefined, ...this.getSuccessWrapper('updated unsynced tour in local database') }
+    // no need to make an api call if the tour was only created locally
+    if (localTour?.status === TourStatusType.CREATED) {
+      return this.handleLocalTourUpdate(localTour, tour)
     }
 
     const result = await this.fetchSingleDataFromApi(
@@ -59,62 +65,99 @@ export default class ToursService extends APIService {
   }
 
   public async delete (id: string): Promise<SingleApiResponse<unknown>> {
+    const localTour = await this.localDatabaseService.getOne(id)
+    // no need to call api if tour was created locally and is not synced
+    if (localTour && localTour.status === TourStatusType.CREATED) {
+      await this.localDatabaseService.deleteTour(id)
+      return { ...this.getSuccessWrapper('successfully deleted tour') }
+    }
+
     const result = await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('DELETE', {})
     )
-    return this.handleTourDeleteResult(result, id)
+    return this.handleTourDeleteResult(result, localTour!)
   }
 
-  private async handleTourDeleteResult (result: SingleApiResponse<unknown>, id: string): Promise<SingleApiResponse<unknown>> {
-    const localTour = await this.localDatabaseService.getOne(id)
-    if (result.statusCode === 500 || !localTour?.isSynced) {
-      await this.localDatabaseService.markTourAsDeleted(localTour!)
+  private async handleTourDeleteResult (result: SingleApiResponse<unknown>, localTour: Tour): Promise<SingleApiResponse<unknown>> {
+    if (ToursService.isOffline(result.statusCode)) {
+      await this.localDatabaseService.markTourAsDeleted(localTour)
       return { ...this.getSuccessWrapper('marked tour as deleted in local database') }
     }
-    await this.localDatabaseService.deleteTour(id)
+    // todo: error handling if status code is > 200 => treat 404 special.
+    // if error != 404 => revive entry and show notification to user if entry marked as "DELETED" => we will be in process of syncing
+    await this.localDatabaseService.deleteTour(localTour.id)
     return result
   }
 
   private async handleTourUpdateResult (result: SingleApiResponse<unknown>, tour: UpdateOrCreateTour, localTour: Tour | undefined): Promise<SingleApiResponse<unknown>> {
-    if (result.statusCode === 500) {
-      let updatedTour
-      if (!localTour) { // todo: will this ever happen?
-        updatedTour = this.localDatabaseService.createLocalTour(tour)
-      } else {
-        updatedTour = this.localDatabaseService.updateLocalTour(localTour, tour)
-      }
-      await this.localDatabaseService.putTour(updatedTour)
-      return { ...this.getSuccessWrapper('updated tour in local database') }
+    if (ToursService.isOffline(result.statusCode)) {
+      return this.handleLocalTourUpdate(localTour, tour)
     }
+    // todo handle 404 => remove entry from db and show notification to user
+    // todo: handle every other error and notify user
+
+    const updatedTour = this.localDatabaseService.updateLocalTour(localTour!, tour, TourStatusType.SYNCED)
+    await this.localDatabaseService.putTour(updatedTour)
+
     return result
   }
 
-  private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string): Promise<SingleApiResponse<Tour>> {
-    const localTour = await this.localDatabaseService.getOne(tourId)
-    if (result.statusCode === 500 || result.statusCode === 404) {
-      if (localTour) {
-        const wrapper = this.getSuccessWrapper('got data from local database')
-        return { content: localTour, ...wrapper }
-      }
+  private async handleLocalTourUpdate (localTour: Tour | undefined, tour: UpdateOrCreateTour): Promise<SingleApiResponse<unknown>> {
+    const updatedTour = this.localDatabaseService.updateLocalTour(localTour!, tour, TourStatusType.UPDATED)
+    await this.localDatabaseService.putTour(updatedTour)
+    return { ...this.getSuccessWrapper('updated tour in local database') }
+  }
 
-      if (result.statusCode === 500) {
-        // todo: refactor
+  private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string | undefined, localTour: Tour|undefined): Promise<SingleApiResponse<Tour>> {
+    if (ToursService.isOffline(result.statusCode)) {
+      if (localTour) {
+        return this.getLocalTourResponse(localTour, 'got data from local database')
+      } else { // tour could not be found in local database
         result.statusCode = 404
         result.statusMessage = 'Could not find tour'
+        return result
       }
     }
 
-    if (!localTour && result.statusCode === 200) {
+    if (result.statusCode === 404) {
+      if (localTour) {
+        return this.handleTourNotFoundStatus(tourId)
+      }
+    }
+
+    return this.handleGetTour(result, localTour)
+  }
+
+  private static isOffline (statusCode: number): boolean {
+    return statusCode === 500
+  }
+
+  private async handleGetTour (result: SingleApiResponse<Tour>, localTour: Tour | undefined): Promise<SingleApiResponse<Tour>> {
+    if (result.statusCode === 200) {
+      if (localTour!.status === TourStatusType.SYNCING) {
+        return result
+      } else if (localTour!.status !== TourStatusType.SYNCED) {
+        // serve local tour assuming these are the most recent changes
+        result.content = localTour
+      }
+      // only update the tour in the database if it was already synced
+      // otherwise we could overwrite local changes!
       await this.localDatabaseService.putTour(result.content!)
     }
 
-    // if the tour hasn't been synced yet serve the tour saved in the local db
-    if (!localTour?.isSynced) {
-      result.content = localTour
-    }
-
     return result
+  }
+
+  private async handleTourNotFoundStatus (tourId: string | undefined): Promise<SingleApiResponse<Tour>> {
+    await this.localDatabaseService.deleteTour(tourId)
+    const wrapper = this.createResponseWrapper(false, 404, 'Tour was deleted in database. Removing local copy.')
+    return { ...wrapper }
+  }
+
+  private async getLocalTourResponse (localTour: Tour, message: string): Promise<SingleApiResponse<Tour>> {
+    const wrapper = this.getSuccessWrapper(message)
+    return { content: localTour, ...wrapper }
   }
 
   private getSuccessWrapper (message: string): ApiResponseWrapper {
@@ -122,7 +165,8 @@ export default class ToursService extends APIService {
   }
 
   private async handleTourAddResult (tour: UpdateOrCreateTour, result: SingleApiResponse<Tour>): Promise<SingleApiResponse<Tour>> {
-    if (result.statusCode === 500) {
+    // todo: do some error handling here as well
+    if (ToursService.isOffline(result.statusCode)) {
       const wrapper = this.getSuccessWrapper('added data to local database')
       const localTour = this.localDatabaseService.createLocalTour(tour)
       await this.localDatabaseService.putTour(localTour)
@@ -135,9 +179,7 @@ export default class ToursService extends APIService {
   }
 
   private async handleTourListResult (result: ArrayApiResponse<Tour>): Promise<ArrayApiResponse<Tour>> {
-    console.log('result content handle tour list: ', result.content)
-
-    if (result.statusCode === 500) {
+    if (ToursService.isOffline(result.statusCode)) {
       const wrapper = this.getSuccessWrapper('serve data from local database')
       const tours = await this.localDatabaseService.findAllTours()
       return { content: tours, ...wrapper }
@@ -146,7 +188,7 @@ export default class ToursService extends APIService {
         result.content = []
       }
       await this.localDatabaseService.addTourList(result.content)
-      result.content = await this.localDatabaseService.findAllTours()
+      result.content = await this.localDatabaseService.findAllTours() // todo: needs error handling as it sometimes can happen that the local db throws an error (eg Firefox private mode)
       return result
     }
   }

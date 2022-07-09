@@ -1,6 +1,7 @@
 import { Tour, UpdateOrCreateTour } from '../types/tour'
-import { localDB } from '../components/shared/local-database/local-db'
+import { localDB } from '../utils/local-database/local-db'
 import dayjs from 'dayjs'
+import { TourStatusType } from '../enums/tour-status-type'
 
 export default class LocalDatabaseService {
   public async addTourList (tours: Tour[]): Promise<void> {
@@ -8,14 +9,14 @@ export default class LocalDatabaseService {
       const localTour = await localDB.tours.get(tour.id)
       // only update/add tour to indexed db if it is
       // not yet added or if it is marked as synced
-      if (!localTour || localTour?.isSynced === 1) {
+      if (!localTour || localTour?.status === TourStatusType.SYNCED) {
         await localDB.tours.put(tour)
       }
     }
   }
 
   public async findAllTours (): Promise<Tour[]> {
-    return localDB.tours.where('isDeleted').equals(0).toArray()
+    return localDB.tours.where('status').notEqual(TourStatusType.DELETED).toArray()
   }
 
   /**
@@ -27,37 +28,45 @@ export default class LocalDatabaseService {
     await localDB.tours.put(tour)
   }
 
-  public async getOne (id: string): Promise<Tour|undefined> {
-    return localDB.tours.get(id)
+  public async getOne (id: string | undefined): Promise<Tour|undefined> {
+    return localDB.tours.get(id!)
   }
 
   public async markTourAsDeleted (tour: Tour): Promise<void> {
     const localTour = await localDB.tours.get(tour.id)
     if (localTour) {
-      localTour.isDeleted = 1
-      localTour.isSynced = 0
-      await localDB.tours.put(localTour)
+      await this.updateTourStatus(localTour, TourStatusType.DELETED)
     }
   }
 
-  public async deleteTour (id: string): Promise<void> {
-    await localDB.tours.delete(id)
+  public async deleteTour (id: string | undefined): Promise<void> {
+    await localDB.tours.delete(id!)
   }
 
   public createLocalTour (tour: UpdateOrCreateTour): Tour {
     const id = crypto.randomUUID().toString()
     const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, dayjs().toDate(), dayjs().toDate())
-    localTour.isSynced = 0
+    localTour.status = TourStatusType.CREATED
     return localTour
   }
 
-  public updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour): Tour {
+  public updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Tour {
     localTour.name = updatedTour.name
     localTour.startLocation = updatedTour.startLocation
     localTour.endLocation = updatedTour.endLocation
     localTour.description = updatedTour.description
+    localTour.images = updatedTour.images
     localTour.updatedAt = dayjs().toDate()
-    localTour.isSynced = 0
+    localTour.status = statusType
     return localTour
+  }
+
+  public async getToursToSynchronize (): Promise<Tour[]> {
+    return localDB.tours.where('status').anyOf(TourStatusType.UPDATED, TourStatusType.DELETED).toArray()
+  }
+
+  public async updateTourStatus (tour: Tour, status: TourStatusType): Promise<void> {
+    tour.status = status
+    await localDB.tours.put(tour)
   }
 }

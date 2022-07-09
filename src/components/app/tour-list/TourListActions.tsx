@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 type TourListActionsProps = {
   id: string
 }
-export default function TourListActions ({ id }: TourListActionsProps): JSX.Element {
+const TourListActions = ({ id }: TourListActionsProps): JSX.Element => {
   const tourListContext = useContext(TourListContext)
 
   const onClick = () => {
@@ -24,3 +24,5 @@ export default function TourListActions ({ id }: TourListActionsProps): JSX.Elem
     </>
   )
 }
+
+export default TourListActions

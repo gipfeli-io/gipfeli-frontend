@@ -16,6 +16,7 @@ import useApiError from '../../../hooks/use-api-error'
 import { dateTimeFormat } from '../../../utils/constants'
 import dayjs from 'dayjs'
 import ImageGallery from '../../shared/images/gallery/ImageGallery'
+import useOnlineStatus from '../../../hooks/use-online-status'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -25,6 +26,7 @@ const TourDetail = () => {
   const [tour, setTour] = useState<Tour | undefined>(undefined)
   const [open, setOpen] = useState(false)
   const throwError = useApiError()
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     async function fetchTour () {
@@ -72,9 +74,11 @@ const TourDetail = () => {
         </Grid>
       </Grid>
       <Divider/>
-      <MapWrapper>
-        <WayPointMarkerLayer features={[tour.startLocation, tour.endLocation]}/>
-      </MapWrapper>
+      {isOnline &&
+        <MapWrapper>
+          <WayPointMarkerLayer features={[tour.startLocation, tour.endLocation]}/>
+        </MapWrapper>
+      }
       <Grid container mb={2} mt={2} direction={'column'}>
         <Grid item>
           <Typography variant="h5" gutterBottom component="div">
@@ -87,7 +91,7 @@ const TourDetail = () => {
           </Typography>
         </Grid>
       </Grid>
-      {tour.images.length > 0 &&
+      {isOnline && tour.images && tour.images.length > 0 &&
           <Grid container mb={2} mt={2} direction={'column'}>
               <Grid item>
                   <Typography variant="h5" gutterBottom component="div">

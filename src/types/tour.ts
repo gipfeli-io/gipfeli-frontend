@@ -1,6 +1,7 @@
 import { Point } from 'geojson'
 import { Exclude, Expose, Type } from 'class-transformer'
 import { ImageUpload } from './media'
+import { TourStatusType } from '../enums/tour-status-type'
 
 export class BaseTour {
   @Expose()
@@ -20,21 +21,11 @@ export class BaseTour {
 
   /**
    * This is a frontend property only and is not saved/fetched to/from the database
-   * It is only needed to find out which entries are in the local database only and
-   * need to be synced.
-   * IMPORTANT: As dexie cannot index boolean values the type number is the best option
-   */
-  @Exclude()
-    isSynced: number = 1
-
-  /**
-   * This is a frontend property only and is not saved/fetched to/from the database
-   * It is only needed to find out which entries were deleted while offline and
+   * It is helps us finding out which entries were mutated while offline and
    * sync them respectively.
-   * IMPORTANT: As dexie cannot index boolean values the type number is the best option
    */
   @Exclude()
-    isDeleted: number = 0
+    status: TourStatusType = TourStatusType.SYNCED
 
   constructor (name: string, startLocation: Point, endLocation: Point, description: string, images: ImageUpload[] = []) {
     this.name = name

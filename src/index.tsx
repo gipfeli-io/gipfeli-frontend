@@ -35,32 +35,32 @@ root.render(
   <React.StrictMode>
     <SwitchableThemeProvider>
       <NotificationProvider>
-        <OnlineStatusProvider>
           <BrowserRouter>
             <ErrorBoundary>
               <AuthenticationProvider>
-                <RoutesWrapper>
-                  <Route path="/" element={<MainLayout/>}>
-                    <Route index element={<Home/>}/>
-                    <Route path="tours" element={<AppPageLayout/>}>
-                      <Route index element={<ToursOverview/>}/>
-                      <Route path="create" element={<TourCreate/>}/>
-                      <Route path=":id/edit" element={<TourEdit/>}/>
-                      <Route path=":id" element={<TourDetail/>}/>
+                <OnlineStatusProvider>
+                  <RoutesWrapper>
+                    <Route path="/" element={<MainLayout/>}>
+                      <Route index element={<Home/>}/>
+                      <Route path="tours" element={<AppPageLayout/>}>
+                        <Route index element={<ToursOverview/>}/>
+                        <Route path="create" element={<TourCreate/>}/>
+                        <Route path=":id/edit" element={<TourEdit/>}/>
+                        <Route path=":id" element={<TourDetail/>}/>
+                      </Route>
                     </Route>
-                  </Route>
-                  <Route path="/" element={<AuthPageLayout/>}>
-                    <Route path="login" element={<Login/>}/>
-                    <Route path="signup" element={<SignUp/>}/>
-                    <Route path="user/activate/:userId/:token" element={<ActivateUser/>}/>
-                  </Route>
-                  <Route path="404" element={<NotFound/>}/>
-                  <Route path="*" element={<Navigate to="/404" replace/>}/>
-                </RoutesWrapper>
+                    <Route path="/" element={<AuthPageLayout/>}>
+                      <Route path="login" element={<Login/>}/>
+                      <Route path="signup" element={<SignUp/>}/>
+                      <Route path="user/activate/:userId/:token" element={<ActivateUser/>}/>
+                    </Route>
+                    <Route path="404" element={<NotFound/>}/>
+                    <Route path="*" element={<Navigate to="/404" replace/>}/>
+                  </RoutesWrapper>
+                </OnlineStatusProvider>
               </AuthenticationProvider>
             </ErrorBoundary>
           </BrowserRouter>
-        </OnlineStatusProvider>
       </NotificationProvider>
     </SwitchableThemeProvider>
   </React.StrictMode>
