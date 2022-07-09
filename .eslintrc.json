@@ -44,7 +44,6 @@
         "args": "after-used",
         "argsIgnorePattern": "^_"
       }
-    ],
-    "no-unnecessary-type-assertion": "error"
+    ]
   }
 }
