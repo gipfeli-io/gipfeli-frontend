@@ -68,7 +68,7 @@ export default class ToursService extends APIService {
 
   private async handleTourDeleteResult (result: SingleApiResponse<unknown>, id: string): Promise<SingleApiResponse<unknown>> {
     const localTour = await this.localDatabaseService.getOne(id)
-    if (result.statusCode === 500) {
+    if (ToursService.isOffline(result.statusCode)) {
       await this.localDatabaseService.markTourAsDeleted(localTour!)
       return { ...this.getSuccessWrapper('marked tour as deleted in local database') }
     }
@@ -79,7 +79,7 @@ export default class ToursService extends APIService {
   private async handleTourUpdateResult (result: SingleApiResponse<unknown>, tourId: string, tour: UpdateOrCreateTour): Promise<SingleApiResponse<unknown>> {
     const localTour = await this.localDatabaseService.getOne(tourId)
 
-    if (result.statusCode === 500) {
+    if (ToursService.isOffline(result.statusCode)) {
       let updatedTour
       if (!localTour) { // todo: will this ever happen?
         updatedTour = this.localDatabaseService.createLocalTour(tour)
@@ -99,7 +99,7 @@ export default class ToursService extends APIService {
   }
 
   private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string, localTour: Tour|undefined): Promise<SingleApiResponse<Tour>> {
-    if (this.isOffline(result.statusCode)) {
+    if (ToursService.isOffline(result.statusCode)) {
       if (localTour) {
         return this.getLocalTourResponse(localTour, 'got data from local database')
       } else { // tour could not be found in local database
@@ -111,12 +111,18 @@ export default class ToursService extends APIService {
 
     if (result.statusCode === 404) {
       if (localTour) {
-        await this.localDatabaseService.deleteTour(tourId)
-        const wrapper = this.createResponseWrapper(false, 404, 'Tour was deleted in database. Removing local copy.')
-        return { ...wrapper }
+        return this.handleTourNotFoundStatus(tourId)
       }
     }
 
+    return this.handleGetTour(result, localTour)
+  }
+
+  private static isOffline (statusCode: number): boolean {
+    return statusCode === 500
+  }
+
+  private async handleGetTour (result: SingleApiResponse<Tour>, localTour: Tour | undefined): Promise<SingleApiResponse<Tour>> {
     if (result.statusCode === 200) {
       if (localTour!.status === TourStatusType.SYNCING) {
         return result
@@ -132,8 +138,10 @@ export default class ToursService extends APIService {
     return result
   }
 
-  private isOffline (statusCode: number): boolean {
-    return statusCode === 500
+  private async handleTourNotFoundStatus (tourId: string): Promise<SingleApiResponse<Tour>> {
+    await this.localDatabaseService.deleteTour(tourId)
+    const wrapper = this.createResponseWrapper(false, 404, 'Tour was deleted in database. Removing local copy.')
+    return { ...wrapper }
   }
 
   private async getLocalTourResponse (localTour: Tour, message: string): Promise<SingleApiResponse<Tour>> {
@@ -146,7 +154,7 @@ export default class ToursService extends APIService {
   }
 
   private async handleTourAddResult (tour: UpdateOrCreateTour, result: SingleApiResponse<Tour>): Promise<SingleApiResponse<Tour>> {
-    if (result.statusCode === 500) {
+    if (ToursService.isOffline(result.statusCode)) {
       const wrapper = this.getSuccessWrapper('added data to local database')
       const localTour = this.localDatabaseService.createLocalTour(tour)
       await this.localDatabaseService.putTour(localTour)
@@ -159,7 +167,7 @@ export default class ToursService extends APIService {
   }
 
   private async handleTourListResult (result: ArrayApiResponse<Tour>): Promise<ArrayApiResponse<Tour>> {
-    if (result.statusCode === 500) {
+    if (ToursService.isOffline(result.statusCode)) {
       const wrapper = this.getSuccessWrapper('serve data from local database')
       const tours = await this.localDatabaseService.findAllTours()
       return { content: tours, ...wrapper }
@@ -168,7 +176,7 @@ export default class ToursService extends APIService {
         result.content = []
       }
       await this.localDatabaseService.addTourList(result.content)
-      result.content = await this.localDatabaseService.findAllTours()
+      result.content = await this.localDatabaseService.findAllTours() // todo: needs error handling as it sometimes can happen that the local db throws an error (eg Firefox private mode)
       return result
     }
   }
