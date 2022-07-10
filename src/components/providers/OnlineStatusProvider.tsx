@@ -3,10 +3,13 @@ import OnlineStatusContext from '../../contexts/online-status-context'
 import useInterval from '../../hooks/use-interval'
 import ToursSyncService from '../../services/tours/tours-sync-service'
 import useAuth from '../../hooks/use-auth'
+import { SingleApiResponse } from '../../types/api'
+import useNotifications from '../../hooks/use-notifications'
 
 export const OnlineStatusProvider = ({ children }: PropsWithChildren<any>) => {
   const [onlineStatus, setOnlineStatus] = useState<boolean>(true)
   const auth = useAuth()
+  const { triggerSyncFailedNotification } = useNotifications()
   const requestUrl: string = process.env.REACT_APP_PUBLIC_BACKEND_API || 'http://localhost:3000'
   const pollingDelay: string | number = process.env.ONLINE_POLLING_DELAY || 20000
   const tourSyncService: ToursSyncService = new ToursSyncService(auth.token)
@@ -17,8 +20,12 @@ export const OnlineStatusProvider = ({ children }: PropsWithChildren<any>) => {
       if (request.status < 500) {
         setOnlineStatus(true)
         if (auth.token) {
-          // todo: show notification banner showing synchronization
-          await tourSyncService.synchronizeTourData()
+          const results = await tourSyncService.synchronizeTourData()
+          results.forEach((result: SingleApiResponse<unknown>) => {
+            if (result.error) {
+              triggerSyncFailedNotification(result.error.message!)
+            }
+          })
         }
       } else {
         setOnlineStatus(false)
