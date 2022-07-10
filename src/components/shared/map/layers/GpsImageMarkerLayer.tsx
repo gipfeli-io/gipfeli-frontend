@@ -31,7 +31,7 @@ type PopupContent = {
 /**
  * Adds a layer which can display georeferenced images on the map.
  */
-const GpsMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
+const GpsImageMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
   const iconSelector: StyleSelector<ImageUpload> = (_index, _objects) => {
@@ -126,4 +126,4 @@ const GpsMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
   return null
 }
 
-export default GpsMarkerLayer
+export default GpsImageMarkerLayer
