@@ -7,8 +7,8 @@ import renderer from 'react-test-renderer'
 
 const mockedStorageUrl = 'https://localhost:3000/'
 const mockedImages: ImageUpload[] = [
-  { id: 'img-1', identifier: 'ident-1' },
-  { id: 'img-2', identifier: 'ident-2' }
+  { id: 'img-1', identifier: 'ident-1', getGeometry: jest.fn() },
+  { id: 'img-2', identifier: 'ident-2', getGeometry: jest.fn() }
 ]
 describe('ImageGallery', () => {
   beforeEach(() => {

@@ -1,7 +1,7 @@
 import { Notification } from './notifications'
 import { AppTheme } from './theme'
 import { handleSave } from './handle-save'
-import { ImageUpload } from './media'
+import { CurrentUpload, ImageUpload } from './media'
 
 export interface TourListContextProperties {
   deleteEvent: (id: string) => void
@@ -30,4 +30,5 @@ export interface ImageUploadContextType {
   files: ImageUpload[];
   save: handleSave<File[]>;
   remove: (id: string) => void;
+  currentUploads: CurrentUpload[];
 }

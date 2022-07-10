@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography'
 import { Divider, Grid, Link as MuiLink } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import CameraIcon from '@mui/icons-material/PhotoCamera'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import useAuth from '../../../hooks/use-auth'
@@ -9,7 +10,7 @@ import WayPointMarkerLayer from '../../shared/map/layers/WayPointMarkerLayer'
 import ToursService from '../../../services/tours/tours-service'
 import { TourDeleteConfirmation } from '../../app/tour-list/TourDeleteConfirmation'
 import MapWrapper from '../../shared/map/MapWrapper'
-import { Tour } from '../../../types/tour'
+import { Tour, TourPoint } from '../../../types/tour'
 import { Link } from 'react-router-dom'
 import Loader from '../../shared/Loader'
 import useApiError from '../../../hooks/use-api-error'
@@ -17,6 +18,8 @@ import { dateTimeFormat } from '../../../utils/constants'
 import dayjs from 'dayjs'
 import ImageGallery from '../../shared/images/gallery/ImageGallery'
 import useOnlineStatus from '../../../hooks/use-online-status'
+import { ImageUpload } from '../../../types/media'
+import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -25,6 +28,7 @@ const TourDetail = () => {
   const service = new ToursService(auth.token)
   const [tour, setTour] = useState<Tour | undefined>(undefined)
   const [open, setOpen] = useState(false)
+  const [geoReferencedImages, setGeoReferencedImages] = useState<ImageUpload[]>([])
   const throwError = useApiError()
   const isOnline = useOnlineStatus()
 
@@ -40,6 +44,12 @@ const TourDetail = () => {
 
     fetchTour()
   }, [])
+
+  useEffect(() => {
+    if (tour && tour.images.length > 0) {
+      setGeoReferencedImages(tour.images.filter((image) => image.location))
+    }
+  }, [tour])
 
   const handleDeleteModalClose = () => {
     setOpen(false)
@@ -75,9 +85,16 @@ const TourDetail = () => {
       </Grid>
       <Divider/>
       {isOnline &&
-        <MapWrapper>
-          <WayPointMarkerLayer features={[tour.startLocation, tour.endLocation]}/>
-        </MapWrapper>
+          <>
+              <MapWrapper>
+                  <WayPointMarkerLayer features={[new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]}/>
+                  <GpsImageMarkerLayer features={geoReferencedImages} isEditable={false}/>
+              </MapWrapper>
+              <Typography variant="caption" component="div">
+                  Click on a <CameraIcon fontSize="inherit" sx={{ verticalAlign: 'middle' }}/> pin to show its image, and
+                  click on the image to open its original.
+              </Typography>
+          </>
       }
       <Grid container mb={2} mt={2} direction={'column'}>
         <Grid item>

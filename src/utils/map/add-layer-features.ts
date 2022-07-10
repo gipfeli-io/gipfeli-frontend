@@ -1,44 +1,43 @@
-import { GeoJsonObject } from 'geojson'
 import { Feature } from 'ol'
 import { Vector as VectorSource } from 'ol/source'
-import MapConfigurationService from '../../services/map/map-configuration-service'
 import { GeoJSON } from 'ol/format'
-import { Icon, Style } from 'ol/style'
 import VectorLayer from 'ol/layer/Vector'
 import { Geometry } from 'ol/geom'
 import { GeoJSONPoint } from 'ol/format/GeoJSON'
+import { GeoJsonPropertySetter, GeometryObject, StyleSelector } from '../../types/map'
+import { CoordinateSystems } from '../../enums/coordinate-systems'
 
 /**
- * Adds geojson points to an existing vector layer as markers
+ * Adds geojson points to an existing vector layer as markers. Takes a StyleSelector callback to style all items and an
+ * (optional) GeoJsonPropertySetter to add properties to each feature (for e.g. popups).
  */
-const addLayerFeatures = (features: GeoJsonObject[], layer: VectorLayer<VectorSource<Geometry>>): number[] => {
+const addLayerFeatures = <T extends GeometryObject>(features: T[], layer: VectorLayer<VectorSource<Geometry>>, styleSelector: StyleSelector<T>, propertySetter: GeoJsonPropertySetter<T, any> | null = null): number[] => {
   const jsonFeatures: Feature[] = []
-  const mapConfigurationService: MapConfigurationService = new MapConfigurationService()
-  const startIcon = mapConfigurationService.getStartIcon()
-  const endIcon = mapConfigurationService.getEndIcon()
   let extent: number[] = []
 
-  features.forEach((feature:GeoJsonObject, idx:number, features:GeoJsonObject[]) => {
-    if (Object.keys(feature).length !== 0 && (feature as GeoJSONPoint).coordinates.length !== 0) {
-      const jsonFeature = new GeoJSON().readFeature(feature, {
-        dataProjection: 'EPSG:4326',
-        featureProjection: 'EPSG:3857'
+  features.forEach((feature: T, idx: number, objects: T[]) => {
+    const geometry = feature.getGeometry()
+    if (geometry && Object.keys(geometry).length !== 0 && (geometry as GeoJSONPoint).coordinates.length !== 0) {
+      const jsonFeature = new GeoJSON().readFeature(geometry, {
+        dataProjection: CoordinateSystems.DATA,
+        featureProjection: CoordinateSystems.MAP
       })
 
-      const style = new Style({
-        image: new Icon(({
-          anchor: [0.5, 1],
-          src: idx === features.length - 1 ? endIcon : startIcon
-        }))
-      })
-      jsonFeature.setId(idx)
+      const style = styleSelector(idx, objects)
       jsonFeature.setStyle(style)
+
+      if (propertySetter) {
+        const properties = propertySetter(feature)
+        jsonFeature.setProperties(properties)
+      }
+
+      jsonFeature.setId(idx)
       jsonFeatures.push(jsonFeature)
     }
   })
 
   if (jsonFeatures.length > 0) {
-        layer.getSource()!.addFeatures(jsonFeatures)
+    layer.getSource()!.addFeatures(jsonFeatures)
   }
 
   if (jsonFeatures.length > 1) {

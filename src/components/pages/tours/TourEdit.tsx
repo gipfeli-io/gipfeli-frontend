@@ -30,7 +30,7 @@ const EditTour = () => {
   const toursSyncService = new ToursSyncService(auth.token)
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
-  const handleImageUpload = useHandleImageUpload(mediaService, images, setImages)
+  const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
 
   useEffect(() => {
     async function fetchTour () {
@@ -78,7 +78,8 @@ const EditTour = () => {
   const imageContextProps: ImageUploadContextType = {
     save: handleImageUpload,
     files: images,
-    remove: removeItem
+    remove: removeItem,
+    currentUploads
   }
 
   const tourType: string = tour?.status === TourStatusType.CREATED ? 'Create' : 'Edit'

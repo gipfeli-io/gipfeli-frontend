@@ -5,6 +5,7 @@ import TileLayer from 'ol/layer/Tile'
 import { TileWMS } from 'ol/source'
 import styles from './MapWrapper.module.scss'
 import MapContext from './MapContext'
+import { CoordinateSystems } from '../../../enums/coordinate-systems'
 
 const MapWrapper = ({ children }: PropsWithChildren<any>) => {
   const mapContainerId = useId()
@@ -22,12 +23,12 @@ const MapWrapper = ({ children }: PropsWithChildren<any>) => {
               FORMAT: 'image/jpeg'
             },
             url: 'https://wms.geo.admin.ch/',
-            projection: 'EPSG:3857'
+            projection: CoordinateSystems.MAP
           })
         })
       ],
       view: new View({
-        projection: 'EPSG:3857',
+        projection: CoordinateSystems.MAP,
         center: [916355.758968, 5909242.750142],
         zoom: 8,
         minZoom: 8
