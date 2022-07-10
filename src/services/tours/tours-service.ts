@@ -173,7 +173,6 @@ export default class ToursService extends APIService {
   }
 
   private async handleTourAddResult (tour: UpdateOrCreateTour, result: SingleApiResponse<Tour>): Promise<SingleApiResponse<Tour>> {
-    // todo: do some error handling here as well
     if (ToursService.isOffline(result.statusCode)) {
       const wrapper = this.getSuccessWrapper('added data to local database')
       const localTour = this.localDatabaseService.createLocalTour(tour)

@@ -24,9 +24,14 @@ export default class ToursSyncService {
   }
 
   public async synchronizeCreatedTour (id: string | undefined, tour: UpdateOrCreateTour): Promise<SingleApiResponse<Tour>> {
-    // we can delete the local tour here as it gets freshly added (incl. correct id if successful)
-    await this.localDatabaseService.deleteTour(id)
-    return this.tourService.create(tour)
+    const result = await this.tourService.create(tour)
+    if (result.success) {
+      // we can delete the local tour here as it was freshly added with the correct id
+      await this.localDatabaseService.deleteTour(id)
+    } else if (result.error) {
+      result.error.message = `Synchronization of offline created tour "${tour.name}" was not successful. Error: ${result.error?.message}`
+    }
+    return result
   }
 
   private async handleTourSync (tour: Tour): Promise<SingleApiResponse<unknown>> {

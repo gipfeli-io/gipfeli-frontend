@@ -58,7 +58,7 @@ const EditTour = () => {
     let data
     if (baseTour.status === TourStatusType.CREATED) {
       data = await toursSyncService.synchronizeCreatedTour(id, tourToSave)
-      id = data.content!.id
+      id = data.content?.id
     } else {
       data = await toursService.update(id, tourToSave)
     }
