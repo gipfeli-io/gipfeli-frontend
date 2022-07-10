@@ -8,7 +8,7 @@ export const OnlineStatusProvider = ({ children }: PropsWithChildren<any>) => {
   const [onlineStatus, setOnlineStatus] = useState<boolean>(true)
   const auth = useAuth()
   const requestUrl: string = process.env.REACT_APP_PUBLIC_BACKEND_API || 'http://localhost:3000'
-  const pollingDelay: string | number = process.env.ONLINE_POLLING_DELAY || 20000
+  const pollingDelay: string | number = process.env.REACT_APP_ONLINE_POLLING_DELAY || 20000
   const tourSyncService: ToursSyncService = new ToursSyncService(auth.token)
 
   const checkOnlineStatus = async (): Promise<void> => {
