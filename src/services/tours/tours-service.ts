@@ -84,9 +84,12 @@ export default class ToursService extends APIService {
       await this.localDatabaseService.markTourAsDeleted(localTour)
       return { ...this.getSuccessWrapper('marked tour as deleted in local database') }
     }
-    // todo: error handling if status code is > 200 => treat 404 special.
-    // if error != 404 => revive entry and show notification to user if entry marked as "DELETED" => we will be in process of syncing
-    await this.localDatabaseService.deleteTour(localTour.id)
+    if (!ToursService.hasError(result.statusCode)) {
+      await this.localDatabaseService.deleteTour(localTour.id)
+    } else if (localTour) {
+      localTour.status = TourStatusType.SYNCED
+      await this.localDatabaseService.putTour(localTour)
+    }
     return result
   }
 
@@ -131,6 +134,11 @@ export default class ToursService extends APIService {
 
   private static isOffline (statusCode: number): boolean {
     return statusCode === 500
+  }
+
+  private static hasError (statusCode: number): boolean {
+    // we need to handle statusCode 404 differently than other status codes that's why we don't handle it here
+    return statusCode !== 404 && !(statusCode >= 200 && statusCode < 300)
   }
 
   private async handleGetTour (result: SingleApiResponse<Tour>, localTour: Tour | undefined): Promise<SingleApiResponse<Tour>> {
