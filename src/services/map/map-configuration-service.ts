@@ -1,6 +1,7 @@
 import pinImage from '../../static/img/map/pin_image.png'
 import pinEndOfTour from '../../static/img/map/pin_end_of_tour.png'
 import pinStartOfTour from '../../static/img/map/pin_start_of_tour.png'
+import pinMultiple from '../../static/img/map/pin_multiple.png'
 
 export default class MapConfigurationService {
   /**
@@ -25,6 +26,10 @@ export default class MapConfigurationService {
    */
   public static getImageIcon (): string {
     return pinImage
+  }
+
+  public static getMultipleImagesIcon (): string {
+    return pinMultiple
   }
 
   public static getMaxMarkerCount (): number {
