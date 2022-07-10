@@ -14,7 +14,7 @@ import { StyleSelector } from '../../../../types/map'
 import { MapLayers } from '../../../../enums/map-layers'
 import { TourPoint } from '../../../../types/tour'
 import { Extent } from 'ol/extent'
-import addLayerFeatures from '../../../../utils/map/add-layer-features'
+import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
 import { CoordinateSystems } from '../../../../enums/coordinate-systems'
@@ -56,11 +56,11 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
 
       if (!markerLayer) {
         markerLayer = createVectorLayer(MapLayers.WAYPOINT_MARKER)
-        layerExtent = addLayerFeatures<TourPoint>(features, markerLayer, iconSelector)
+        layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
         map.addLayer(markerLayer)
       } else {
         markerLayer.getSource()?.clear(true)
-        layerExtent = addLayerFeatures<TourPoint>(features, markerLayer, iconSelector)
+        layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
       }
 
       // if no features were added the extent is set to an empty array
