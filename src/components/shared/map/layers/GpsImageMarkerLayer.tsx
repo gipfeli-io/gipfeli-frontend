@@ -99,7 +99,7 @@ const GpsMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
       map.addInteraction(select)
 
       select.getFeatures().on('add', function (e: BaseEvent | Event): void {
-        // Somehow, the typing of OL are wrong. We get a CollectionEvent here, which is neither BaseEvent nor Event...
+        // Somehow, the typings of OL are wrong. We get a CollectionEvent here, which is neither BaseEvent nor Event...
         const castedEvent = e as CollectionEvent
         const feature = castedEvent.element
         const popupContent = feature.get('content')

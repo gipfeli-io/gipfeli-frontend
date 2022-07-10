@@ -32,9 +32,8 @@ const useHandleImageUpload = (mediaService: MediaService, records: ImageUpload[]
   const handleImageUpload = useCallback(
     async (uploadedImages: File[]) => {
       setCurrentUploads(prevState => [
-        ...prevState, ...uploadedImages.map(
-          (image) => ({ name: image.name })
-        )
+        ...prevState,
+        ...uploadedImages.map((image) => ({ name: image.name }))
       ])
 
       for (const uploadedImage of uploadedImages) {
