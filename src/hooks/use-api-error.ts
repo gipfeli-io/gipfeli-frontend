@@ -29,7 +29,7 @@ const useApiError = () => {
 
   /**
    * We extract the error type and generate the corresponding object. If we have more details, the message parameter on
-   * the ErrorContent object is set and we show this - otherwise, we just show the generic error type.
+   * the ErrorContent object is set and, we show this - otherwise, we just show the generic error type.
    * @param statusCode
    * @param error
    * @param message
@@ -61,10 +61,8 @@ const useApiError = () => {
   return useCallback((apiResponse: ApiResponseWrapper, redirect: boolean = true) => {
     // At this point, we know that we have an error, because we would not get here without it.
     const error = getApiError(apiResponse.statusCode, apiResponse.error!)
-    console.log(apiResponse)
     if (error instanceof NonCriticalApiError) {
       triggerErrorNotification(error.message)
-
       if (redirect) {
         navigate('/tours', { replace: true })
       }
