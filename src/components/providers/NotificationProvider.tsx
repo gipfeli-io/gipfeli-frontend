@@ -8,8 +8,9 @@ import { NotificationContextType } from '../../types/contexts'
 const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined)
 
-  const triggerNotification = (message: string, type: NotificationType) => {
-    setNotification({ message, type, visible: true })
+  const triggerNotification = (message: string, type: NotificationType, autoHideDuration?: number | null) => {
+    autoHideDuration = autoHideDuration === undefined ? 3000 : autoHideDuration
+    setNotification({ message, type, visible: true, autoHideDuration })
   }
 
   const triggerSuccessNotification = (message: string) => {
@@ -20,6 +21,10 @@ const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
     triggerNotification(message, NotificationType.ERROR)
   }
 
+  const triggerSyncFailedNotification = (message: string) => {
+    triggerNotification(message, NotificationType.ERROR, null)
+  }
+
   const resetNotification = () => {
     setNotification(undefined)
   }
@@ -28,6 +33,7 @@ const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
     notification,
     triggerErrorNotification,
     triggerSuccessNotification,
+    triggerSyncFailedNotification,
     resetNotification
   }
 

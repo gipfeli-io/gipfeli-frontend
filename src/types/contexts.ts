@@ -18,6 +18,7 @@ export interface NotificationContextType {
   notification: Notification | undefined;
   triggerErrorNotification: (message: string) => void;
   triggerSuccessNotification: (message: string) => void;
+  triggerSyncFailedNotification: (message: string) => void;
   resetNotification: () => void;
 }
 
