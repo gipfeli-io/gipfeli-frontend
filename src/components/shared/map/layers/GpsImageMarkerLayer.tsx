@@ -95,10 +95,12 @@ const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
       select.getFeatures().on('add', function (e: BaseEvent | Event): void {
       // Somehow, the typings of OL are wrong. We get a CollectionEvent here, which is neither BaseEvent nor Event...
         const castedEvent = e as CollectionEvent
-        const features = castedEvent.element.get('features')
-        if (features.length === 1) {
-          const popupContent = features[0].get('content')
-          popup.show(features[0].getGeometry().getFirstCoordinate(), popupContent)
+        const selectedFeatures = castedEvent.element.get('features')
+
+        // if the current selection has 1 feature, it is an actual feature. Otherwise, it's a cluster.
+        if (selectedFeatures.length === 1) {
+          const popupContent = selectedFeatures[0].get('content')
+          popup.show(selectedFeatures[0].getGeometry().getFirstCoordinate(), popupContent)
         }
       })
 

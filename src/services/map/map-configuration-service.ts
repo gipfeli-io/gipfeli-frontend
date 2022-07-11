@@ -146,8 +146,8 @@ export default class MapConfigurationService {
       return new Style({
         image: new Icon(({
           anchor: [0.5, 1],
-          src: iconSrc,
-          scale: iconSize
+          src: icon,
+          scale: size
         }))
       })
     }
