@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react'
 import MapContext from '../MapContext'
 import { Draw, Modify } from 'ol/interaction'
 import VectorSource from 'ol/source/Vector'
-import { Icon, Style } from 'ol/style'
 import { Geometry } from 'ol/geom'
 import Point from 'ol/geom/Point'
 import { Feature } from 'ol'
@@ -32,16 +31,9 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
   const { map } = useContext(MapContext)
 
   const maxMarkerCount = MapConfigurationService.getMaxMarkerCount()
-  const startIcon = MapConfigurationService.getStartIcon()
-  const endIcon = MapConfigurationService.getEndIcon()
 
   const iconSelector: StyleSelector<TourPoint> = (index, objects) => {
-    return new Style({
-      image: new Icon(({
-        anchor: [0.5, 1],
-        src: index === objects.length - 1 ? endIcon : startIcon
-      }))
-    })
+    return index === objects.length - 1 ? MapConfigurationService.getEndIcon() : MapConfigurationService.getStartIcon()
   }
 
   useEffect(() => {
@@ -105,12 +97,7 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
       const drawInteraction = new Draw({
         source: vectorSource,
         type: 'Point',
-        style: new Style({
-          image: new Icon(({
-            anchor: [0.5, 1],
-            src: markerId === 0 ? startIcon : endIcon
-          }))
-        })
+        style: markerId === 0 ? MapConfigurationService.getStartIcon() : MapConfigurationService.getEndIcon()
       })
 
       map.addInteraction(drawInteraction)
