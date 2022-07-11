@@ -168,11 +168,9 @@ export default class MapConfigurationService {
   private static getOrSetStyleCache (iconType: StyleCache, styleFactory: StyleFactory, iconSrc: string = pinDefault, iconSize: number = MarkerSize.DEFAULT) {
     const cachedIcon = MapConfigurationService.styleCache.get(iconType)
     if (cachedIcon) {
-      console.log('from cache')
       return cachedIcon
     }
 
-    console.log('set cache')
     const style = styleFactory(iconSrc, iconSize)
     MapConfigurationService.styleCache.set(iconType, style)
     return style

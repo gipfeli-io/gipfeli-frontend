@@ -6,6 +6,9 @@ import { TileWMS } from 'ol/source'
 import styles from './MapWrapper.module.scss'
 import MapContext from './MapContext'
 import { CoordinateSystems } from '../../../enums/coordinate-systems'
+import Typography from '@mui/material/Typography'
+import CameraIcon from '@mui/icons-material/PhotoCamera'
+import AccountTreeIcon from '@mui/icons-material/AccountTree'
 
 const MapWrapper = ({ children }: PropsWithChildren<any>) => {
   const mapContainerId = useId()
@@ -33,8 +36,7 @@ const MapWrapper = ({ children }: PropsWithChildren<any>) => {
         zoom: 8,
         minZoom: 8
       }),
-      controls: [
-      ]
+      controls: []
     })
 
     setMap(initialMap)
@@ -42,11 +44,17 @@ const MapWrapper = ({ children }: PropsWithChildren<any>) => {
   }, [mapContainerId])
 
   return (
-        <MapContext.Provider value={{ map }}>
-            <div id={mapContainerId} className={styles.mapContainer}>
-                {children}
-            </div>
-        </MapContext.Provider>
+    <MapContext.Provider value={{ map }}>
+      <div id={mapContainerId} className={styles.mapContainer}>
+        {children}
+      </div>
+      <Typography variant="caption" component="div">
+        Click on a <CameraIcon fontSize="inherit" sx={{ verticalAlign: 'middle' }}/> pin to show its image, and
+        click on the image to open its original. <AccountTreeIcon fontSize="inherit" sx={{ verticalAlign: 'middle' }}/> is
+        a cluster of images, which spread open when clicked. If an image is part of a cluster, its tooltip will point
+        at the actual location of the image.
+      </Typography>
+    </MapContext.Provider>
   )
 }
 

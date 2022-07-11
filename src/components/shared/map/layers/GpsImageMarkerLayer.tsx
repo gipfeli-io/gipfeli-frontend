@@ -11,7 +11,7 @@ import getCloudStorageUrlForIdentifier from '../../../../utils/storage-helper'
 import Popup from 'ol-ext/overlay/Popup'
 import BaseEvent from 'ol/events/Event'
 import { CollectionEvent } from 'ol/Collection'
-import { click, pointerMove } from 'ol/events/condition'
+import { click } from 'ol/events/condition'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
 import Cluster from 'ol/source/Cluster'
 import AnimatedCluster from 'ol-ext/layer/AnimatedCluster'
@@ -21,7 +21,6 @@ import { MapLayers } from '../../../../enums/map-layers'
 
 type GpsMarkerLayerProps = {
   features: ImageUpload[],
-  isEditable: boolean
 }
 
 type PopupContent = {
@@ -31,7 +30,7 @@ type PopupContent = {
 /**
  * Adds a layer which can display georeferenced images on the map.
  */
-const GpsImageMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
+const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
   const iconSelector: StyleSelector<ImageUpload> = (_index, _objects) => {
@@ -85,7 +84,7 @@ const GpsImageMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
       map.addOverlay(popup)
 
       const select = new SelectCluster({
-        condition: isEditable ? pointerMove : click,
+        condition: click,
         layers: [layer],
         pointRadius: 40,
         featureStyle: MapConfigurationService.getGpsImageIconWithinCluster,

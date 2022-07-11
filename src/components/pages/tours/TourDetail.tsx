@@ -2,7 +2,6 @@ import Typography from '@mui/material/Typography'
 import { Divider, Grid, Link as MuiLink } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
-import CameraIcon from '@mui/icons-material/PhotoCamera'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import useAuth from '../../../hooks/use-auth'
@@ -88,12 +87,8 @@ const TourDetail = () => {
           <>
               <MapWrapper>
                   <WayPointMarkerLayer features={[new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]}/>
-                  <GpsImageMarkerLayer features={geoReferencedImages} isEditable={false}/>
+                  <GpsImageMarkerLayer features={geoReferencedImages}/>
               </MapWrapper>
-              <Typography variant="caption" component="div">
-                  Click on a <CameraIcon fontSize="inherit" sx={{ verticalAlign: 'middle' }}/> pin to show its image, and
-                  click on the image to open its original.
-              </Typography>
           </>
       }
       <Grid container mb={2} mt={2} direction={'column'}>
