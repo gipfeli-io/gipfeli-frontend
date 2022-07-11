@@ -1,7 +1,8 @@
-import pinImage from '../../static/img/map/pin_image.png'
-import pinEndOfTour from '../../static/img/map/pin_end_of_tour.png'
-import pinStartOfTour from '../../static/img/map/pin_start_of_tour.png'
-import pinMultiple from '../../static/img/map/pin_cluster.png'
+import pinImage from '../../static/img/map/pin_image.png' // Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-camera&size=50&hoffset=0&voffset=-1&background=03cafc
+import pinEndOfTour from '../../static/img/map/pin_end_of_tour.png' // Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-play&size=50&hoffset=0&voffset=-1
+import pinStartOfTour from '../../static/img/map/pin_start_of_tour.png' // Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-flag-checkered&size=50&hoffset=0&voffset=-1
+import pinMultiple from '../../static/img/map/pin_cluster.png' // Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-camera&size=50&hoffset=0&voffset=-1&background=03cafc
+import pinDefault from '../../static/img/map/pin_default.png' // Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-globe&size=50&hoffset=0&voffset=-1
 import { FeatureLike } from 'ol/Feature'
 import { Icon, Stroke, Style } from 'ol/style'
 
@@ -21,57 +22,53 @@ enum MarkerSize {
   CLUSTERED = 0.9
 }
 
+/**
+ * A factory that takes a string which is a path to an icon and a size and returns a Style.
+ */
+type StyleFactory = (iconSrc: string, size: number) => Style
+
 export default class MapConfigurationService {
   /**
    * Cache styles, so they do not have to be initiated for each feature. This is useful because the cluster images are
-   * rerendered on every zoom-in, so caching them is much more performant.
+   * re-rendered on every zoom-in, so caching them is much more performant.
    * @private
    */
   private static styleCache: Map<StyleCache, Style> = new Map()
 
   /**
    * Icon used to designate the start point of a tour.
-   * Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-play&size=50&hoffset=0&voffset=-1
    */
   public static getStartIcon (): Style {
-    const cachedIcon = MapConfigurationService.getCachedStyle(StyleCache.WAYPOINT_START)
-    if (cachedIcon) {
-      return cachedIcon
+    const styleFactory: StyleFactory = () => {
+      return new Style({
+        image: new Icon(({
+          anchor: [0.5, 1],
+          src: pinStartOfTour
+        }))
+      })
     }
 
-    const style = new Style({
-      image: new Icon(({
-        anchor: [0.5, 1],
-        src: pinStartOfTour
-      }))
-    })
-
-    return MapConfigurationService.setAndGetCachedStyle(StyleCache.WAYPOINT_START, style)
+    return MapConfigurationService.getOrSetStyleCache(StyleCache.WAYPOINT_START, styleFactory)
   }
 
   /**
    * Icon used to designate the end point of a tour.
-   * Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-flag-checkered&size=50&hoffset=0&voffset=-1
    */
   public static getEndIcon (): Style {
-    const cachedIcon = MapConfigurationService.getCachedStyle(StyleCache.WAYPOINT_END)
-    if (cachedIcon) {
-      return cachedIcon
+    const styleFactory: StyleFactory = () => {
+      return new Style({
+        image: new Icon(({
+          anchor: [0.5, 1],
+          src: pinEndOfTour
+        }))
+      })
     }
 
-    const style = new Style({
-      image: new Icon(({
-        anchor: [0.5, 1],
-        src: pinEndOfTour
-      }))
-    })
-
-    return MapConfigurationService.setAndGetCachedStyle(StyleCache.WAYPOINT_START, style)
+    return MapConfigurationService.getOrSetStyleCache(StyleCache.WAYPOINT_END, styleFactory)
   }
 
   /**
    * Icon used for images with GPS coordinates.
-   * Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-camera&size=50&hoffset=0&voffset=-1&background=03cafc
    */
   public static getImageIcon (): string {
     return pinImage
@@ -91,27 +88,21 @@ export default class MapConfigurationService {
    */
   public static getBasicGpsImageIcon (clusterFeatures: FeatureLike): Style {
     const isCluster = clusterFeatures.get('features').length > 1
-    const iconType = isCluster
-      ? StyleCache.BASIC_CLUSTER
-      : StyleCache.BASIC_IMAGE
+    const [iconType, iconSrc] = isCluster
+      ? [StyleCache.BASIC_CLUSTER, pinMultiple]
+      : [StyleCache.BASIC_IMAGE, pinImage]
 
-    const cachedIcon = MapConfigurationService.getCachedStyle(iconType)
-    if (cachedIcon) {
-      return cachedIcon
+    const styleFactory: StyleFactory = (icon) => {
+      return new Style({
+        image: new Icon(({
+          anchor: [0.5, 1],
+          src: icon,
+          scale: MarkerSize.DEFAULT
+        }))
+      })
     }
 
-    const imgSrc = isCluster
-      ? MapConfigurationService.getClusterIcon()
-      : MapConfigurationService.getImageIcon()
-    const style = new Style({
-      image: new Icon(({
-        anchor: [0.5, 1],
-        src: imgSrc,
-        scale: MarkerSize.DEFAULT
-      }))
-    })
-
-    return MapConfigurationService.setAndGetCachedStyle(iconType, style)
+    return MapConfigurationService.getOrSetStyleCache(iconType, styleFactory, iconSrc)
   }
 
   /**
@@ -119,24 +110,21 @@ export default class MapConfigurationService {
    * clustered icons.
    */
   public static getGpsImageIconWithinCluster (): Style {
-    const cachedIcon = MapConfigurationService.getCachedStyle(StyleCache.IMAGE_WITHIN_CLUSTER)
-    if (cachedIcon) {
-      return cachedIcon
+    const styleFactory: StyleFactory = () => {
+      return new Style({
+        image: new Icon(({
+          anchor: [0.5, 1],
+          src: MapConfigurationService.getImageIcon(),
+          scale: MarkerSize.CLUSTERED
+        })),
+        stroke: new Stroke({
+          color: '#fff',
+          width: 2
+        })
+      })
     }
 
-    const style = new Style({
-      image: new Icon(({
-        anchor: [0.5, 1],
-        src: MapConfigurationService.getImageIcon(),
-        scale: MarkerSize.CLUSTERED
-      })),
-      stroke: new Stroke({
-        color: '#fff',
-        width: 2
-      })
-    })
-
-    return MapConfigurationService.setAndGetCachedStyle(StyleCache.IMAGE_WITHIN_CLUSTER, style)
+    return MapConfigurationService.getOrSetStyleCache(StyleCache.IMAGE_WITHIN_CLUSTER, styleFactory)
   }
 
   /**
@@ -150,54 +138,43 @@ export default class MapConfigurationService {
    */
   public static getSelectedGpsImageIcon (feature: FeatureLike): Style {
     const isCluster = feature.get('features').length > 1
-    const iconType = isCluster
-      ? StyleCache.SELECTED_CLUSTER
-      : StyleCache.SELECTED_IMAGE
+    const [iconType, iconSrc, iconSize] = isCluster
+      ? [StyleCache.SELECTED_CLUSTER, pinMultiple, MarkerSize.DEFAULT]
+      : [StyleCache.SELECTED_IMAGE, pinImage, MarkerSize.SELECTED]
 
-    const cachedIcon = MapConfigurationService.getCachedStyle(iconType)
+    const styleFactory: StyleFactory = (icon, size) => {
+      return new Style({
+        image: new Icon(({
+          anchor: [0.5, 1],
+          src: iconSrc,
+          scale: iconSize
+        }))
+      })
+    }
+
+    return MapConfigurationService.getOrSetStyleCache(iconType, styleFactory, iconSrc, iconSize)
+  }
+
+  /**
+   * Get from or set a style in the cache. The given styleFactory is called with iconSrc and iconSize which can be used
+   * in the style function to dynamically set the icon or the size. Defaults to pinDefault and iconSize if not passed
+   * when calling this function, but referenced within the styleFactory.
+   * @param iconType
+   * @param styleFactory
+   * @param iconSrc
+   * @param iconSize
+   * @private
+   */
+  private static getOrSetStyleCache (iconType: StyleCache, styleFactory: StyleFactory, iconSrc: string = pinDefault, iconSize: number = MarkerSize.DEFAULT) {
+    const cachedIcon = MapConfigurationService.styleCache.get(iconType)
     if (cachedIcon) {
+      console.log('from cache')
       return cachedIcon
     }
 
-    const iconSrc = isCluster
-      ? MapConfigurationService.getClusterIcon()
-      : MapConfigurationService.getImageIcon()
-
-    const style = new Style({
-      image: new Icon(({
-        anchor: [0.5, 1],
-        src: iconSrc,
-        scale: isCluster ? MarkerSize.DEFAULT : MarkerSize.SELECTED
-      }))
-    })
-
-    return MapConfigurationService.setAndGetCachedStyle(iconType, style)
-  }
-
-  /**
-   * Icon used for cluster of pins.
-   * Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-camera&size=50&hoffset=0&voffset=-1&background=03cafc
-   */
-  private static getClusterIcon (): string {
-    return pinMultiple
-  }
-
-  /**
-   * Returns a cached Style object or undefined if it is not yet added to cache.
-   * @param iconType
-   * @private
-   */
-  private static getCachedStyle (iconType: StyleCache): Style | undefined {
-    return this.styleCache.get(iconType)
-  }
-
-  /**
-   * Caches a Style and returns it.
-   * @param iconType
-   * @private
-   */
-  private static setAndGetCachedStyle (iconType: StyleCache, style: Style): Style {
-    this.styleCache.set(iconType, style)
+    console.log('set cache')
+    const style = styleFactory(iconSrc, iconSize)
+    MapConfigurationService.styleCache.set(iconType, style)
     return style
   }
 }
