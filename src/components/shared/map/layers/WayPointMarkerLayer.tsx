@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react'
 import MapContext from '../MapContext'
 import { Draw, Modify } from 'ol/interaction'
 import VectorSource from 'ol/source/Vector'
-import { Icon, Style } from 'ol/style'
 import { Geometry } from 'ol/geom'
 import Point from 'ol/geom/Point'
 import { Feature } from 'ol'
@@ -14,7 +13,7 @@ import { StyleSelector } from '../../../../types/map'
 import { MapLayers } from '../../../../enums/map-layers'
 import { TourPoint } from '../../../../types/tour'
 import { Extent } from 'ol/extent'
-import addLayerFeatures from '../../../../utils/map/add-layer-features'
+import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
 import { CoordinateSystems } from '../../../../enums/coordinate-systems'
@@ -32,16 +31,9 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
   const { map } = useContext(MapContext)
 
   const maxMarkerCount = MapConfigurationService.getMaxMarkerCount()
-  const startIcon = MapConfigurationService.getStartIcon()
-  const endIcon = MapConfigurationService.getEndIcon()
 
   const iconSelector: StyleSelector<TourPoint> = (index, objects) => {
-    return new Style({
-      image: new Icon(({
-        anchor: [0.5, 1],
-        src: index === objects.length - 1 ? endIcon : startIcon
-      }))
-    })
+    return index === objects.length - 1 ? MapConfigurationService.getEndIcon() : MapConfigurationService.getStartIcon()
   }
 
   useEffect(() => {
@@ -56,11 +48,11 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
 
       if (!markerLayer) {
         markerLayer = createVectorLayer(MapLayers.WAYPOINT_MARKER)
-        layerExtent = addLayerFeatures<TourPoint>(features, markerLayer, iconSelector)
+        layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
         map.addLayer(markerLayer)
       } else {
         markerLayer.getSource()?.clear(true)
-        layerExtent = addLayerFeatures<TourPoint>(features, markerLayer, iconSelector)
+        layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
       }
 
       // if no features were added the extent is set to an empty array
@@ -105,12 +97,7 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
       const drawInteraction = new Draw({
         source: vectorSource,
         type: 'Point',
-        style: new Style({
-          image: new Icon(({
-            anchor: [0.5, 1],
-            src: markerId === 0 ? startIcon : endIcon
-          }))
-        })
+        style: markerId === 0 ? MapConfigurationService.getStartIcon() : MapConfigurationService.getEndIcon()
       })
 
       map.addInteraction(drawInteraction)

@@ -2,11 +2,8 @@ import { useContext, useEffect } from 'react'
 import MapContext from '../MapContext'
 import VectorSource from 'ol/source/Vector'
 import VectorLayer from 'ol/layer/Vector'
-import { Layer } from 'ol/layer'
 import { GeoJsonPropertySetter, StyleSelector } from '../../../../types/map'
 import { Icon, Style } from 'ol/style'
-import { MapLayers } from '../../../../enums/map-layers'
-import { Select } from 'ol/interaction'
 import 'ol-ext/dist/ol-ext.css'
 import './styles/gps-image-popup.scss'
 import { ImageUpload } from '../../../../types/media'
@@ -14,14 +11,16 @@ import getCloudStorageUrlForIdentifier from '../../../../utils/storage-helper'
 import Popup from 'ol-ext/overlay/Popup'
 import BaseEvent from 'ol/events/Event'
 import { CollectionEvent } from 'ol/Collection'
-import { click, pointerMove } from 'ol/events/condition'
+import { click } from 'ol/events/condition'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
-import addLayerFeatures from '../../../../utils/map/add-layer-features'
-import createVectorLayer from '../../../../utils/map/create-vector-layer'
+import Cluster from 'ol/source/Cluster'
+import AnimatedCluster from 'ol-ext/layer/AnimatedCluster'
+import SelectCluster from 'ol-ext/interaction/SelectCluster'
+import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
+import { MapLayers } from '../../../../enums/map-layers'
 
 type GpsMarkerLayerProps = {
   features: ImageUpload[],
-  isEditable: boolean
 }
 
 type PopupContent = {
@@ -31,7 +30,7 @@ type PopupContent = {
 /**
  * Adds a layer which can display georeferenced images on the map.
  */
-const GpsImageMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
+const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
   const iconSelector: StyleSelector<ImageUpload> = (_index, _objects) => {
@@ -47,33 +46,32 @@ const GpsImageMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
     const imageUrl = getCloudStorageUrlForIdentifier(feature.identifier)
     const content = '<a href="' + imageUrl + '" target="_blank"><img alt="Image" src="' + imageUrl + '"/></a>'
 
-    return {
-      content
-    }
+    return { content }
   }
 
   useEffect(() => {
-    // if map or features are not set do nothing
     if (!map || !features) {
       return
     }
 
-    const setupMarkerLayer = (): VectorLayer<VectorSource> => {
-      let imageLayer = map
-        .getAllLayers()
-        .find((layer: Layer) => layer.getProperties().name === MapLayers.IMAGE_MARKER) as VectorLayer<VectorSource>
+    const setupClusterLayer = (): VectorLayer<VectorSource> => {
+      const featureSource: VectorSource = new VectorSource()
+      const clusterSource = new Cluster({
+        distance: 40,
+        source: featureSource
+      })
+      const clusterLayer = new AnimatedCluster({
+        properties: {
+          name: MapLayers.IMAGE_MARKER
+        },
+        source: clusterSource,
+        animationDuration: 700,
+        style: MapConfigurationService.getBasicGpsImageIcon
+      })
+      addFeaturesToVectorSource<ImageUpload>(features, featureSource, iconSelector, propertySetter)
+      map.addLayer(clusterLayer)
 
-      if (!imageLayer) {
-        const layer = createVectorLayer(MapLayers.IMAGE_MARKER)
-        imageLayer = layer as VectorLayer<VectorSource>
-        addLayerFeatures<ImageUpload>(features, imageLayer, iconSelector, propertySetter)
-        map.addLayer(imageLayer)
-      } else {
-        imageLayer.getSource()?.clear(true)
-        addLayerFeatures<ImageUpload>(features, imageLayer, iconSelector, propertySetter)
-      }
-
-      return imageLayer
+      return clusterLayer
     }
 
     const setupPopups = (layer: VectorLayer<VectorSource>) => {
@@ -85,25 +83,25 @@ const GpsImageMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
       })
       map.addOverlay(popup)
 
-      const select = new Select({
-        condition: isEditable ? pointerMove : click,
+      const select = new SelectCluster({
+        condition: click,
         layers: [layer],
-        style: new Style({
-          image: new Icon(({
-            anchor: [0.5, 1],
-            src: MapConfigurationService.getImageIcon(),
-            scale: 1.2
-          }))
-        })
+        pointRadius: 40,
+        featureStyle: MapConfigurationService.getGpsImageIconWithinCluster,
+        style: MapConfigurationService.getSelectedGpsImageIcon
       })
       map.addInteraction(select)
 
       select.getFeatures().on('add', function (e: BaseEvent | Event): void {
-        // Somehow, the typings of OL are wrong. We get a CollectionEvent here, which is neither BaseEvent nor Event...
+      // Somehow, the typings of OL are wrong. We get a CollectionEvent here, which is neither BaseEvent nor Event...
         const castedEvent = e as CollectionEvent
-        const feature = castedEvent.element
-        const popupContent = feature.get('content')
-        popup.show(feature.getGeometry().getFirstCoordinate(), popupContent)
+        const selectedFeatures = castedEvent.element.get('features')
+
+        // if the current selection has 1 feature, it is an actual feature. Otherwise, it's a cluster.
+        if (selectedFeatures.length === 1) {
+          const popupContent = selectedFeatures[0].get('content')
+          popup.show(selectedFeatures[0].getGeometry().getFirstCoordinate(), popupContent)
+        }
       })
 
       select.getFeatures().on('remove', function (_e: BaseEvent | Event) {
@@ -113,16 +111,16 @@ const GpsImageMarkerLayer = ({ features, isEditable }: GpsMarkerLayerProps) => {
       return select
     }
 
-    const selectableLayer = setupMarkerLayer()
+    const selectableLayer = setupClusterLayer()
     const selectListener = setupPopups(selectableLayer)
 
     return () => {
-      // Clean up, because in devmode, the select listener is attached twice, opening 2 popups.
-      // todo: maybe we should clean up everything?
+    // Clean up, because in devmode, the select listener is attached twice, opening 2 popups.
+    // todo: maybe we should clean up everything?
       map.removeInteraction(selectListener)
     }
-  }, [map, features]
-  )
+  }, [map, features])
+
   return null
 }
 

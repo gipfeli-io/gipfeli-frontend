@@ -1,17 +1,16 @@
 import { Feature } from 'ol'
 import { Vector as VectorSource } from 'ol/source'
 import { GeoJSON } from 'ol/format'
-import VectorLayer from 'ol/layer/Vector'
 import { Geometry } from 'ol/geom'
 import { GeoJSONPoint } from 'ol/format/GeoJSON'
 import { GeoJsonPropertySetter, GeometryObject, StyleSelector } from '../../types/map'
 import { CoordinateSystems } from '../../enums/coordinate-systems'
 
 /**
- * Adds geojson points to an existing vector layer as markers. Takes a StyleSelector callback to style all items and an
+ * Adds geojson points to an existing vector source as markers. Takes a StyleSelector callback to style all items and an
  * (optional) GeoJsonPropertySetter to add properties to each feature (for e.g. popups).
  */
-const addLayerFeatures = <T extends GeometryObject>(features: T[], layer: VectorLayer<VectorSource<Geometry>>, styleSelector: StyleSelector<T>, propertySetter: GeoJsonPropertySetter<T, any> | null = null): number[] => {
+const addFeaturesToVectorSource = <T extends GeometryObject>(features: T[], source: VectorSource<Geometry>, styleSelector: StyleSelector<T>, propertySetter: GeoJsonPropertySetter<T, any> | null = null): number[] => {
   const jsonFeatures: Feature[] = []
   let extent: number[] = []
 
@@ -37,14 +36,14 @@ const addLayerFeatures = <T extends GeometryObject>(features: T[], layer: Vector
   })
 
   if (jsonFeatures.length > 0) {
-    layer.getSource()!.addFeatures(jsonFeatures)
+    source.addFeatures(jsonFeatures)
   }
 
   if (jsonFeatures.length > 1) {
-    extent = layer.getSource()!.getExtent()
+    extent = source.getExtent()
   }
 
   return extent
 }
 
-export default addLayerFeatures
+export default addFeaturesToVectorSource

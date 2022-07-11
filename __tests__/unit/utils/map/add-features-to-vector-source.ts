@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom'
 import { GeometryObject } from '../../../../src/types/map'
 import { GeoJsonObject, Point } from 'geojson'
-import addLayerFeatures from '../../../../src/utils/map/add-layer-features'
-import VectorLayer from 'ol/layer/Vector'
+import addFeaturesToVectorSource from '../../../../src/utils/map/add-features-to-vector-source'
 import VectorSource from 'ol/source/Vector'
 import { Extent } from 'ol/extent'
 
@@ -24,26 +23,20 @@ const mockPoint: Point = {
   coordinates: [8.0, 40.0]
 }
 
-describe('addLayerFeatures', () => {
+describe('addFeaturesToVectorSource', () => {
   let mockSource: VectorSource
-  let mockLayer: VectorLayer<VectorSource>
 
   beforeEach(() => {
     mockSource = new VectorSource()
-    mockLayer = new VectorLayer({
-      source: mockSource
-    })
   })
 
   it('does not add to layer and returns an empty extent if no features are added', () => {
-    const layerSpy = jest.spyOn(mockLayer, 'getSource')
     const addFeatureSpy = jest.spyOn(mockSource, 'addFeatures')
     const getExtentSpy = jest.spyOn(mockSource, 'getExtent')
     const features: MockGeometryObject[] = []
 
-    const result = addLayerFeatures(features, mockLayer, jest.fn())
+    const result = addFeaturesToVectorSource(features, mockSource, jest.fn())
 
-    expect(layerSpy).not.toHaveBeenCalled()
     expect(addFeatureSpy).not.toHaveBeenCalled()
     expect(getExtentSpy).not.toHaveBeenCalled()
     expect(result).toEqual([])
@@ -54,7 +47,7 @@ describe('addLayerFeatures', () => {
     const getExtentSpy = jest.spyOn(mockSource, 'getExtent')
     const features: MockGeometryObject[] = [new MockGeometryObject(mockPoint)]
 
-    const result = addLayerFeatures(features, mockLayer, jest.fn())
+    const result = addFeaturesToVectorSource(features, mockSource, jest.fn())
 
     expect(addFeatureSpy).toHaveBeenCalled()
     expect(getExtentSpy).not.toHaveBeenCalled()
@@ -67,7 +60,7 @@ describe('addLayerFeatures', () => {
     const getExtentSpy = jest.spyOn(mockSource, 'getExtent').mockReturnValue(mockExtent)
     const features: MockGeometryObject[] = [new MockGeometryObject(mockPoint), new MockGeometryObject(mockPoint)]
 
-    const result = addLayerFeatures(features, mockLayer, jest.fn())
+    const result = addFeaturesToVectorSource(features, mockSource, jest.fn())
 
     expect(addFeatureSpy).toHaveBeenCalled()
     expect(getExtentSpy).toHaveBeenCalled()
@@ -75,14 +68,12 @@ describe('addLayerFeatures', () => {
   })
 
   it('does nothing if element has no geometry and returns an empty extent', () => {
-    const layerSpy = jest.spyOn(mockLayer, 'getSource')
     const addFeatureSpy = jest.spyOn(mockSource, 'addFeatures')
     const getExtentSpy = jest.spyOn(mockSource, 'getExtent')
     const features: MockGeometryObject[] = [new MockGeometryObject()]
 
-    const result = addLayerFeatures(features, mockLayer, jest.fn())
+    const result = addFeaturesToVectorSource(features, mockSource, jest.fn())
 
-    expect(layerSpy).not.toHaveBeenCalled()
     expect(addFeatureSpy).not.toHaveBeenCalled()
     expect(getExtentSpy).not.toHaveBeenCalled()
     expect(result).toEqual([])
@@ -98,7 +89,7 @@ describe('addLayerFeatures', () => {
     const styleSelectorMock = jest.fn()
     const features: MockGeometryObject[] = [mockPoint1, mockPoint2]
 
-    addLayerFeatures(features, mockLayer, styleSelectorMock)
+    addFeaturesToVectorSource(features, mockSource, styleSelectorMock)
 
     const expectedCallArgs = [
       [0, [mockPoint1, mockPoint2]],
@@ -118,7 +109,7 @@ describe('addLayerFeatures', () => {
     const propertySetterMock = jest.fn()
     const features: MockGeometryObject[] = [mockPoint1, mockPoint2]
 
-    addLayerFeatures(features, mockLayer, jest.fn(), propertySetterMock)
+    addFeaturesToVectorSource(features, mockSource, jest.fn(), propertySetterMock)
 
     const expectedCallArgs = [
       [mockPoint1],

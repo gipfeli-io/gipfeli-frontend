@@ -10,8 +10,6 @@ import ImageUpload from '../shared/images/upload/ImageUpload'
 import useOnlineStatus from '../../hooks/use-online-status'
 import GpsImageMarkerLayer from '../shared/map/layers/GpsImageMarkerLayer'
 import useImageUpload from '../../hooks/use-image-upload'
-import Typography from '@mui/material/Typography'
-import CameraIcon from '@mui/icons-material/PhotoCamera'
 
 type TourFormProps = {
   tour: BaseTour
@@ -73,12 +71,10 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
                 <MapWrapper>
                     <FullScreenControl/>
                     <WayPointMarkerLayer handleSetMarker={handleSetMarker}
-                                         features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]} type={type}/>
-                    <GpsImageMarkerLayer features={files} isEditable />
+                                         features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
+                                         type={type}/>
+                    <GpsImageMarkerLayer features={files}/>
                 </MapWrapper>
-                <Typography variant="caption" component="div">
-                    Hover over a <CameraIcon fontSize='inherit' sx={{ verticalAlign: 'middle' }}/> pin to show its image.
-                </Typography>
             </>
         }
       </Grid>
