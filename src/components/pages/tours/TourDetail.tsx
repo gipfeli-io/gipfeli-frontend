@@ -16,9 +16,10 @@ import useApiError from '../../../hooks/use-api-error'
 import { dateTimeFormat } from '../../../utils/constants'
 import dayjs from 'dayjs'
 import ImageGallery from '../../shared/images/gallery/ImageGallery'
-import useOnlineStatus from '../../../hooks/use-online-status'
+import useConnectionStatus from '../../../hooks/use-connection-status'
 import { ImageUpload } from '../../../types/media'
 import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
+import { ConnectionStatus } from '../../../enums/connection-status'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -29,7 +30,7 @@ const TourDetail = () => {
   const [open, setOpen] = useState(false)
   const [geoReferencedImages, setGeoReferencedImages] = useState<ImageUpload[]>([])
   const throwError = useApiError()
-  const isOnline = useOnlineStatus()
+  const { connectionStatus } = useConnectionStatus()
 
   useEffect(() => {
     async function fetchTour () {
@@ -59,6 +60,8 @@ const TourDetail = () => {
     handleDeleteModalClose()
     navigate('/tours')
   }
+
+  const isOnline = connectionStatus === ConnectionStatus.ONLINE
 
   if (!tour) {
     return (<Loader/>)

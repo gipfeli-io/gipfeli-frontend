@@ -20,6 +20,10 @@ const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
     triggerNotification(message, NotificationType.ERROR)
   }
 
+  const triggerOfflineNotification = () => {
+    triggerNotification('You are offline. Please activate offline mode to keep using the app.', NotificationType.OFFLINE)
+  }
+
   const resetNotification = () => {
     setNotification(undefined)
   }
@@ -28,6 +32,7 @@ const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
     notification,
     triggerErrorNotification,
     triggerSuccessNotification,
+    triggerOfflineNotification,
     resetNotification
   }
 

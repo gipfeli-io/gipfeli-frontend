@@ -5,7 +5,7 @@ import {
   ForbiddenError,
   GenericApiError,
   NonCriticalApiError,
-  NotFoundError,
+  NotFoundError, OfflineError,
   PayLoadTooLarge,
   ServerError,
   UnauthorizedError
@@ -24,7 +24,7 @@ import { useNavigate } from 'react-router'
 const useApiError = () => {
   // eslint-disable-next-line no-unused-vars
   const [_, setError] = useState<Error>()
-  const { triggerErrorNotification } = useNotifications()
+  const { triggerErrorNotification, triggerOfflineNotification } = useNotifications()
   const navigate = useNavigate()
 
   /**
@@ -34,7 +34,7 @@ const useApiError = () => {
    * @param error
    * @param message
    */
-  const getApiError: (statusCode: number, error: ErrorContent) => (GenericApiError) = (statusCode: number, {
+  const getApiError: (statusCode: number, statusMessage: string, error: ErrorContent) => (GenericApiError) = (statusCode: number, statusMessage, {
     error,
     message
   }: ErrorContent) => {
@@ -52,7 +52,7 @@ const useApiError = () => {
       case 413:
         return new PayLoadTooLarge(displayMessage)
       case 500:
-        return new ServerError(displayMessage)
+        return statusMessage === 'Failed to fetch' ? new OfflineError(displayMessage) : new ServerError(displayMessage)
       default:
         return new GenericApiError(displayMessage)
     }
@@ -60,9 +60,11 @@ const useApiError = () => {
 
   return useCallback((apiResponse: ApiResponseWrapper, redirect: boolean = true) => {
     // At this point, we know that we have an error, because we would not get here without it.
-    const error = getApiError(apiResponse.statusCode, apiResponse.error!)
-    console.log(apiResponse)
-    if (error instanceof NonCriticalApiError) {
+    const error = getApiError(apiResponse.statusCode, apiResponse.statusMessage, apiResponse.error!)
+
+    if (error instanceof OfflineError) {
+      triggerOfflineNotification()
+    } else if (error instanceof NonCriticalApiError) {
       triggerErrorNotification(error.message)
 
       if (redirect) {

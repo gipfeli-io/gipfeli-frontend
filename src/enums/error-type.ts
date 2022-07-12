@@ -7,4 +7,5 @@ export enum ErrorType {
   LOGIN_ERROR = 'Login Error',
   BAD_REQUEST = 'Bad Request',
   PAYLOAD_TOO_LARGE = 'Payload too large',
+  OFFLINE = 'Offline'
 }

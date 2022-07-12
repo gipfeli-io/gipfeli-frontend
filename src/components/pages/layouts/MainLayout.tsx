@@ -6,14 +6,15 @@ import Copyright from '../../shared/Copyright'
 import { Link, Outlet } from 'react-router-dom'
 import NavBarLinkSection from '../../shared/navbar/NavBarLinkSection'
 import ThemeSwitcher from '../../shared/navbar/ThemeSwitcher'
-import useOnlineStatus from '../../../hooks/use-online-status'
+import useConnectionStatus from '../../../hooks/use-connection-status'
 import Banner from '../../shared/Banner'
 import OfflineNotification from '../../shared/OfflineNotification'
+import { ConnectionStatus } from '../../../enums/connection-status'
 
 const MainLayout = () => {
-  const isOnline = useOnlineStatus()
+  const { connectionStatus } = useConnectionStatus()
 
-  const offlineBannerContent = isOnline ? null : <OfflineNotification/>
+  const offlineBannerContent = connectionStatus === ConnectionStatus.ONLINE ? null : <OfflineNotification/>
 
   return (<>
       <AppBar position="static">

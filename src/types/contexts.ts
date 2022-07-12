@@ -2,6 +2,7 @@ import { Notification } from './notifications'
 import { AppTheme } from './theme'
 import { handleSave } from './handle-save'
 import { CurrentUpload, ImageUpload } from './media'
+import { ConnectionStatus } from '../enums/connection-status'
 
 export interface TourListContextProperties {
   deleteEvent: (id: string) => void
@@ -18,7 +19,13 @@ export interface NotificationContextType {
   notification: Notification | undefined;
   triggerErrorNotification: (message: string) => void;
   triggerSuccessNotification: (message: string) => void;
+  triggerOfflineNotification: () => void;
   resetNotification: () => void;
+}
+
+export interface ConnectionStatusContextType {
+  connectionStatus: ConnectionStatus
+  updateConnectionStatus: (connectionStatus: ConnectionStatus) => void
 }
 
 export interface ThemeContextType {
