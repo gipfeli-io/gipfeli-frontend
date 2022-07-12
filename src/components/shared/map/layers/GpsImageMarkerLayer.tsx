@@ -3,7 +3,6 @@ import MapContext from '../MapContext'
 import VectorSource from 'ol/source/Vector'
 import VectorLayer from 'ol/layer/Vector'
 import { GeoJsonPropertySetter, StyleSelector } from '../../../../types/map'
-import { Icon, Style } from 'ol/style'
 import 'ol-ext/dist/ol-ext.css'
 import './styles/gps-image-popup.scss'
 import { ImageUpload } from '../../../../types/media'
@@ -34,12 +33,7 @@ const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
   const iconSelector: StyleSelector<ImageUpload> = (_index, _objects) => {
-    return new Style({
-      image: new Icon(({
-        anchor: [0.5, 1],
-        src: MapConfigurationService.getImageIcon()
-      }))
-    })
+    return MapConfigurationService.getBasicGpsImageIcon()
   }
 
   const propertySetter: GeoJsonPropertySetter<ImageUpload, PopupContent> = (feature: ImageUpload) => {
@@ -93,7 +87,7 @@ const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
       map.addInteraction(select)
 
       select.getFeatures().on('add', function (e: BaseEvent | Event): void {
-      // Somehow, the typings of OL are wrong. We get a CollectionEvent here, which is neither BaseEvent nor Event...
+        // Somehow, the typings of OL are wrong. We get a CollectionEvent here, which is neither BaseEvent nor Event...
         const castedEvent = e as CollectionEvent
         const selectedFeatures = castedEvent.element.get('features')
 
@@ -115,8 +109,8 @@ const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
     const selectListener = setupPopups(selectableLayer)
 
     return () => {
-    // Clean up, because in devmode, the select listener is attached twice, opening 2 popups.
-    // todo: maybe we should clean up everything?
+      // Clean up, because in devmode, the select listener is attached twice, opening 2 popups.
+      // todo: maybe we should clean up everything?
       map.removeInteraction(selectListener)
     }
   }, [map, features])
