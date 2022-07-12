@@ -34,36 +34,36 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <SwitchableThemeProvider>
-      <ConnectionStatusProvider>
-        <NotificationProvider>
-            <BrowserRouter>
-              <ErrorBoundary>
-                <AuthenticationProvider>
-                    <RoutesWrapper>
-                      <Route path="/" element={<MainLayout/>}>
-                        <Route index element={<Home/>}/>
-                        <Route path="tours" element={<AppPageLayout/>}>
-                          <Route index element={<ToursOverview/>}/>
-                          <Route path="create" element={<TourCreate/>}/>
-                          <Route path=":id/edit" element={<TourEdit/>}/>
-                          <Route path=":id" element={<TourDetail/>}/>
+      <BrowserRouter>
+        <ConnectionStatusProvider>
+          <NotificationProvider>
+                <ErrorBoundary>
+                  <AuthenticationProvider>
+                      <RoutesWrapper>
+                        <Route path="/" element={<MainLayout/>}>
+                          <Route index element={<Home/>}/>
+                          <Route path="tours" element={<AppPageLayout/>}>
+                            <Route index element={<ToursOverview/>}/>
+                            <Route path="create" element={<TourCreate/>}/>
+                            <Route path=":id/edit" element={<TourEdit/>}/>
+                            <Route path=":id" element={<TourDetail/>}/>
+                          </Route>
                         </Route>
-                      </Route>
-                      <Route path="/" element={<AuthPageLayout/>}>
-                        <Route path="login" element={<Login/>}/>
-                        <Route path="signup" element={<SignUp/>}/>
-                        <Route path="user/activate/:userId/:token" element={<ActivateUser/>}/>
-                      </Route>
-                      <Route path="404" element={<NotFound/>}/>
-                      <Route path="*" element={<Navigate to="/404" replace/>}/>
-                    </RoutesWrapper>
-                </AuthenticationProvider>
-              </ErrorBoundary>
-            </BrowserRouter>
-        </NotificationProvider>
-      </ConnectionStatusProvider>
+                        <Route path="/" element={<AuthPageLayout/>}>
+                          <Route path="login" element={<Login/>}/>
+                          <Route path="signup" element={<SignUp/>}/>
+                          <Route path="user/activate/:userId/:token" element={<ActivateUser/>}/>
+                        </Route>
+                        <Route path="404" element={<NotFound/>}/>
+                        <Route path="*" element={<Navigate to="/404" replace/>}/>
+                      </RoutesWrapper>
+                  </AuthenticationProvider>
+                </ErrorBoundary>
+          </NotificationProvider>
+        </ConnectionStatusProvider>
+      </BrowserRouter>
     </SwitchableThemeProvider>
-  </React.StrictMode>
+</React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function

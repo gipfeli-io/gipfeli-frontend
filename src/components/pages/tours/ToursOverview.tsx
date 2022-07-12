@@ -11,6 +11,9 @@ import { Link } from 'react-router-dom'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import { TourListContextProperties } from '../../../types/contexts'
+import useConnectionStatus from '../../../hooks/use-connection-status'
+import { ConnectionStatus } from '../../../enums/connection-status'
+import LocalDatabaseService from '../../../services/local-database-service'
 
 const ToursOverview = () => {
   const { token } = useAuth()
@@ -21,16 +24,24 @@ const ToursOverview = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const throwError = useApiError()
+  const { connectionStatus } = useConnectionStatus()
+  const localDatabaseService = new LocalDatabaseService()
 
   useEffect(() => {
     async function fetchTours () {
-      const data = await service.findAll()
-      if (data.success) {
-        setTourList(data.content!)
+      if (connectionStatus === ConnectionStatus.OFFLINE) {
+        const tours = await localDatabaseService.findAllTours()
+        setTourList(tours)
+        setLoading(false)
       } else {
-        throwError(data)
+        const data = await service.findAll()
+        if (data.success) {
+          setTourList(data.content!)
+        } else {
+          throwError(data)
+        }
+        setLoading(false)
       }
-      setLoading(false)
     }
 
     fetchTours()

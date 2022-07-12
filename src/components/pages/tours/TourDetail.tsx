@@ -46,7 +46,7 @@ const TourDetail = () => {
   }, [])
 
   useEffect(() => {
-    if (tour && tour.images.length > 0) {
+    if (tour && tour.images && tour.images.length > 0) {
       setGeoReferencedImages(tour.images.filter((image) => image.location))
     }
   }, [tour])
