@@ -5,6 +5,7 @@ import pinMultiple from '../../static/img/map/pin_cluster.png' // Source: https:
 import pinDefault from '../../static/img/map/pin_default.png' // Source: https://cdn.mapmarker.io/api/v1/font-awesome/v5/pin?icon=fa-globe&size=50&hoffset=0&voffset=-1
 import { FeatureLike } from 'ol/Feature'
 import { Icon, Stroke, Style } from 'ol/style'
+import { MarkerSize } from '../../enums/marker-size'
 
 enum StyleCache {
   WAYPOINT_START,
@@ -14,12 +15,6 @@ enum StyleCache {
   IMAGE_WITHIN_CLUSTER,
   SELECTED_IMAGE,
   SELECTED_CLUSTER
-}
-
-enum MarkerSize {
-  DEFAULT = 1.0,
-  SELECTED = 1.2,
-  CLUSTERED = 0.9
 }
 
 /**
@@ -68,13 +63,6 @@ export default class MapConfigurationService {
   }
 
   /**
-   * Icon used for images with GPS coordinates.
-   */
-  public static getImageIcon (): string {
-    return pinImage
-  }
-
-  /**
    * Defines the maximum number of markers which can be added manually.
    */
   public static getMaxMarkerCount (): number {
@@ -83,11 +71,17 @@ export default class MapConfigurationService {
 
   /**
    * Returns the style for a marker on the image layer. If the given feature contains more than one feature, it means
-   * that we have a clustered marker, so we return a different icon (see comment below on getSelectedGpsImageIcon)
+   * that we have a clustered marker, so we return a different icon (see comment below on getSelectedGpsImageIcon).
+   *
+   * If no feature is given, it just returns the basic image picture (meaning it's no cluster).
+   *
    * @param clusterFeatures
    */
-  public static getBasicGpsImageIcon (clusterFeatures: FeatureLike): Style {
-    const isCluster = clusterFeatures.get('features').length > 1
+  public static getBasicGpsImageIcon (clusterFeatures?: FeatureLike): Style {
+    const isCluster = clusterFeatures === undefined
+      ? false
+      : clusterFeatures.get('features').length > 1
+
     const [iconType, iconSrc] = isCluster
       ? [StyleCache.BASIC_CLUSTER, pinMultiple]
       : [StyleCache.BASIC_IMAGE, pinImage]
@@ -114,7 +108,7 @@ export default class MapConfigurationService {
       return new Style({
         image: new Icon(({
           anchor: [0.5, 1],
-          src: MapConfigurationService.getImageIcon(),
+          src: pinImage,
           scale: MarkerSize.CLUSTERED
         })),
         stroke: new Stroke({
