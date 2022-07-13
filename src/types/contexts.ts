@@ -3,6 +3,7 @@ import { AppTheme } from './theme'
 import { handleSave } from './handle-save'
 import { CurrentUpload, ImageUpload } from './media'
 import { ConnectionStatus } from '../enums/connection-status'
+import { OnlineBannerStatus } from '../enums/OnlineBannerStatus'
 
 export interface TourListContextProperties {
   deleteEvent: (id: string) => void
@@ -25,6 +26,8 @@ export interface NotificationContextType {
 
 export interface ConnectionStatusContextType {
   isOffline: () => boolean
+  showOnlineBanner: () => boolean,
+  updateOnlineBannerStatus: (onlineBannerStatus: OnlineBannerStatus) => void,
   updateConnectionStatus: (connectionStatus: ConnectionStatus) => void
 }
 

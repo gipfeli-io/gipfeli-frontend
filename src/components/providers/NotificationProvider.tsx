@@ -21,7 +21,7 @@ const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
   }
 
   const triggerOfflineNotification = () => {
-    triggerNotification('You are offline. Please activate offline mode to keep using the app.', NotificationType.OFFLINE)
+    triggerNotification('Oh no, your internet connection is gone! But good news, you can switch to the offline mode to keep using the app.', NotificationType.OFFLINE)
   }
 
   const resetNotification = () => {

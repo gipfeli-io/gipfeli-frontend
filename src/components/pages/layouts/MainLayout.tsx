@@ -9,6 +9,7 @@ import ThemeSwitcher from '../../shared/navbar/ThemeSwitcher'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import Banner from '../../shared/Banner'
 import OfflineNotification from '../../shared/OfflineNotification'
+import OnlineNotificationSnackbar from '../../shared/OnlineNotificationSnackbar'
 
 const MainLayout = () => {
   const { isOffline } = useConnectionStatus()
@@ -34,7 +35,7 @@ const MainLayout = () => {
       </AppBar>
       <Banner bannerContent={offlineBannerContent}/>
       <Outlet/>
-
+      <OnlineNotificationSnackbar/>
       <Copyright/>
     </>
   )

@@ -1,4 +1,4 @@
 export enum ConnectionStatus {
   ONLINE = 'Online',
-  OFFLINE = 'Offline'
+  OFFLINE = 'Offline',
 }
