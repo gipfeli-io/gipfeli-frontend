@@ -12,7 +12,6 @@ import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import { TourListContextProperties } from '../../../types/contexts'
 import useConnectionStatus from '../../../hooks/use-connection-status'
-import { ConnectionStatus } from '../../../enums/connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
 
 const ToursOverview = () => {
@@ -24,12 +23,12 @@ const ToursOverview = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const throwError = useApiError()
-  const { connectionStatus } = useConnectionStatus()
+  const { isOffline } = useConnectionStatus()
   const localDatabaseService = new LocalDatabaseService()
 
   useEffect(() => {
     async function fetchTours () {
-      if (connectionStatus === ConnectionStatus.OFFLINE) {
+      if (isOffline()) {
         const tours = await localDatabaseService.findAllTours()
         setTourList(tours)
         setLoading(false)

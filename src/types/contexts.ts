@@ -24,7 +24,7 @@ export interface NotificationContextType {
 }
 
 export interface ConnectionStatusContextType {
-  connectionStatus: ConnectionStatus
+  isOffline: () => boolean
   updateConnectionStatus: (connectionStatus: ConnectionStatus) => void
 }
 

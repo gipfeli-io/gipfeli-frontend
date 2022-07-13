@@ -9,12 +9,11 @@ import ThemeSwitcher from '../../shared/navbar/ThemeSwitcher'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import Banner from '../../shared/Banner'
 import OfflineNotification from '../../shared/OfflineNotification'
-import { ConnectionStatus } from '../../../enums/connection-status'
 
 const MainLayout = () => {
-  const { connectionStatus } = useConnectionStatus()
+  const { isOffline } = useConnectionStatus()
 
-  const offlineBannerContent = connectionStatus === ConnectionStatus.ONLINE ? null : <OfflineNotification/>
+  const offlineBannerContent = isOffline() ? <OfflineNotification/> : null
 
   return (<>
       <AppBar position="static">

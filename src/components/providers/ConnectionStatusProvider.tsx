@@ -21,6 +21,8 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
 
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>(getInitialConnectionStatus)
 
+  const isOffline = () => connectionStatus === ConnectionStatus.OFFLINE
+
   const updateConnectionStatus = (status: ConnectionStatus) => {
     localStorageService.addItem(LocalStorageKey.ConnectionStatus, status)
     setConnectionStatus(status)
@@ -28,7 +30,7 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   }
 
   const value: ConnectionStatusContextType = {
-    connectionStatus,
+    isOffline,
     updateConnectionStatus
   }
 

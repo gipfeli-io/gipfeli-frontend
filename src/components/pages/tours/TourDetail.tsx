@@ -19,7 +19,6 @@ import ImageGallery from '../../shared/images/gallery/ImageGallery'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import { ImageUpload } from '../../../types/media'
 import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
-import { ConnectionStatus } from '../../../enums/connection-status'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -30,7 +29,7 @@ const TourDetail = () => {
   const [open, setOpen] = useState(false)
   const [geoReferencedImages, setGeoReferencedImages] = useState<ImageUpload[]>([])
   const throwError = useApiError()
-  const { connectionStatus } = useConnectionStatus()
+  const { isOffline } = useConnectionStatus()
 
   useEffect(() => {
     async function fetchTour () {
@@ -61,8 +60,6 @@ const TourDetail = () => {
     navigate('/tours')
   }
 
-  const isOnline = connectionStatus === ConnectionStatus.ONLINE
-
   if (!tour) {
     return (<Loader/>)
   }
@@ -86,7 +83,7 @@ const TourDetail = () => {
         </Grid>
       </Grid>
       <Divider/>
-      {isOnline &&
+      {!isOffline() &&
           <>
               <MapWrapper>
                   <WayPointMarkerLayer features={[new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]}/>
@@ -106,7 +103,7 @@ const TourDetail = () => {
           </Typography>
         </Grid>
       </Grid>
-      {isOnline && tour.images && tour.images.length > 0 &&
+      {!isOffline() && tour.images && tour.images.length > 0 &&
           <Grid container mb={2} mt={2} direction={'column'}>
               <Grid item>
                   <Typography variant="h5" gutterBottom component="div">

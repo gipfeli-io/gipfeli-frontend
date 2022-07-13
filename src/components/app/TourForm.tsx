@@ -10,7 +10,6 @@ import ImageUpload from '../shared/images/upload/ImageUpload'
 import useConnectionStatus from '../../hooks/use-connection-status'
 import GpsImageMarkerLayer from '../shared/map/layers/GpsImageMarkerLayer'
 import useImageUpload from '../../hooks/use-image-upload'
-import { ConnectionStatus } from '../../enums/connection-status'
 
 type TourFormProps = {
   tour: BaseTour
@@ -21,7 +20,7 @@ type TourFormProps = {
 export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
   const navigate = useNavigate()
   const [currentTour, setCurrentTour] = useState(tour)
-  const { connectionStatus } = useConnectionStatus()
+  const { isOffline } = useConnectionStatus()
   const { files } = useImageUpload()
 
   const cancel = () => navigate(-1)
@@ -31,7 +30,6 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
     // todo: perform validation
     saveHandler(currentTour)
   }
-  const isOnline = connectionStatus === ConnectionStatus.ONLINE
 
   const handleSetMarker = useCallback((coordinates: number[], id: number) => {
     if (id === 0) {
@@ -68,7 +66,7 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
         />
       </Grid>
       <Grid item xs={12}>
-        {isOnline &&
+        {!isOffline() &&
             <>
                 <MapWrapper>
                     <FullScreenControl/>
@@ -91,7 +89,7 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
       </Grid>
 
       <Grid item xs={12}>
-        {isOnline &&
+        {!isOffline() &&
             <ImageUpload/>
         }
       </Grid>
