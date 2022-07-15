@@ -17,8 +17,8 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   const [onlineBannerStatus, setOnlineBannerStatus] = useState<OnlineBannerStatus>(OnlineBannerStatus.HIDE)
 
   const checkIfApplicationIsOnline = async () : Promise<void> => {
-    const request = await fetch(requestUrl + '/robots.txt')
-    if (request.status !== 500) {
+    const request = await fetch(requestUrl + '/heartbeat')
+    if (request.status === 200) {
       clearInterval(intervalId)
       setOnlineBannerStatus(OnlineBannerStatus.SHOW)
     }
