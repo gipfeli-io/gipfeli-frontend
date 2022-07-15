@@ -28,7 +28,9 @@ export interface ConnectionStatusContextType {
   isOffline: () => boolean
   showOnlineBanner: () => boolean,
   updateOnlineBannerStatus: (onlineBannerStatus: OnlineBannerStatus) => void,
-  updateConnectionStatus: (connectionStatus: ConnectionStatus) => void
+  updateConnectionStatus: (connectionStatus: ConnectionStatus) => void,
+  updateConnectionStatusSwitcherVisibility: (isVisible: boolean) => void,
+  showConnectionStatusSwitcher: boolean
 }
 
 export interface ThemeContextType {

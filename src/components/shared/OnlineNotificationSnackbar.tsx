@@ -17,7 +17,6 @@ const OnlineNotificationSnackbar = () => {
   const goOnline = (event: React.SyntheticEvent | Event, reason?:string): void => {
     if (reason === 'clickaway') { return }
     updateConnectionStatus(ConnectionStatus.ONLINE)
-    updateOnlineBannerStatus(OnlineBannerStatus.HIDE)
     handleClose(event)
   }
 
@@ -36,6 +35,7 @@ const OnlineNotificationSnackbar = () => {
     showOnlineBanner()
       ? <Snackbar
       open={showOnlineBanner()}
+      autoHideDuration={6000}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       onClose={handleClose}
     >

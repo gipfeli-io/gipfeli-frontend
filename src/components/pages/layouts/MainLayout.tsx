@@ -10,6 +10,7 @@ import useConnectionStatus from '../../../hooks/use-connection-status'
 import Banner from '../../shared/Banner'
 import OfflineNotification from '../../shared/OfflineNotification'
 import OnlineNotificationSnackbar from '../../shared/OnlineNotificationSnackbar'
+import ConnectionStatusSwitcher from '../../shared/navbar/ConnectionStatusSwitcher'
 
 const MainLayout = () => {
   const { isOffline } = useConnectionStatus()
@@ -29,6 +30,7 @@ const MainLayout = () => {
             <LandscapeIcon/>
           </IconButton>
           <NavBarLinkSection/>
+          <ConnectionStatusSwitcher/>
           <NavBarUserSection/>
           <ThemeSwitcher/>
         </Toolbar>
