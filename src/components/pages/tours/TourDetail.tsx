@@ -19,6 +19,7 @@ import ImageGallery from '../../shared/images/gallery/ImageGallery'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import { ImageUpload } from '../../../types/media'
 import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
+import LocalDatabaseService from '../../../services/local-database-service'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -30,14 +31,24 @@ const TourDetail = () => {
   const [geoReferencedImages, setGeoReferencedImages] = useState<ImageUpload[]>([])
   const throwError = useApiError()
   const { isOffline } = useConnectionStatus()
+  const localDatabaseService = new LocalDatabaseService()
 
   useEffect(() => {
     async function fetchTour () {
-      const data = await service.findOne(id!)
-      if (data.success) {
-        setTour(data.content)
+      if (isOffline()) {
+        const localTour = await localDatabaseService.getOne(id)
+        if (localTour) {
+          setTour(localTour)
+        } else {
+          console.log('error fetching tour') // todo: throw error
+        }
       } else {
-        throwError(data)
+        const data = await service.findOne(id)
+        if (data.success) {
+          setTour(data.content)
+        } else {
+          throwError(data)
+        }
       }
     }
 
