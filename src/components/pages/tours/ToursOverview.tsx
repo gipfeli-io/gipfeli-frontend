@@ -51,14 +51,23 @@ const ToursOverview = () => {
     setOpen(false)
   }
 
+  const triggerDeletionSuccess = () => {
+    triggerSuccessNotification('Successfully deleted tour!')
+    setTourList(prevState => prevState.filter(tour => tour.id !== deleteId))
+  }
   const handleDelete = async () => {
-    const data = await service.delete(deleteId!)
-    if (data.success) {
-      triggerSuccessNotification('Successfully deleted tour!')
-      setTourList(prevState => prevState.filter(tour => tour.id !== deleteId))
+    if (isOffline()) {
+      await localDatabaseService.deleteTour(deleteId!)
+      triggerDeletionSuccess()
     } else {
-      throwError(data)
+      const data = await service.delete(deleteId!)
+      if (data.success) {
+        triggerDeletionSuccess()
+      } else {
+        throwError(data)
+      }
     }
+
     handleDeleteModalClose()
   }
 
