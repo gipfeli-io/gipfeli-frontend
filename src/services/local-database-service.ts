@@ -56,14 +56,19 @@ export default class LocalDatabaseService {
     return localTour
   }
 
-  public updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Tour {
-    localTour.name = updatedTour.name
-    localTour.startLocation = updatedTour.startLocation
-    localTour.endLocation = updatedTour.endLocation
-    localTour.description = updatedTour.description
-    localTour.images = updatedTour.images
-    localTour.updatedAt = dayjs().toDate()
-    localTour.status = statusType
+  public async updateLocalTour (tourId: string|undefined, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Promise<Tour|undefined> {
+    if (!tourId) { return }
+
+    const localTour = await localDB.tours.get(tourId)
+    if (localTour) {
+      localTour.name = updatedTour.name
+      localTour.startLocation = updatedTour.startLocation
+      localTour.endLocation = updatedTour.endLocation
+      localTour.description = updatedTour.description
+      localTour.images = updatedTour.images
+      localTour.updatedAt = dayjs().toDate()
+      localTour.status = statusType
+    }
     return localTour
   }
 

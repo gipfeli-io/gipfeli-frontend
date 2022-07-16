@@ -40,7 +40,7 @@ const TourDetail = () => {
         if (localTour) {
           setTour(localTour)
         } else {
-          console.log('error fetching tour') // todo: throw error
+          console.log('tour-detail::error fetching tour') // todo: throw error
         }
       } else {
         const data = await service.findOne(id)
@@ -66,7 +66,11 @@ const TourDetail = () => {
   }
 
   const handleDelete = async () => {
-    await service.delete(tour!.id)
+    if (isOffline()) {
+      await localDatabaseService.deleteTour(tour!.id)
+    } else {
+      await service.delete(tour!.id)
+    }
     handleDeleteModalClose()
     navigate('/tours')
   }
