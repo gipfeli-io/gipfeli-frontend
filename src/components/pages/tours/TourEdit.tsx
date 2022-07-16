@@ -80,8 +80,8 @@ const EditTour = () => {
     }
     let data
     if (isOffline()) {
-      const localTour = await localDatabaseService.updateLocalTour(id, tourToSave, TourStatusType.UPDATED)
-      if (localTour) {
+      const result = await localDatabaseService.update(id, tourToSave, TourStatusType.UPDATED)
+      if (result) {
         triggerSuccess()
       } else {
         console.log('tour-edit::error while editing') // todo add error handling

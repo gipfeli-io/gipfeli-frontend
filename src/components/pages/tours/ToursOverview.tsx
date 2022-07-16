@@ -57,7 +57,7 @@ const ToursOverview = () => {
   }
   const handleDelete = async () => {
     if (isOffline()) {
-      await localDatabaseService.deleteTour(deleteId!)
+      await localDatabaseService.markTourAsDeleted(deleteId!)
       triggerDeletionSuccess()
     } else {
       const data = await service.delete(deleteId!)

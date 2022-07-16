@@ -73,9 +73,7 @@ export default class ToursService extends APIService {
 
   private async handleTourUpdateResult (result: SingleApiResponse<unknown>, tour: UpdateOrCreateTour, id: string | undefined): Promise<SingleApiResponse<unknown>> {
     if (!ToursService.isOffline(result.statusCode, result.statusMessage)) {
-      const localTour = await this.localDatabaseService.getOne(id)
-      const updatedTour = this.localDatabaseService.updateLocalTour(localTour!, tour, TourStatusType.SYNCED)
-      await this.localDatabaseService.putTour(updatedTour)
+      await this.localDatabaseService.update(id, tour, TourStatusType.SYNCED)
     }
     return result
   }

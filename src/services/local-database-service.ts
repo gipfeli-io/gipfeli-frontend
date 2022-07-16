@@ -38,8 +38,9 @@ export default class LocalDatabaseService {
     return localDB.tours.get(id!)
   }
 
-  public async markTourAsDeleted (tour: Tour): Promise<void> {
-    const localTour = await localDB.tours.get(tour.id)
+  public async markTourAsDeleted (id: string | undefined): Promise<void> {
+    if (!id) { return }
+    const localTour = await localDB.tours.get(id)
     if (localTour) {
       await this.updateTourStatus(localTour, TourStatusType.DELETED)
     }
@@ -56,19 +57,24 @@ export default class LocalDatabaseService {
     return localTour
   }
 
-  public async updateLocalTour (tourId: string|undefined, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Promise<Tour|undefined> {
+  public async update (tourId: string|undefined, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Promise<IndexableType|undefined> {
     if (!tourId) { return }
-
     const localTour = await localDB.tours.get(tourId)
-    if (localTour) {
-      localTour.name = updatedTour.name
-      localTour.startLocation = updatedTour.startLocation
-      localTour.endLocation = updatedTour.endLocation
-      localTour.description = updatedTour.description
-      localTour.images = updatedTour.images
-      localTour.updatedAt = dayjs().toDate()
-      localTour.status = statusType
+    if (!localTour) {
+      return
     }
+    const localUpdateTour = this.updateLocalTour(localTour, updatedTour, statusType)
+    return localDB.tours.put(localUpdateTour)
+  }
+
+  private updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Tour {
+    localTour.name = updatedTour.name
+    localTour.startLocation = updatedTour.startLocation
+    localTour.endLocation = updatedTour.endLocation
+    localTour.description = updatedTour.description
+    localTour.images = updatedTour.images
+    localTour.updatedAt = dayjs().toDate()
+    localTour.status = statusType
     return localTour
   }
 
