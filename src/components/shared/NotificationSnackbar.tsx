@@ -7,8 +7,8 @@ import { ConnectionStatus } from '../../enums/connection-status'
 
 const NotificationSnackbar = () => {
   const { notification, resetNotification } = useNotifications()
-  const { updateConnectionStatus } = useConnectionStatus()
-  const handleClose = (event: React.SyntheticEvent | Event, reason?: string): void => {
+  const { updateConnectionStatus, resetOnlineInfoBanner } = useConnectionStatus()
+  const handleClose = (_event: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return
     }
@@ -16,15 +16,18 @@ const NotificationSnackbar = () => {
     resetNotification()
   }
 
-  const goOffline = (event: React.SyntheticEvent | Event, reason?:string): void => {
+  const goOffline = (_event: React.SyntheticEvent | Event, reason?:string): void => {
     if (reason === 'clickaway') { return }
     updateConnectionStatus(ConnectionStatus.OFFLINE)
-    handleClose(event)
+    resetOnlineInfoBanner()
+    handleClose(_event)
   }
 
   const offlineAction = (
       <Button color="secondary" size="small" onClick={goOffline}>Go offline</Button>
   )
+
+  const getSeverity = () => notification?.type === NotificationType.SUCCESS ? 'success' : 'error'
 
   const snackbarContent = (
     notification?.type === NotificationType.OFFLINE
@@ -32,7 +35,7 @@ const NotificationSnackbar = () => {
         message={notification?.message}
         action={offlineAction}
       />
-      : <Alert onClose={handleClose} severity={notification?.type === NotificationType.SUCCESS ? 'success' : 'error'}>
+      : <Alert onClose={handleClose} severity={getSeverity()}>
         {notification?.message}
       </Alert>
   )

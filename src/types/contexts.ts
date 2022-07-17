@@ -27,7 +27,10 @@ export interface ConnectionStatusContextType {
   isOffline: () => boolean
   updateConnectionStatus: (connectionStatus: ConnectionStatus) => void,
   updateConnectionStatusSwitcherVisibility: (isVisible: boolean) => void,
-  showGoOnlineButton: boolean
+  showGoOnlineButton: boolean,
+  isOnlineInfoBannerVisible: boolean,
+  updateOnlineInfoBannerVisibility: (isVisible: boolean) => void,
+  resetOnlineInfoBanner: () => void
 }
 
 export interface ThemeContextType {
