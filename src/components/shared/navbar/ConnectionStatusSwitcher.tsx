@@ -5,12 +5,12 @@ import WifiIcon from '@mui/icons-material/Wifi'
 import { ConnectionStatus } from '../../../enums/connection-status'
 
 const ConnectionStatusSwitcher = () => {
-  const { showConnectionStatusSwitcher, updateConnectionStatus } = useConnectionStatus()
+  const { showGoOnlineButton, updateConnectionStatus } = useConnectionStatus()
   const goOnline = () => {
     updateConnectionStatus(ConnectionStatus.ONLINE)
   }
   return (
-    showConnectionStatusSwitcher
+    showGoOnlineButton
       ? <Button sx={{ mr: 3 }} onClick={goOnline} variant="outlined" color="inherit" startIcon={<WifiIcon/>}>Go online</Button>
       : null
   )
