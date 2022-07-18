@@ -2,6 +2,7 @@ import { Tour, UpdateOrCreateTour } from '../types/tour'
 import { localDB } from '../utils/local-database/local-db'
 import dayjs from 'dayjs'
 import { TourStatusType } from '../enums/tour-status-type'
+import { IndexableType } from 'dexie'
 
 export default class LocalDatabaseService {
   public async addTourList (tours: Tour[]): Promise<void> {
@@ -19,21 +20,27 @@ export default class LocalDatabaseService {
     return localDB.tours.where('status').notEqual(TourStatusType.DELETED).toArray()
   }
 
+  public async create (tour: UpdateOrCreateTour) : Promise<IndexableType> {
+    const newTour = this.createLocalTour(tour)
+    return this.putTour(newTour)
+  }
+
   /**
    * If a tour does not exist in the table it will be created
    * If it exists it will be updated
    * @param tour
    */
-  public async putTour (tour: Tour): Promise<void> {
-    await localDB.tours.put(tour)
+  public async putTour (tour: Tour): Promise<IndexableType> {
+    return localDB.tours.put(tour)
   }
 
   public async getOne (id: string | undefined): Promise<Tour|undefined> {
     return localDB.tours.get(id!)
   }
 
-  public async markTourAsDeleted (tour: Tour): Promise<void> {
-    const localTour = await localDB.tours.get(tour.id)
+  public async markTourAsDeleted (id: string | undefined): Promise<void> {
+    if (!id) { return }
+    const localTour = await localDB.tours.get(id)
     if (localTour) {
       await this.updateTourStatus(localTour, TourStatusType.DELETED)
     }
@@ -50,7 +57,17 @@ export default class LocalDatabaseService {
     return localTour
   }
 
-  public updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Tour {
+  public async update (tourId: string|undefined, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Promise<IndexableType|undefined> {
+    if (!tourId) { return }
+    const localTour = await localDB.tours.get(tourId)
+    if (!localTour) {
+      return
+    }
+    const localUpdateTour = this.updateLocalTour(localTour, updatedTour, statusType)
+    return localDB.tours.put(localUpdateTour)
+  }
+
+  private updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Tour {
     localTour.name = updatedTour.name
     localTour.startLocation = updatedTour.startLocation
     localTour.endLocation = updatedTour.endLocation

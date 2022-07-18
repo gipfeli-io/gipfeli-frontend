@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react'
  * @param callback
  * @param delay
  */
-const useInterval = (callback: CallableFunction, delay: number) => {
+const useInterval = (callback: CallableFunction, delay: number | null) => {
   const savedCallback = useRef<CallableFunction>()
 
   useEffect(() => {

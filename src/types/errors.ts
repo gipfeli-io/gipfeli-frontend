@@ -78,6 +78,16 @@ export class BadRequestError extends NonCriticalApiError {
 }
 
 /**
+ * Statuscode: 500 due to being offline
+ */
+export class OfflineError extends NonCriticalApiError {
+  constructor (message: string) {
+    super(message)
+    this.name = ErrorType.OFFLINE
+  }
+}
+
+/**
  * Displayed on login if either password or user or both are wrong
  */
 export class LoginError extends NonCriticalApiError {

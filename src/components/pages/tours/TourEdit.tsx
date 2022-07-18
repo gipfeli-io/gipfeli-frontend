@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography'
-import { BaseTour, UpdateOrCreateTour } from '../../../types/tour'
+import { BaseTour, Tour, UpdateOrCreateTour } from '../../../types/tour'
 import TourForm from '../../../components/app/TourForm'
 import ToursService from '../../../services/tours/tours-service'
 import { handleSave } from '../../../types/handle-save'
@@ -18,6 +18,8 @@ import MediaService from '../../../services/media/media-service'
 import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import ToursSyncService from '../../../services/tours/tours-sync-service'
+import useConnectionStatus from '../../../hooks/use-connection-status'
+import LocalDatabaseService from '../../../services/local-database-service'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -31,21 +33,42 @@ const EditTour = () => {
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
+  const { isOffline } = useConnectionStatus()
+  const localDatabaseService = new LocalDatabaseService()
 
   useEffect(() => {
-    async function fetchTour () {
-      const data = await toursService.findOne(id)
-      if (data.success) {
-        const { description, endLocation, startLocation, name, status, images: imageList } = data.content!
-        setTour({ description, endLocation, startLocation, name, status, images: [] })
+    const setResult = (fetchedTour: Tour) => {
+      const { description, endLocation, startLocation, name, status, images: imageList } = fetchedTour
+      setTour({ description, endLocation, startLocation, name, status, images: [] })
+      if (!isOffline()) {
         setImages(imageList)
+      }
+    }
+    async function fetchTour () {
+      const localTour = await localDatabaseService.getOne(id)
+      if (isOffline() || localTour?.status === TourStatusType.CREATED) {
+        if (localTour) {
+          setResult(localTour)
+        } else {
+          console.log('tour-edit::error fetching tour') // todo: throw error
+        }
       } else {
-        throwError(data)
+        const data = await toursService.findOne(id)
+        if (data.success) {
+          setResult(data.content!)
+        } else {
+          throwError(data)
+        }
       }
     }
 
     fetchTour()
   }, [])
+
+  const triggerSuccess = () => {
+    triggerSuccessNotification('Successfully updated tour!')
+    navigate(`/tours/${id}`)
+  }
 
   const updateTour: handleSave<BaseTour> = async (baseTour: BaseTour) => {
     const tourToSave: UpdateOrCreateTour = {
@@ -56,18 +79,27 @@ const EditTour = () => {
       images
     }
     let data
-    if (baseTour.status === TourStatusType.CREATED) {
-      data = await toursSyncService.synchronizeCreatedTour(id, tourToSave)
-      id = data.content!.id
+    if (isOffline()) {
+      const result = await localDatabaseService.update(id, tourToSave, TourStatusType.UPDATED)
+      if (result) {
+        triggerSuccess()
+      } else {
+        console.log('tour-edit::error while editing') // todo add error handling
+      }
     } else {
-      data = await toursService.update(id, tourToSave)
-    }
+      if (baseTour.status === TourStatusType.CREATED) {
+        console.log('sync offline tour', baseTour, id, tourToSave)
+        data = await toursSyncService.synchronizeCreatedTour(id, tourToSave)
+        id = data.content!.id
+      } else {
+        data = await toursService.update(id, tourToSave)
+      }
 
-    if (data.success) {
-      triggerSuccessNotification('Successfully updated tour!')
-      navigate(`/tours/${id}`)
-    } else {
-      throwError(data)
+      if (data.success) {
+        triggerSuccess()
+      } else {
+        throwError(data)
+      }
     }
   }
 

@@ -13,40 +13,57 @@ export default class ToursSyncService {
     this.tourService = new ToursService(token)
   }
 
-  public async synchronizeTourData (): Promise<void> {
+  public async synchronizeTourData (): Promise<SingleApiResponse<unknown>[]> {
     const localDatabaseService = new LocalDatabaseService()
     const toursToSync: Tour[] = await localDatabaseService.getToursToSynchronize()
+    const resultList: SingleApiResponse<unknown>[] = []
     for (const tour of toursToSync) {
-      await this.handleTourSync(tour)
+      resultList.push(await this.handleTourSync(tour))
     }
+    return resultList
   }
 
   public async synchronizeCreatedTour (id: string | undefined, tour: UpdateOrCreateTour): Promise<SingleApiResponse<Tour>> {
-    // we can delete the local tour here as it gets freshly added (incl. correct id if successful)
-    await this.localDatabaseService.deleteTour(id)
-    return this.tourService.create(tour)
+    const result = await this.tourService.create(tour)
+    if (result.success) {
+      // we can delete the local tour here as it was freshly added with the correct id
+      await this.localDatabaseService.deleteTour(id)
+    } else if (result.error) {
+      result.error.message = `Synchronization of offline created tour "${tour.name}" was not successful. Error: ${result.error?.message}`
+    }
+    return result
   }
 
-  private async handleTourSync (tour: Tour): Promise<void> {
+  private async handleTourSync (tour: Tour): Promise<SingleApiResponse<unknown>> {
     const status = tour.status
     switch (status) {
       case TourStatusType.UPDATED:
-        await this.handleUpdatedTourSync(tour)
-        break
+        return this.handleUpdatedTourSync(tour)
       case TourStatusType.DELETED:
-        await this.tourService.delete(tour.id)
-        break
+        return this.handleDeletedTourSync(tour)
       default:
-        console.log('could not find status type. should notify user.') // todo: show error notification
+        return {
+          success: false,
+          statusCode: 500,
+          statusMessage: 'Could not find logic for syncing tour status type: ' + tour.status,
+          error: undefined
+        }
     }
   }
 
-  private async handleUpdatedTourSync (tour: Tour): Promise<void> {
+  private async handleDeletedTourSync (tour: Tour): Promise<SingleApiResponse<unknown>> {
+    const result = await this.tourService.delete(tour.id)
+    if (!result.success && result.error) {
+      result.error.message = `Synchronization of deletion for tour "${tour.name}" was not successful. Please re-load the page. Error: ${result.error?.message}`
+    }
+    return result
+  }
+
+  private async handleUpdatedTourSync (tour: Tour): Promise<SingleApiResponse<unknown>> {
     await this.localDatabaseService.updateTourStatus(tour, TourStatusType.SYNCING)
     const result = await this.tourService.findOne(tour.id)
-    // todo: error handling
     const mergedTour = ToursSyncService.mergeTour(tour, result.content!)
-    await this.tourService.update(tour.id, mergedTour)
+    return this.tourService.update(tour.id, mergedTour)
   }
 
   private static mergeTour (tour: Tour, remoteTour: Tour): UpdateOrCreateTour {

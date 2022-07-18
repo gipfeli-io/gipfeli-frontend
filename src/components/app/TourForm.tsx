@@ -7,7 +7,7 @@ import MapWrapper from '../shared/map/MapWrapper'
 import WayPointMarkerLayer from '../shared/map/layers/WayPointMarkerLayer'
 import FullScreenControl from '../shared/map/controls/FullScreenControl'
 import ImageUpload from '../shared/images/upload/ImageUpload'
-import useOnlineStatus from '../../hooks/use-online-status'
+import useConnectionStatus from '../../hooks/use-connection-status'
 import GpsImageMarkerLayer from '../shared/map/layers/GpsImageMarkerLayer'
 import useImageUpload from '../../hooks/use-image-upload'
 
@@ -20,7 +20,7 @@ type TourFormProps = {
 export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
   const navigate = useNavigate()
   const [currentTour, setCurrentTour] = useState(tour)
-  const isOnline = useOnlineStatus()
+  const { isOffline } = useConnectionStatus()
   const { files } = useImageUpload()
 
   const cancel = () => navigate(-1)
@@ -66,7 +66,7 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
         />
       </Grid>
       <Grid item xs={12}>
-        {isOnline &&
+        {!isOffline() &&
             <>
                 <MapWrapper>
                     <FullScreenControl/>
@@ -89,7 +89,7 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
       </Grid>
 
       <Grid item xs={12}>
-        {isOnline &&
+        {!isOffline() &&
             <ImageUpload/>
         }
       </Grid>

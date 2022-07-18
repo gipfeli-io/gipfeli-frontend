@@ -16,9 +16,11 @@ import useApiError from '../../../hooks/use-api-error'
 import { dateTimeFormat } from '../../../utils/constants'
 import dayjs from 'dayjs'
 import ImageGallery from '../../shared/images/gallery/ImageGallery'
-import useOnlineStatus from '../../../hooks/use-online-status'
+import useConnectionStatus from '../../../hooks/use-connection-status'
 import { ImageUpload } from '../../../types/media'
 import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
+import LocalDatabaseService from '../../../services/local-database-service'
+import { TourStatusType } from '../../../enums/tour-status-type'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -29,15 +31,25 @@ const TourDetail = () => {
   const [open, setOpen] = useState(false)
   const [geoReferencedImages, setGeoReferencedImages] = useState<ImageUpload[]>([])
   const throwError = useApiError()
-  const isOnline = useOnlineStatus()
+  const { isOffline } = useConnectionStatus()
+  const localDatabaseService = new LocalDatabaseService()
 
   useEffect(() => {
     async function fetchTour () {
-      const data = await service.findOne(id!)
-      if (data.success) {
-        setTour(data.content)
+      if (isOffline()) {
+        const localTour = await localDatabaseService.getOne(id)
+        if (localTour) {
+          setTour(localTour)
+        } else {
+          console.log('tour-detail::error fetching tour') // todo: throw error
+        }
       } else {
-        throwError(data)
+        const data = await service.findOne(id)
+        if (data.success) {
+          setTour(data.content)
+        } else {
+          throwError(data)
+        }
       }
     }
 
@@ -45,7 +57,7 @@ const TourDetail = () => {
   }, [])
 
   useEffect(() => {
-    if (tour && tour.images.length > 0) {
+    if (tour && tour.images && tour.images.length > 0) {
       setGeoReferencedImages(tour.images.filter((image) => image.location))
     }
   }, [tour])
@@ -55,7 +67,14 @@ const TourDetail = () => {
   }
 
   const handleDelete = async () => {
-    await service.delete(tour!.id)
+    const localTour = await localDatabaseService.getOne(tour!.id)
+    if (isOffline()) {
+      await localDatabaseService.markTourAsDeleted(tour!.id)
+    } else if (localTour && localTour.status === TourStatusType.DELETED) {
+      await localDatabaseService.deleteTour(tour!.id)
+    } else {
+      await service.delete(tour!.id)
+    }
     handleDeleteModalClose()
     navigate('/tours')
   }
@@ -83,7 +102,7 @@ const TourDetail = () => {
         </Grid>
       </Grid>
       <Divider/>
-      {isOnline &&
+      {!isOffline() &&
           <>
               <MapWrapper>
                   <WayPointMarkerLayer features={[new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]}/>
@@ -103,7 +122,7 @@ const TourDetail = () => {
           </Typography>
         </Grid>
       </Grid>
-      {isOnline && tour.images && tour.images.length > 0 &&
+      {!isOffline() && tour.images && tour.images.length > 0 &&
           <Grid container mb={2} mt={2} direction={'column'}>
               <Grid item>
                   <Typography variant="h5" gutterBottom component="div">

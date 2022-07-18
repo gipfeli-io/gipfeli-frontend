@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { dateTimeFormat } from '../../../utils/constants'
 import { OfflineBolt } from '@mui/icons-material'
 import { TourStatusType } from '../../../enums/tour-status-type'
-import useOnlineStatus from '../../../hooks/use-online-status'
+import useConnectionStatus from '../../../hooks/use-connection-status'
 import { Chip } from '@mui/material'
 
 type TourListProps = {
@@ -19,7 +19,7 @@ const getActions = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
 }
 
 const getName = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
-  const isOnline = useOnlineStatus()
+  const { isOffline } = useConnectionStatus()
   const offlineCreatedChip: JSX.Element = <Chip size="small" sx={{ ml: 1 }} label="Complete to sync" color="primary"/>
   const offlineBolt: JSX.Element = <span title="This tour is not synchronized with the database."><OfflineBolt sx={{ mr: 1 }}/></span>
 
@@ -28,14 +28,14 @@ const getName = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
   }
 
   const fieldValue: JSX.Element =
-     isOnline
-       ? <>
+    isOffline()
+      ? <>
+        {(params.row.status === TourStatusType.UPDATED || params.row.status === TourStatusType.CREATED) && offlineBolt}
+        {params.row.name}
+      </>
+      : <>
          {params.row.name}
          {params.row.status === TourStatusType.CREATED && offlineCreatedChip}
-       </>
-       : <>
-         {(params.row.status === TourStatusType.UPDATED || params.row.status === TourStatusType.CREATED) && offlineBolt}
-         {params.row.name}
        </>
   return fieldValue
 }

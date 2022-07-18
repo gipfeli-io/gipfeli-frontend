@@ -7,4 +7,7 @@ export enum LocalStorageKey {
   ActiveStyle = 'active_style',
   LightMode = 'light',
   DarkMode = 'dark',
+  ConnectionStatus = 'connection_status',
+  IsGoOnlineButtonVisible = 'IsGoOnlineButtonVisible',
+  IsOnlineBannerSeen = 'IsOnlineBannerSeen'
 }

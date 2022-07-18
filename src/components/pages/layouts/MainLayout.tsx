@@ -6,14 +6,16 @@ import Copyright from '../../shared/Copyright'
 import { Link, Outlet } from 'react-router-dom'
 import NavBarLinkSection from '../../shared/navbar/NavBarLinkSection'
 import ThemeSwitcher from '../../shared/navbar/ThemeSwitcher'
-import useOnlineStatus from '../../../hooks/use-online-status'
+import useConnectionStatus from '../../../hooks/use-connection-status'
 import Banner from '../../shared/Banner'
 import OfflineNotification from '../../shared/OfflineNotification'
+import OnlineNotificationSnackbar from '../../shared/OnlineNotificationSnackbar'
+import ConnectionStatusSwitcher from '../../shared/navbar/ConnectionStatusSwitcher'
 
 const MainLayout = () => {
-  const isOnline = useOnlineStatus()
+  const { isOffline } = useConnectionStatus()
 
-  const offlineBannerContent = isOnline ? null : <OfflineNotification/>
+  const offlineBannerContent = isOffline() ? <OfflineNotification/> : null
 
   return (<>
       <AppBar position="static">
@@ -28,13 +30,14 @@ const MainLayout = () => {
             <LandscapeIcon/>
           </IconButton>
           <NavBarLinkSection/>
+          <ConnectionStatusSwitcher/>
           <NavBarUserSection/>
           <ThemeSwitcher/>
         </Toolbar>
       </AppBar>
       <Banner bannerContent={offlineBannerContent}/>
       <Outlet/>
-
+      <OnlineNotificationSnackbar/>
       <Copyright/>
     </>
   )
