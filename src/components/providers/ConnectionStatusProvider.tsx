@@ -14,6 +14,25 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   // eslint-disable-next-line no-undef
   let intervalId: NodeJS.Timer
 
+  const getInitialOnlineInfoBannerVisibility = () => {
+    const savedOnlineInfoBannerVisibility = localStorageService.getItem(LocalStorageKey.IsOnlineBannerSeen)
+    if (!savedOnlineInfoBannerVisibility) {
+      return false
+    }
+    return JSON.parse(savedOnlineInfoBannerVisibility) === true
+  }
+
+  const [isOnlineInfoBannerVisible, setIsOnlineInfoBannerVisible] = useState<boolean>(getInitialOnlineInfoBannerVisibility)
+
+  const updateOnlineInfoBannerVisibility = (isVisible: boolean) => {
+    localStorageService.addItem(LocalStorageKey.IsOnlineBannerSeen, String(isVisible))
+    setIsOnlineInfoBannerVisible(isVisible)
+  }
+
+  const resetOnlineInfoBanner = () => {
+    localStorageService.removeItem(LocalStorageKey.IsOnlineBannerSeen)
+  }
+
   const getInitialGoOnlineButtonState = () => {
     const savedGoOnlineButtonState = localStorageService.getItem(LocalStorageKey.IsGoOnlineButtonVisible)
     if (!savedGoOnlineButtonState) {
@@ -35,6 +54,7 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
     if (request.status === 200) {
       clearInterval(intervalId)
       updateGoOnlineButtonVisibility(true)
+      updateOnlineInfoBannerVisibility(true)
     }
   }
 
@@ -69,25 +89,6 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   }
 
   const isOffline = () => connectionStatus === ConnectionStatus.OFFLINE
-
-  const getInitialOnlineInfoBannerVisibility = () => {
-    const savedOnlineInfoBannerVisibility = localStorageService.getItem(LocalStorageKey.IsOnlineBannerSeen)
-    if (!savedOnlineInfoBannerVisibility) {
-      return false
-    }
-    return JSON.parse(savedOnlineInfoBannerVisibility) === true
-  }
-
-  const [isOnlineInfoBannerVisible, setIsOnlineInfoBannerVisible] = useState<boolean>(getInitialOnlineInfoBannerVisibility)
-
-  const updateOnlineInfoBannerVisibility = (isVisible: boolean) => {
-    localStorageService.addItem(LocalStorageKey.IsOnlineBannerSeen, String(isVisible))
-    setIsOnlineInfoBannerVisible(isVisible)
-  }
-
-  const resetOnlineInfoBanner = () => {
-    localStorageService.removeItem(LocalStorageKey.IsOnlineBannerSeen)
-  }
 
   const value: ConnectionStatusContextType = {
     isOffline,

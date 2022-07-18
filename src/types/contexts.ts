@@ -9,38 +9,39 @@ export interface TourListContextProperties {
 }
 
 export interface AuthenticationContextType {
-  email: string | undefined;
-  token: string | undefined;
-  signIn: (email: string, password: string, callback: () => void) => void;
-  signOut: (callback: () => void) => void;
+  email: string | undefined
+  token: string | undefined
+  signIn: (email: string, password: string, callback: () => void) => void
+  signOut: (callback: () => void) => void
 }
 
 export interface NotificationContextType {
-  notification: Notification | undefined;
-  triggerErrorNotification: (message: string) => void;
-  triggerSuccessNotification: (message: string) => void;
-  triggerOfflineNotification: () => void;
-  resetNotification: () => void;
+  notification: Notification | undefined
+  triggerErrorNotification: (message: string) => void
+  triggerSuccessNotification: (message: string) => void
+  triggerOfflineNotification: () => void
+  triggerSyncFailedNotification: (message: string) => void
+  resetNotification: () => void
 }
 
 export interface ConnectionStatusContextType {
   isOffline: () => boolean
-  updateConnectionStatus: (connectionStatus: ConnectionStatus) => void,
-  updateConnectionStatusSwitcherVisibility: (isVisible: boolean) => void,
-  showGoOnlineButton: boolean,
-  isOnlineInfoBannerVisible: boolean,
-  updateOnlineInfoBannerVisibility: (isVisible: boolean) => void,
+  updateConnectionStatus: (connectionStatus: ConnectionStatus) => void
+  updateConnectionStatusSwitcherVisibility: (isVisible: boolean) => void
+  showGoOnlineButton: boolean
+  isOnlineInfoBannerVisible: boolean
+  updateOnlineInfoBannerVisibility: (isVisible: boolean) => void
   resetOnlineInfoBanner: () => void
 }
 
 export interface ThemeContextType {
-  activeTheme: AppTheme;
-  toggleTheme: () => void;
+  activeTheme: AppTheme
+  toggleTheme: () => void
 }
 
 export interface ImageUploadContextType {
-  files: ImageUpload[];
-  save: handleSave<File[]>;
-  remove: (id: string) => void;
-  currentUploads: CurrentUpload[];
+  files: ImageUpload[]
+  save: handleSave<File[]>
+  remove: (id: string) => void
+  currentUploads: CurrentUpload[]
 }

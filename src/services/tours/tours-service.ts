@@ -51,21 +51,15 @@ export default class ToursService extends APIService {
 
   public async delete (id: string): Promise<SingleApiResponse<unknown>> {
     const localTour = await this.localDatabaseService.getOne(id)
-    // no need to call api if tour was created locally and is not synced
-    if (localTour && localTour.status === TourStatusType.CREATED) {
-      await this.localDatabaseService.deleteTour(id)
-      return { ...this.getSuccessWrapper('successfully deleted tour') }
-    }
-
     const result = await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('DELETE', {})
     )
-    return this.handleTourDeleteResult(result, localTour!)
+    return this.handleTourDeleteResult(result, localTour)
   }
 
-  private async handleTourDeleteResult (result: SingleApiResponse<unknown>, localTour: Tour): Promise<SingleApiResponse<unknown>> {
-    if (!ToursService.isOffline(result.statusCode, result.statusMessage)) {
+  private async handleTourDeleteResult (result: SingleApiResponse<unknown>, localTour: Tour|undefined): Promise<SingleApiResponse<unknown>> {
+    if (!ToursService.isOffline(result.statusCode, result.statusMessage) && localTour) {
       await this.localDatabaseService.deleteTour(localTour.id)
     }
     return result
@@ -128,6 +122,7 @@ export default class ToursService extends APIService {
       await this.localDatabaseService.putTour(result.content!)
     }
 
+    console.log('handleTourAddResult::result', result)
     return result
   }
 

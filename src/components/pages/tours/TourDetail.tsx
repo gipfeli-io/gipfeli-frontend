@@ -20,6 +20,7 @@ import useConnectionStatus from '../../../hooks/use-connection-status'
 import { ImageUpload } from '../../../types/media'
 import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
 import LocalDatabaseService from '../../../services/local-database-service'
+import { TourStatusType } from '../../../enums/tour-status-type'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -66,8 +67,11 @@ const TourDetail = () => {
   }
 
   const handleDelete = async () => {
+    const localTour = await localDatabaseService.getOne(tour!.id)
     if (isOffline()) {
       await localDatabaseService.markTourAsDeleted(tour!.id)
+    } else if (localTour && localTour.status === TourStatusType.DELETED) {
+      await localDatabaseService.deleteTour(tour!.id)
     } else {
       await service.delete(tour!.id)
     }

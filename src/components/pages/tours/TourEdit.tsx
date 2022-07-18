@@ -45,8 +45,8 @@ const EditTour = () => {
       }
     }
     async function fetchTour () {
-      if (isOffline()) {
-        const localTour = await localDatabaseService.getOne(id)
+      const localTour = await localDatabaseService.getOne(id)
+      if (isOffline() || localTour?.status === TourStatusType.CREATED) {
         if (localTour) {
           setResult(localTour)
         } else {
@@ -88,6 +88,7 @@ const EditTour = () => {
       }
     } else {
       if (baseTour.status === TourStatusType.CREATED) {
+        console.log('sync offline tour', baseTour, id, tourToSave)
         data = await toursSyncService.synchronizeCreatedTour(id, tourToSave)
         id = data.content!.id
       } else {

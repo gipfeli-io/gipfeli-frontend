@@ -45,6 +45,7 @@ const NotificationSnackbar = () => {
       open={notification?.visible}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       onClose={handleClose}
+      autoHideDuration={notification?.autoHideDuration}
     >
       {snackbarContent}
     </Snackbar>

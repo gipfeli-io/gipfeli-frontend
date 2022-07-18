@@ -13,6 +13,7 @@ import useApiError from '../../../hooks/use-api-error'
 import { TourListContextProperties } from '../../../types/contexts'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
+import { TourStatusType } from '../../../enums/tour-status-type'
 
 const ToursOverview = () => {
   const { token } = useAuth()
@@ -56,8 +57,12 @@ const ToursOverview = () => {
     setTourList(prevState => prevState.filter(tour => tour.id !== deleteId))
   }
   const handleDelete = async () => {
+    const localTour = await localDatabaseService.getOne(deleteId!)
     if (isOffline()) {
       await localDatabaseService.markTourAsDeleted(deleteId!)
+      triggerDeletionSuccess()
+    } else if (localTour && localTour.status === TourStatusType.DELETED) {
+      await localDatabaseService.deleteTour(deleteId!)
       triggerDeletionSuccess()
     } else {
       const data = await service.delete(deleteId!)
