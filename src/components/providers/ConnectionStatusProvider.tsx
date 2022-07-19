@@ -25,12 +25,13 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   const [isOnlineInfoBannerVisible, setIsOnlineInfoBannerVisible] = useState<boolean>(getInitialOnlineInfoBannerVisibility)
 
   const updateOnlineInfoBannerVisibility = (isVisible: boolean) => {
-    localStorageService.addItem(LocalStorageKey.IsOnlineBannerSeen, String(isVisible))
+    localStorageService.addItem(LocalStorageKey.IsOnlineBannerSeen, String(!isVisible))
     setIsOnlineInfoBannerVisible(isVisible)
   }
 
   const resetOnlineInfoBanner = () => {
     localStorageService.removeItem(LocalStorageKey.IsOnlineBannerSeen)
+    setIsOnlineInfoBannerVisible(false)
   }
 
   const getInitialGoOnlineButtonState = () => {
@@ -93,7 +94,7 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   const value: ConnectionStatusContextType = {
     isOffline,
     updateConnectionStatus,
-    updateConnectionStatusSwitcherVisibility: updateGoOnlineButtonVisibility,
+    updateGoOnlineButtonVisibility,
     showGoOnlineButton,
     isOnlineInfoBannerVisible,
     updateOnlineInfoBannerVisibility,
