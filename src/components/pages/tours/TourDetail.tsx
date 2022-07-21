@@ -79,7 +79,7 @@ const TourDetail = () => {
     navigate('/tours')
   }
 
-  function getWayPointMarkerFeatures (): TourPoint[] {
+  const getWayPointMarkerFeatures = (): TourPoint[] => {
     if (tour) {
       return [new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]
     }
