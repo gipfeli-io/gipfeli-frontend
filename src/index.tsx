@@ -25,6 +25,7 @@ import SignUp from './components/pages/SignUp'
 import ActivateUser from './components/pages/user/ActivateUser'
 import { ConnectionStatusProvider } from './components/providers/ConnectionStatusProvider'
 import PasswordReset from './components/pages/user/PasswordReset'
+import SetNewPassword from './components/pages/user/SetNewPassword'
 
 const RoutesWrapper = initializeSentry(process.env.REACT_APP_SENTRY_DSN, process.env.REACT_APP_SENTRY_ENVIRONMENT)
 
@@ -54,6 +55,7 @@ root.render(
                           <Route path="login" element={<Login/>}/>
                           <Route path="signup" element={<SignUp/>}/>
                           <Route path="password-reset" element={<PasswordReset/>}/>
+                          <Route path="password-reset/:userId/:token" element={<SetNewPassword/>}/>
                           <Route path="user/activate/:userId/:token" element={<ActivateUser/>}/>
                         </Route>
                         <Route path="404" element={<NotFound/>}/>
