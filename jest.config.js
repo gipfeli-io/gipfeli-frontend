@@ -3,21 +3,17 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testEnvironment: 'jest-environment-jsdom',
   transform: {
-    '^.+\\.ts|tsx?$': 'ts-jest',
-    '^.+\\.(js|jsx)$': 'babel-jest' // required, because e.g. OpenLayers cannot be transformed directly
+    '^.+\\.ts|tsx|js|jsx?$': 'ts-jest'
   },
   automock: false,
   resetMocks: false,
   transformIgnorePatterns: [
-    'node_modules/(?!(ol)/)' // Exclude from transform to force babel-jest to bundle it
+    'node_modules/(?!(ol)/)'
   ],
-
-  /**
-     * In order to use CSS Modules and Image imports, this proxy has to be used.
-     * See https://stackoverflow.com/a/59283057
-     */
   moduleNameMapper: {
+    // required to use import css syntax
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    // required to use import file (e.g. image) syntax
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/__mocks__/fileMock.js'
   }
 }
