@@ -4,12 +4,12 @@ const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   transform: {
     '^.+\\.ts|tsx?$': 'ts-jest',
-    '^.+\\.(js|jsx)$': 'babel-jest' // required, because e.g. OpenLayers cannot be transformed directly
+    '^.+\\.(js|jsx|mjs)$': 'babel-jest' // required, because e.g. OpenLayers cannot be transformed directly
   },
   automock: false,
   resetMocks: false,
   transformIgnorePatterns: [
-    'node_modules/(?!(ol)/)' // Exclude from transform to force babel-jest to bundle it
+    'node_modules/(?!(ol|dexie)/)' // Exclude from transform to force babel-jest to bundle it
   ],
 
   /**
