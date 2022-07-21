@@ -43,7 +43,7 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
     }
 
     const setupMarkerLayer = (): VectorLayer<VectorSource> => {
-      let markerLayer = map.getAllLayers().find((l: Layer) => l.getProperties().name === MapLayers.WAYPOINT_MARKER) as VectorLayer<VectorSource>
+      let markerLayer = map.getAllLayers().find((layer: Layer) => layer.getProperties().name === MapLayers.WAYPOINT_MARKER) as VectorLayer<VectorSource>
       let layerExtent: Extent = []
 
       if (!markerLayer) {
@@ -105,8 +105,8 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
       initDrawListener(drawInteraction, markerId)
     }
 
-    const layer = setupMarkerLayer()
-    const source = layer.getSource() as VectorSource
+    const markerLayer = setupMarkerLayer()
+    const source = markerLayer.getSource() as VectorSource
 
     // only add interactions when type is set (type = 'edit' or 'create')
     if (type) {
