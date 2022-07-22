@@ -10,7 +10,7 @@ const customJestConfig = {
   automock: false,
   resetMocks: false,
   transformIgnorePatterns: [
-    'node_modules/(?!(ol|dexie|uuid|geotiff|quick-lru|ol-ext)/)' // Exclude from transform to force babel-jest to bundle it
+    'node_modules/(?!(ol|dexie|geotiff|quick-lru|ol-ext)/)' // Exclude from transform to force babel-jest to bundle it
   ],
   moduleNameMapper: {
     // required to use import css syntax
