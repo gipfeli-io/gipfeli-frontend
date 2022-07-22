@@ -9,7 +9,7 @@ const customJestConfig = {
   automock: false,
   resetMocks: false,
   transformIgnorePatterns: [
-    'node_modules/(?!(ol|dexie|uuid)/)' // Exclude from transform to force babel-jest to bundle it
+    'node_modules/(?!(ol|dexie|uuid|geotiff|quick-lru|ol-ext)/)' // Exclude from transform to force babel-jest to bundle it
   ],
 
   /**
