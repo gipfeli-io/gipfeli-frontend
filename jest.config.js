@@ -1,8 +1,10 @@
+const { jsWithBabelESM: tsjPreset } = require('ts-jest/presets')
 const customJestConfig = {
   preset: 'ts-jest',
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testEnvironment: 'jest-environment-jsdom',
   transform: {
+    ...tsjPreset.transform,
     '^.+\\.ts|tsx|js|jsx?$': 'ts-jest'
   },
   automock: false,

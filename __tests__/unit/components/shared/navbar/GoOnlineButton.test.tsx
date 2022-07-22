@@ -47,6 +47,7 @@ describe('GoOnlineButton', () => {
   })
 
   it('will not show button if user is online', () => {
+    mockConnectionStatusContext.showGoOnlineButton = false
     const tree = renderer
       .create(<ConnectionStatusProvider><GoOnlineButton/></ConnectionStatusProvider>)
       .toJSON()
