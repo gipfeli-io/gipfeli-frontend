@@ -3,7 +3,7 @@ import { localDB } from '../utils/local-database/local-db'
 import dayjs from 'dayjs'
 import { TourStatusType } from '../enums/tour-status-type'
 import { IndexableType } from 'dexie'
-import { v4 as uuidv4 } from 'uuid'
+import { uuid } from 'uuidv4'
 
 export default class LocalDatabaseService {
   public async addTourList (tours: Tour[]): Promise<void> {
@@ -52,7 +52,7 @@ export default class LocalDatabaseService {
   }
 
   public createLocalTour (tour: UpdateOrCreateTour): Tour {
-    const id = uuidv4()
+    const id = uuid()
     const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, dayjs().toDate(), dayjs().toDate())
     localTour.status = TourStatusType.CREATED
     return localTour
