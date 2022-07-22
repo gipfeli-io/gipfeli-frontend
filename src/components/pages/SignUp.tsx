@@ -3,13 +3,12 @@ import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import { Link as MuiLink } from '@mui/material'
 import React, { FormEvent } from 'react'
-import { Link } from 'react-router-dom'
 import AuthService from '../../services/auth/auth-service'
 import useApiError from '../../hooks/use-api-error'
 import useNotifications from '../../hooks/use-notifications'
 import { useNavigate } from 'react-router'
+import AuthFormLinks from '../shared/AuthFormLinks'
 
 const SignUp = () => {
   const authService = new AuthService()
@@ -107,18 +106,7 @@ const SignUp = () => {
         >
           Sign Up
         </Button>
-        <Grid container>
-          <Grid item xs>
-            <MuiLink href="pages/login#">
-              Forgot password?
-            </MuiLink>
-          </Grid>
-          <Grid item>
-            <MuiLink component={Link} to="/login">
-              Already have an account?
-            </MuiLink>
-          </Grid>
-        </Grid>
+        <AuthFormLinks type={'signup'}/>
       </Box>
     </>
   )

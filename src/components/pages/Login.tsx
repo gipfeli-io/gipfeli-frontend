@@ -2,12 +2,10 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
-import { Link as MuiLink } from '@mui/material'
 import React, { FormEvent } from 'react'
 import { useNavigate } from 'react-router'
 import useAuth from '../../hooks/use-auth'
-import { Link } from 'react-router-dom'
+import AuthFormLinks from '../shared/AuthFormLinks'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -58,18 +56,7 @@ const Login = () => {
         >
           Sign In
         </Button>
-        <Grid container>
-          <Grid item xs>
-            <MuiLink href="pages/login#">
-              Forgot password?
-            </MuiLink>
-          </Grid>
-          <Grid item>
-            <MuiLink component={Link} to="/signup">
-              Create a free account
-            </MuiLink>
-          </Grid>
-        </Grid>
+        <AuthFormLinks type={'login'}/>
       </Box>
     </>
   )

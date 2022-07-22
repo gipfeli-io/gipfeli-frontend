@@ -79,9 +79,18 @@ const TourDetail = () => {
     navigate('/tours')
   }
 
+  const getWayPointMarkerFeatures = (): TourPoint[] => {
+    if (tour) {
+      return [new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]
+    }
+
+    return []
+  }
+
   if (!tour) {
     return (<Loader/>)
   }
+
   return (
     <>
       <Typography variant="h2" gutterBottom component="div">
@@ -105,7 +114,7 @@ const TourDetail = () => {
       {!isOffline() &&
           <>
               <MapWrapper>
-                  <WayPointMarkerLayer features={[new TourPoint(tour.startLocation), new TourPoint(tour.endLocation)]}/>
+                  <WayPointMarkerLayer features={getWayPointMarkerFeatures()}/>
                   <GpsImageMarkerLayer features={geoReferencedImages}/>
               </MapWrapper>
           </>
