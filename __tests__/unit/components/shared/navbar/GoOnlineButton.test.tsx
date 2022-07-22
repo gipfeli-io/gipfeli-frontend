@@ -7,18 +7,8 @@ import renderer from 'react-test-renderer'
 import GoOnlineButton from '../../../../../src/components/shared/navbar/GoOnlineButton'
 import { ConnectionStatusProvider } from '../../../../../src/components/providers/ConnectionStatusProvider'
 
-const updateConnectionStatus: jest.Mock = jest.fn()
-const updateGoOnlineButtonVisibility: jest.Mock = jest.fn()
-const updateOnlineInfoBannerVisibility: jest.Mock = jest.fn()
-const resetOnlineInfoBanner: jest.Mock = jest.fn()
 const mockConnectionStatusContext: any = {
-  isOffline: false,
-  updateConnectionStatus,
-  updateGoOnlineButtonVisibility,
-  showGoOnlineButton: false,
-  isOnlineInfoBannerVisible: false,
-  updateOnlineInfoBannerVisibility,
-  resetOnlineInfoBanner
+  showGoOnlineButton: false
 }
 
 const triggerSyncFailedNotification:jest.Mock = jest.fn()
