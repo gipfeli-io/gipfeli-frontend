@@ -27,7 +27,7 @@ export interface NotificationContextType {
 export interface ConnectionStatusContextType {
   isOffline: () => boolean
   updateConnectionStatus: (connectionStatus: ConnectionStatus) => void
-  updateConnectionStatusSwitcherVisibility: (isVisible: boolean) => void
+  updateGoOnlineButtonVisibility: (isVisible: boolean) => void
   showGoOnlineButton: boolean
   isOnlineInfoBannerVisible: boolean
   updateOnlineInfoBannerVisibility: (isVisible: boolean) => void

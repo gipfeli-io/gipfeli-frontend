@@ -67,7 +67,7 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
       </Grid>
       <Grid item xs={12}>
         {!isOffline() &&
-            <>
+            <div id={'map'}>
                 <MapWrapper>
                     <FullScreenControl/>
                     <WayPointMarkerLayer handleSetMarker={handleSetMarker}
@@ -75,7 +75,7 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
                                          type={type}/>
                     <GpsImageMarkerLayer features={files}/>
                 </MapWrapper>
-            </>
+            </div>
         }
       </Grid>
       <Grid item xs={12}>
@@ -90,7 +90,7 @@ export default function TourForm ({ tour, saveHandler, type }: TourFormProps) {
 
       <Grid item xs={12}>
         {!isOffline() &&
-            <ImageUpload/>
+            <div id={'image-gallery'}><ImageUpload/></div>
         }
       </Grid>
     </Grid>

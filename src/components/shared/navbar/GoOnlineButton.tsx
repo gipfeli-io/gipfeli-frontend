@@ -8,7 +8,7 @@ import useAuth from '../../../hooks/use-auth'
 import useNotifications from '../../../hooks/use-notifications'
 import ToursSyncService from '../../../services/tours/tours-sync-service'
 
-const ConnectionStatusSwitcher = () => {
+const GoOnlineButton = () => {
   const { showGoOnlineButton, updateConnectionStatus } = useConnectionStatus()
   const auth = useAuth()
   const { triggerSyncFailedNotification } = useNotifications()
@@ -30,4 +30,4 @@ const ConnectionStatusSwitcher = () => {
   )
 }
 
-export default ConnectionStatusSwitcher
+export default GoOnlineButton
