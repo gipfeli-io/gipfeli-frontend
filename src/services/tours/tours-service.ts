@@ -84,7 +84,7 @@ export default class ToursService extends APIService {
   private async handleGetTour (result: SingleApiResponse<Tour>, tourId: string| undefined): Promise<SingleApiResponse<Tour>> {
     const localTour = await this.localDatabaseService.getOne(tourId)
     if (result.statusCode === 404) {
-      if (localTour) {
+      if (localTour && localTour.status !== TourStatusType.CREATED) {
         await this.localDatabaseService.deleteTour(tourId)
         return result
       }
