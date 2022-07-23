@@ -99,8 +99,8 @@ describe('ConnectionStatusProvider', () => {
     const { queryByTestId } = renderTestComponent()
     const testElement = queryByTestId('isInfoBannerVisible')
     expect(testElement!.innerHTML).toEqual('false')
-    const isOnlineBannerSeen = localStorage.getItem(LocalStorageKey.IsOnlineBannerSeen)
-    expect(isOnlineBannerSeen).toBeNull()
+    const isOnlineBannerVisible = localStorage.getItem(LocalStorageKey.IsOnlineBannerVisible)
+    expect(isOnlineBannerVisible).toBeNull()
   })
 
   it('show info banner', () => {
@@ -108,7 +108,7 @@ describe('ConnectionStatusProvider', () => {
     fireEvent.click(getByTestId('update-info-banner--visible'))
     const testElement = queryByTestId('isInfoBannerVisible')
     expect(testElement!.innerHTML).toEqual('true')
-    const storedButtonVisibility = localStorage.getItem(LocalStorageKey.IsOnlineBannerSeen)
+    const storedButtonVisibility = localStorage.getItem(LocalStorageKey.IsOnlineBannerVisible)
     expect(storedButtonVisibility).toEqual('false')
   })
 
@@ -117,7 +117,7 @@ describe('ConnectionStatusProvider', () => {
     fireEvent.click(getByTestId('update-info-banner--hidden'))
     const testElement = queryByTestId('isInfoBannerVisible')
     expect(testElement!.innerHTML).toEqual('false')
-    const storedButtonVisibility = localStorage.getItem(LocalStorageKey.IsOnlineBannerSeen)
+    const storedButtonVisibility = localStorage.getItem(LocalStorageKey.IsOnlineBannerVisible)
     expect(storedButtonVisibility).toEqual('true')
   })
 
@@ -126,7 +126,7 @@ describe('ConnectionStatusProvider', () => {
     fireEvent.click(getByTestId('reset-info-banner'))
     const testElement = queryByTestId('isInfoBannerVisible')
     expect(testElement!.innerHTML).toEqual('false')
-    const storedButtonVisibility = localStorage.getItem(LocalStorageKey.IsOnlineBannerSeen)
+    const storedButtonVisibility = localStorage.getItem(LocalStorageKey.IsOnlineBannerVisible)
     expect(storedButtonVisibility).toBeNull()
   })
 })

@@ -10,12 +10,12 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   const localStorageService = new LocalStorageService()
   const navigate = useNavigate()
   const requestUrl: string = process.env.REACT_APP_PUBLIC_BACKEND_API || 'http://localhost:3000'
-  const pollingDelay: string | number = process.env.ONLINE_POLLING_DELAY || 20000
+  const pollingDelay: string = process.env.REACT_APP_ONLINE_POLLING_DELAY || '20000'
   // eslint-disable-next-line no-undef
   let intervalId: NodeJS.Timer
 
   const getInitialOnlineInfoBannerVisibility = () => {
-    const savedOnlineInfoBannerVisibility = localStorageService.getItem(LocalStorageKey.IsOnlineBannerSeen)
+    const savedOnlineInfoBannerVisibility = localStorageService.getItem(LocalStorageKey.IsOnlineBannerVisible)
     if (!savedOnlineInfoBannerVisibility) {
       return false
     }
@@ -25,12 +25,12 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   const [isOnlineInfoBannerVisible, setIsOnlineInfoBannerVisible] = useState<boolean>(getInitialOnlineInfoBannerVisibility)
 
   const updateOnlineInfoBannerVisibility = (isVisible: boolean) => {
-    localStorageService.addItem(LocalStorageKey.IsOnlineBannerSeen, String(!isVisible))
+    localStorageService.addItem(LocalStorageKey.IsOnlineBannerVisible, String(!isVisible))
     setIsOnlineInfoBannerVisible(isVisible)
   }
 
   const resetOnlineInfoBanner = () => {
-    localStorageService.removeItem(LocalStorageKey.IsOnlineBannerSeen)
+    localStorageService.removeItem(LocalStorageKey.IsOnlineBannerVisible)
     setIsOnlineInfoBannerVisible(false)
   }
 
@@ -60,7 +60,7 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   }
 
   const initPolling = () => {
-    intervalId = setInterval(checkIfApplicationIsOnline, +pollingDelay)
+    intervalId = setInterval(checkIfApplicationIsOnline, parseInt(pollingDelay))
   }
 
   const getInitialConnectionStatus = () => {

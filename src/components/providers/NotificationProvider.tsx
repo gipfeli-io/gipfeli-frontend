@@ -8,9 +8,8 @@ import { NotificationContextType } from '../../types/contexts'
 const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
   const [notification, setNotification] = useState<Notification | undefined>(undefined)
 
-  const triggerNotification = (message: string, type: NotificationType, autoHideDuration?: number | null) => {
-    autoHideDuration = autoHideDuration === undefined ? 3000 : autoHideDuration
-    setNotification({ message, type, visible: true, autoHideDuration })
+  const triggerNotification = (message: string, type: NotificationType, autoHide: boolean = true) => {
+    setNotification({ message, type, visible: true, autoHide })
   }
 
   const triggerSuccessNotification = (message: string) => {
@@ -23,11 +22,11 @@ const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
 
   const triggerOfflineNotification = () => {
     const message = 'Oh no, your internet connection is gone! But good news, you can switch to the offline mode to keep using the app.'
-    triggerNotification(message, NotificationType.OFFLINE, null)
+    triggerNotification(message, NotificationType.OFFLINE, false)
   }
 
   const triggerSyncFailedNotification = (message: string) => {
-    triggerNotification(message, NotificationType.ERROR, null)
+    triggerNotification(message, NotificationType.ERROR, false)
   }
 
   const resetNotification = () => {

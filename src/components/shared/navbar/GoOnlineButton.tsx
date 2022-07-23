@@ -2,26 +2,13 @@ import { Button } from '@mui/material'
 import React from 'react'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import WifiIcon from '@mui/icons-material/Wifi'
-import { ConnectionStatus } from '../../../enums/connection-status'
-import { SingleApiResponse } from '../../../types/api'
-import useAuth from '../../../hooks/use-auth'
-import useNotifications from '../../../hooks/use-notifications'
-import ToursSyncService from '../../../services/tours/tours-sync-service'
+import useGoOnline from '../../../hooks/use-go-online'
 
 const GoOnlineButton = () => {
-  const { showGoOnlineButton, updateConnectionStatus } = useConnectionStatus()
-  const auth = useAuth()
-  const { triggerSyncFailedNotification } = useNotifications()
-  const tourSyncService: ToursSyncService = new ToursSyncService(auth.token)
-
+  const { showGoOnlineButton } = useConnectionStatus()
+  const activateOnlineMode = useGoOnline()
   const goOnline = async (): Promise<void> => {
-    updateConnectionStatus(ConnectionStatus.ONLINE)
-    const results = await tourSyncService.synchronizeTourData()
-    results.forEach((result: SingleApiResponse<unknown>) => {
-      if (result.error) {
-        triggerSyncFailedNotification(result.error.message!)
-      }
-    })
+    (await activateOnlineMode)()
   }
   return (
     showGoOnlineButton
