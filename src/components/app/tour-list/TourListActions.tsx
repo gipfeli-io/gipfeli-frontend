@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 type TourListActionsProps = {
   id: string
 }
-const TourListActions = ({ id }: TourListActionsProps): JSX.Element => {
+const TourListActions = ({ id }: TourListActionsProps) => {
   const tourListContext = useContext(TourListContext)
 
   const onClick = () => {
