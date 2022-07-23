@@ -2,13 +2,10 @@ import React from 'react'
 import { Box, Divider, Grid, Paper } from '@mui/material'
 
 type BannerProps = {
-  bannerContent: JSX.Element | null
+  bannerContent: JSX.Element
 }
 
-const Banner = ({ bannerContent }: BannerProps) : JSX.Element | null => {
-  if (!bannerContent) {
-    return null
-  }
+const Banner = ({ bannerContent }: BannerProps) => {
   return (
     <div className="banner">
       <Paper elevation={1}>
