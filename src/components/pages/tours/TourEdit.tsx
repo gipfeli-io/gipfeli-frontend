@@ -114,25 +114,27 @@ const EditTour = () => {
     currentUploads
   }
 
-  const tourType: string = tour?.status === TourStatusType.CREATED ? 'Create' : 'Edit'
-
   if (!tour) {
     return (<Loader/>)
-  }
+  } else {
+    const getFormType = (): string => {
+      return tour.status === TourStatusType.CREATED ? 'Create' : 'Edit'
+    }
 
-  return (
-    <>
-      <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
-        Edit Tour
-        { tour.status !== TourStatusType.SYNCED &&
-            <span title={'This tour is not synchronized with the database.'}><OfflineBoltOutlined color={'warning'} sx={{ ml: 2 }}/></span>}
-        <Button onClick={() => handleImageUpload([])}/>
-      </Typography>
-      <ImageUploadContext.Provider value={imageContextProps}>
-        <TourForm tour={tour} saveHandler={updateTour} type={tourType}/>
-      </ImageUploadContext.Provider>
-    </>
-  )
+    return (
+      <>
+        <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
+          Edit Tour
+          { tour.status !== TourStatusType.SYNCED &&
+              <span title={'This tour is not synchronized with the database.'}><OfflineBoltOutlined color={'warning'} sx={{ ml: 2 }}/></span>}
+          <Button onClick={() => handleImageUpload([])}/>
+        </Typography>
+        <ImageUploadContext.Provider value={imageContextProps}>
+          <TourForm tour={tour} saveHandler={updateTour} type={getFormType()}/>
+        </ImageUploadContext.Provider>
+      </>
+    )
+  }
 }
 
 export default EditTour

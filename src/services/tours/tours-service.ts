@@ -1,6 +1,6 @@
 import APIService from '../api-service'
 import { Tour, UpdateOrCreateTour } from '../../types/tour'
-import { ApiResponseWrapper, ArrayApiResponse, SingleApiResponse } from '../../types/api'
+import { ArrayApiResponse, SingleApiResponse } from '../../types/api'
 import LocalDatabaseService from '../local-database-service'
 import { TourStatusType } from '../../enums/tour-status-type'
 
@@ -41,31 +41,31 @@ export default class ToursService extends APIService {
     return this.handleTourAddResult(result)
   }
 
-  public async update (id: string | undefined, tour: UpdateOrCreateTour): Promise<SingleApiResponse<unknown>> {
-    const result = await this.fetchSingleDataFromApi(
+  public async update (id: string | undefined, tour: UpdateOrCreateTour): Promise<SingleApiResponse<void>> {
+    const result: SingleApiResponse<void> = await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('PATCH', tour)
     )
     return this.handleTourUpdateResult(result, tour, id)
   }
 
-  public async delete (id: string): Promise<SingleApiResponse<unknown>> {
+  public async delete (id: string): Promise<SingleApiResponse<void>> {
     const localTour = await this.localDatabaseService.getOne(id)
-    const result = await this.fetchSingleDataFromApi(
+    const result: SingleApiResponse<void> = await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('DELETE', {})
     )
     return this.handleTourDeleteResult(result, localTour)
   }
 
-  private async handleTourDeleteResult (result: SingleApiResponse<unknown>, localTour: Tour|undefined): Promise<SingleApiResponse<unknown>> {
+  private async handleTourDeleteResult (result: SingleApiResponse<void>, localTour: Tour|undefined): Promise<SingleApiResponse<void>> {
     if (!ToursService.isOffline(result.statusCode, result.statusMessage) && localTour) {
       await this.localDatabaseService.deleteTour(localTour.id)
     }
     return result
   }
 
-  private async handleTourUpdateResult (result: SingleApiResponse<unknown>, tour: UpdateOrCreateTour, id: string | undefined): Promise<SingleApiResponse<unknown>> {
+  private async handleTourUpdateResult (result: SingleApiResponse<void>, tour: UpdateOrCreateTour, id: string | undefined): Promise<SingleApiResponse<void>> {
     if (!ToursService.isOffline(result.statusCode, result.statusMessage)) {
       await this.localDatabaseService.update(id, tour, TourStatusType.SYNCED)
     }
@@ -108,21 +108,10 @@ export default class ToursService extends APIService {
     return result
   }
 
-  private async getLocalTourResponse (localTour: Tour, message: string): Promise<SingleApiResponse<Tour>> {
-    const wrapper = this.getSuccessWrapper(message)
-    return { content: localTour, ...wrapper }
-  }
-
-  private getSuccessWrapper (message: string): ApiResponseWrapper {
-    return this.createResponseWrapper(true, 200, message)
-  }
-
   private async handleTourAddResult (result: SingleApiResponse<Tour>): Promise<SingleApiResponse<Tour>> {
     if (result.statusCode === 201) {
       await this.localDatabaseService.putTour(result.content!)
     }
-
-    console.log('handleTourAddResult::result', result)
     return result
   }
 

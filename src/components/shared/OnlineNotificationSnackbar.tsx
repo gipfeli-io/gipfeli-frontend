@@ -1,17 +1,11 @@
 import { Button, Snackbar, SnackbarContent } from '@mui/material'
 import React from 'react'
 import useConnectionStatus from '../../hooks/use-connection-status'
-import { ConnectionStatus } from '../../enums/connection-status'
-import ToursSyncService from '../../services/tours/tours-sync-service'
-import useAuth from '../../hooks/use-auth'
-import useNotifications from '../../hooks/use-notifications'
-import { SingleApiResponse } from '../../types/api'
+import useGoOnline from '../../hooks/use-go-online'
 
 const OnlineNotificationSnackbar = () => {
-  const auth = useAuth()
-  const { triggerSyncFailedNotification } = useNotifications()
-  const tourSyncService: ToursSyncService = new ToursSyncService(auth.token)
-  const { isOnlineInfoBannerVisible, updateOnlineInfoBannerVisibility, updateConnectionStatus } = useConnectionStatus()
+  const { isOnlineInfoBannerVisible, updateOnlineInfoBannerVisibility } = useConnectionStatus()
+  const activateOnlineMode = useGoOnline()
 
   const handleClose = (_event: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
@@ -22,13 +16,7 @@ const OnlineNotificationSnackbar = () => {
 
   const goOnline = async (_event: React.SyntheticEvent | Event, reason?:string): Promise<void> => {
     if (reason === 'clickaway') { return }
-    updateConnectionStatus(ConnectionStatus.ONLINE)
-    const results = await tourSyncService.synchronizeTourData()
-    results.forEach((result: SingleApiResponse<unknown>) => {
-      if (result.error) {
-        triggerSyncFailedNotification(result.error.message!)
-      }
-    })
+    (await activateOnlineMode)()
     handleClose(_event)
   }
 

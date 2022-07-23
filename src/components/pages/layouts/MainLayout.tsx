@@ -15,7 +15,7 @@ import GoOnlineButton from '../../shared/navbar/GoOnlineButton'
 const MainLayout = () => {
   const { isOffline } = useConnectionStatus()
 
-  const offlineBannerContent = isOffline() ? <OfflineNotification/> : null
+  const offlineBanner = isOffline() ? <Banner bannerContent={<OfflineNotification/>}/> : null
 
   return (<>
       <AppBar position="static">
@@ -35,7 +35,7 @@ const MainLayout = () => {
           <ThemeSwitcher/>
         </Toolbar>
       </AppBar>
-      <Banner bannerContent={offlineBannerContent}/>
+      {offlineBanner}
       <Outlet/>
       <OnlineNotificationSnackbar/>
       <Copyright/>

@@ -40,12 +40,14 @@ const NotificationSnackbar = () => {
       </Alert>
   )
 
+  const getAutoHideDuration = () => notification?.autoHide ? 3000 : null
+
   return (
     <Snackbar
       open={notification?.visible}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       onClose={handleClose}
-      autoHideDuration={notification?.autoHideDuration}
+      autoHideDuration={getAutoHideDuration()}
     >
       {snackbarContent}
     </Snackbar>

@@ -9,5 +9,5 @@ export enum LocalStorageKey {
   DarkMode = 'dark',
   ConnectionStatus = 'connection_status',
   IsGoOnlineButtonVisible = 'IsGoOnlineButtonVisible',
-  IsOnlineBannerSeen = 'IsOnlineBannerSeen'
+  IsOnlineBannerVisible = 'IsOnlineBannerVisible'
 }

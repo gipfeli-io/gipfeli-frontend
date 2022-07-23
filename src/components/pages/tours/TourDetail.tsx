@@ -13,14 +13,13 @@ import { Tour, TourPoint } from '../../../types/tour'
 import { Link } from 'react-router-dom'
 import Loader from '../../shared/Loader'
 import useApiError from '../../../hooks/use-api-error'
-import { dateTimeFormat } from '../../../utils/constants'
-import dayjs from 'dayjs'
 import ImageGallery from '../../shared/images/gallery/ImageGallery'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import { ImageUpload } from '../../../types/media'
 import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
 import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
+import { formatDate } from '../../../utils/date-conversion-helper'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -101,12 +100,12 @@ const TourDetail = () => {
       <Grid container mb={2} direction={'row'} spacing={5}>
         <Grid item>
           <Typography variant="subtitle1" gutterBottom component="div">
-            Created at: {dayjs(tour.createdAt).format(dateTimeFormat)}
+            Created at: {formatDate(tour.createdAt)}
           </Typography>
         </Grid>
         <Grid item>
           <Typography variant="subtitle1" gutterBottom component="div">
-            Last updated at: {dayjs(tour.updatedAt).format(dateTimeFormat)}
+            Last updated at: {formatDate(tour.updatedAt)}
           </Typography>
         </Grid>
       </Grid>
