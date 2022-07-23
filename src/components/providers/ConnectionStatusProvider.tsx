@@ -25,7 +25,7 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   const [isOnlineInfoBannerVisible, setIsOnlineInfoBannerVisible] = useState<boolean>(getInitialOnlineInfoBannerVisibility)
 
   const updateOnlineInfoBannerVisibility = (isVisible: boolean) => {
-    localStorageService.addItem(LocalStorageKey.IsOnlineBannerVisible, String(!isVisible))
+    localStorageService.addItem(LocalStorageKey.IsOnlineBannerVisible, String(isVisible))
     setIsOnlineInfoBannerVisible(isVisible)
   }
 
