@@ -1,6 +1,6 @@
 import APIService from '../api-service'
 import { Tour, UpdateOrCreateTour } from '../../types/tour'
-import { ApiResponseWrapper, ArrayApiResponse, SingleApiResponse } from '../../types/api'
+import { ArrayApiResponse, SingleApiResponse } from '../../types/api'
 import LocalDatabaseService from '../local-database-service'
 import { TourStatusType } from '../../enums/tour-status-type'
 
@@ -106,15 +106,6 @@ export default class ToursService extends APIService {
     }
 
     return result
-  }
-
-  private async getLocalTourResponse (localTour: Tour, message: string): Promise<SingleApiResponse<Tour>> {
-    const wrapper = this.getSuccessWrapper(message)
-    return { content: localTour, ...wrapper }
-  }
-
-  private getSuccessWrapper (message: string): ApiResponseWrapper {
-    return this.createResponseWrapper(true, 200, message)
   }
 
   private async handleTourAddResult (result: SingleApiResponse<Tour>): Promise<SingleApiResponse<Tour>> {

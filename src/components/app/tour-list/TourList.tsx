@@ -18,25 +18,24 @@ const getActions = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
 }
 
 const getName = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
+  const { name, status } = params.row
   const { isOffline } = useConnectionStatus()
-  const offlineCreatedChip: JSX.Element = <Chip size="small" sx={{ ml: 1 }} label="Complete to sync" color="primary"/>
-  const offlineBolt: JSX.Element = <span title="This tour is not synchronized with the database."><OfflineBolt sx={{ mr: 1 }}/></span>
+  const offlineCreatedChip = <Chip size="small" sx={{ ml: 1 }} label="Complete to sync" color="primary"/>
+  const offlineBolt = <span title="This tour is not synchronized with the database."><OfflineBolt sx={{ mr: 1 }}/></span>
 
-  if (params.row.status === TourStatusType.SYNCED) {
-    return <>{params.row.name}</>
+  if (status === TourStatusType.SYNCED) {
+    return <>{name}</>
   }
 
-  const fieldValue: JSX.Element =
-    isOffline()
-      ? <>
-        {(params.row.status === TourStatusType.UPDATED || params.row.status === TourStatusType.CREATED) && offlineBolt}
-        {params.row.name}
-      </>
-      : <>
-         {params.row.name}
-         {params.row.status === TourStatusType.CREATED && offlineCreatedChip}
-       </>
-  return fieldValue
+  return isOffline()
+    ? <>
+      {(status === TourStatusType.UPDATED || status === TourStatusType.CREATED) && offlineBolt}
+      {name}
+    </>
+    : <>
+      {name}
+      {status === TourStatusType.CREATED && offlineCreatedChip}
+    </>
 }
 
 const columns: GridColDef[] = [
@@ -58,7 +57,7 @@ const columns: GridColDef[] = [
   { field: 'actions', headerName: 'Actions', flex: 0.5, renderCell: getActions }
 ]
 
-const TourList = ({ loading, rows }: TourListProps): JSX.Element => (
+const TourList = ({ loading, rows }: TourListProps) => (
   <div style={{ width: '100%' }}>
     <DataGrid
       loading={loading}
