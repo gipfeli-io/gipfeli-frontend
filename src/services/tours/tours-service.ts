@@ -3,6 +3,7 @@ import { Tour, UpdateOrCreateTour } from '../../types/tour'
 import { ArrayApiResponse, SingleApiResponse } from '../../types/api'
 import LocalDatabaseService from '../local-database-service'
 import { TourStatusType } from '../../enums/tour-status-type'
+import { isOfflineResultMessage } from '../../utils/offline-helper'
 
 export default class ToursService extends APIService {
   private prefix: string = 'tours'
@@ -59,29 +60,25 @@ export default class ToursService extends APIService {
 
   private async handleTourDeleteResult (result: SingleApiResponse<void>, id: string): Promise<SingleApiResponse<void>> {
     const localTour = await this.localDatabaseService.getOne(id)
-    if (!ToursService.isOffline(result.statusCode, result.statusMessage) && localTour) {
+    if (!isOfflineResultMessage(result.statusCode, result.statusMessage) && localTour) {
       await this.localDatabaseService.deleteTour(localTour.id)
     }
     return result
   }
 
   private async handleTourUpdateResult (result: SingleApiResponse<void>, tour: UpdateOrCreateTour, id: string | undefined): Promise<SingleApiResponse<void>> {
-    if (!ToursService.isOffline(result.statusCode, result.statusMessage)) {
+    if (!isOfflineResultMessage(result.statusCode, result.statusMessage)) {
       await this.localDatabaseService.update(id, tour, TourStatusType.SYNCED)
     }
     return result
   }
 
   private async handleGetOneResult (result: SingleApiResponse<Tour>, tourId: string | undefined): Promise<SingleApiResponse<Tour>> {
-    if (ToursService.isOffline(result.statusCode, result.statusMessage)) {
+    if (isOfflineResultMessage(result.statusCode, result.statusMessage)) {
       return result
     }
 
     return this.handleGetTour(result, tourId)
-  }
-
-  private static isOffline (statusCode: number, statusMessage: string): boolean {
-    return statusCode === 500 && statusMessage === 'Failed to fetch'
   }
 
   private async handleGetTour (result: SingleApiResponse<Tour>, tourId: string| undefined): Promise<SingleApiResponse<Tour>> {
@@ -116,7 +113,7 @@ export default class ToursService extends APIService {
   }
 
   private async handleTourListResult (result: ArrayApiResponse<Tour>): Promise<ArrayApiResponse<Tour>> {
-    if (ToursService.isOffline(result.statusCode, result.statusMessage)) {
+    if (isOfflineResultMessage(result.statusCode, result.statusMessage)) {
       return result
     } else {
       if (!result.content) {
