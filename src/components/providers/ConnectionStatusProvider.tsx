@@ -4,11 +4,9 @@ import { ConnectionStatus } from '../../enums/connection-status'
 import { ConnectionStatusContextType } from '../../types/contexts'
 import { LocalStorageKey } from '../../enums/local-storage-key'
 import LocalStorageService from '../../services/local-storage-service'
-import { useNavigate } from 'react-router'
 
 export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) => {
   const localStorageService = new LocalStorageService()
-  const navigate = useNavigate()
   const requestUrl: string = process.env.REACT_APP_PUBLIC_BACKEND_API || 'http://localhost:3000'
   const pollingDelay: string = process.env.REACT_APP_ONLINE_POLLING_DELAY || '20000'
   // eslint-disable-next-line no-undef
@@ -86,7 +84,6 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
     } else {
       updateGoOnlineButtonVisibility(false)
     }
-    navigate('/tours', { replace: true })
   }
 
   const isOffline = () => connectionStatus === ConnectionStatus.OFFLINE
