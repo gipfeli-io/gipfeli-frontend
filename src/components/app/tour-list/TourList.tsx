@@ -2,12 +2,11 @@ import { Tour } from '../../../types/tour'
 import { DataGrid, GridColDef, GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid'
 import TourListActions from './TourListActions'
 import React from 'react'
-import dayjs from 'dayjs'
-import { dateTimeFormat } from '../../../utils/constants'
 import { OfflineBolt } from '@mui/icons-material'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import { Chip } from '@mui/material'
+import { formatDate } from '../../../utils/date-conversion-helper'
 
 type TourListProps = {
   rows: Tour[],
@@ -46,14 +45,14 @@ const columns: GridColDef[] = [
     field: 'createdAt',
     headerName: 'Created at',
     type: 'dateTime',
-    valueFormatter: (params: GridValueFormatterParams) => { return dayjs(params.value).format(dateTimeFormat) },
+    valueFormatter: (params: GridValueFormatterParams) => { return formatDate(params.value) },
     flex: 1
   },
   {
     field: 'updatedAt',
     headerName: 'Updated at',
     type: 'dateTime',
-    valueFormatter: (params: GridValueFormatterParams) => { return dayjs(params.value).format(dateTimeFormat) },
+    valueFormatter: (params: GridValueFormatterParams) => { return formatDate(params.value) },
     flex: 1
   },
   { field: 'actions', headerName: 'Actions', flex: 0.5, renderCell: getActions }
