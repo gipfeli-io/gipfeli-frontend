@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 import useAuth from '../../../hooks/use-auth'
 import ToursService from '../../../services/tours/tours-service'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { BaseTour, UpdateOrCreateTour } from '../../../types/tour'
 import { handleSave } from '../../../types/handle-save'
 import Typography from '@mui/material/Typography'
@@ -15,18 +15,33 @@ import ImageUploadContext from '../../shared/images/upload/image-upload-context'
 import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
+import HeartbeatService from '../../../services/heartbeat-service'
+import { isOfflineResultMessage } from '../../../utils/offline-helper'
 
 const TourCreate = () => {
   const auth = useAuth()
   const navigate = useNavigate()
   const { isOffline } = useConnectionStatus()
-  const { triggerSuccessNotification } = useNotifications()
+  const { triggerSuccessNotification, triggerOfflineNotification } = useNotifications()
   const toursService = new ToursService(auth.token)
   const mediaService = new MediaService(auth.token)
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
   const localDatabaseService = new LocalDatabaseService()
+  const heartBeatService = new HeartbeatService()
+
+  useEffect(() => {
+    async function checkConnectivity () {
+      const result = await heartBeatService.checkHeartbeat()
+      if (isOfflineResultMessage(result.statusCode, result.statusMessage)) {
+        triggerOfflineNotification()
+      }
+    }
+    if (!isOffline()) {
+      checkConnectivity()
+    }
+  }, [])
 
   const tour: BaseTour = new BaseTour('', { // Todo: make empty and add points in edit
     type: 'Point',
