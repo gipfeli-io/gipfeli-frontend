@@ -109,7 +109,7 @@ describe('ConnectionStatusProvider', () => {
     const testElement = queryByTestId('isInfoBannerVisible')
     expect(testElement!.innerHTML).toEqual('true')
     const storedButtonVisibility = localStorage.getItem(LocalStorageKey.IsOnlineBannerVisible)
-    expect(storedButtonVisibility).toEqual('false')
+    expect(storedButtonVisibility).toEqual('true')
   })
 
   it('hide info banner', () => {
@@ -118,7 +118,7 @@ describe('ConnectionStatusProvider', () => {
     const testElement = queryByTestId('isInfoBannerVisible')
     expect(testElement!.innerHTML).toEqual('false')
     const storedButtonVisibility = localStorage.getItem(LocalStorageKey.IsOnlineBannerVisible)
-    expect(storedButtonVisibility).toEqual('true')
+    expect(storedButtonVisibility).toEqual('false')
   })
 
   it('info banner information is removed from local storage', () => {

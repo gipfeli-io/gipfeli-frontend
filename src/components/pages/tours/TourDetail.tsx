@@ -35,8 +35,8 @@ const TourDetail = () => {
 
   useEffect(() => {
     async function fetchTour () {
-      if (isOffline()) {
-        const localTour = await localDatabaseService.getOne(id)
+      const localTour = await localDatabaseService.getOne(id)
+      if (isOffline() || localTour?.status === TourStatusType.CREATED) {
         if (localTour) {
           setTour(localTour)
         } else {

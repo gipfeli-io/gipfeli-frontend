@@ -50,15 +50,15 @@ export default class ToursService extends APIService {
   }
 
   public async delete (id: string): Promise<SingleApiResponse<void>> {
-    const localTour = await this.localDatabaseService.getOne(id)
     const result: SingleApiResponse<void> = await this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, id),
       this.getRequestBody('DELETE', {})
     )
-    return this.handleTourDeleteResult(result, localTour)
+    return this.handleTourDeleteResult(result, id)
   }
 
-  private async handleTourDeleteResult (result: SingleApiResponse<void>, localTour: Tour|undefined): Promise<SingleApiResponse<void>> {
+  private async handleTourDeleteResult (result: SingleApiResponse<void>, id: string): Promise<SingleApiResponse<void>> {
+    const localTour = await this.localDatabaseService.getOne(id)
     if (!ToursService.isOffline(result.statusCode, result.statusMessage) && localTour) {
       await this.localDatabaseService.deleteTour(localTour.id)
     }
