@@ -5,10 +5,12 @@ import { ConnectionStatusContextType } from '../../types/contexts'
 import { LocalStorageKey } from '../../enums/local-storage-key'
 import LocalStorageService from '../../services/local-storage-service'
 import HeartbeatService from '../../services/heartbeat-service'
+import { useNavigate } from 'react-router'
 
 export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) => {
   const localStorageService = new LocalStorageService()
   const heartBeatService = new HeartbeatService()
+  const navigate = useNavigate()
   const pollingDelay: string = process.env.REACT_APP_ONLINE_POLLING_DELAY || '20000'
   // eslint-disable-next-line no-undef
   let intervalId: NodeJS.Timer
@@ -85,6 +87,7 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
     } else {
       updateGoOnlineButtonVisibility(false)
     }
+    navigate(0)
   }
 
   const isOffline = () => connectionStatus === ConnectionStatus.OFFLINE

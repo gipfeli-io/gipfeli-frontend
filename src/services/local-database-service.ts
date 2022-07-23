@@ -50,7 +50,7 @@ export default class LocalDatabaseService {
     await localDB.tours.delete(id!)
   }
 
-  public createLocalTour (tour: UpdateOrCreateTour): Tour {
+  private createLocalTour (tour: UpdateOrCreateTour): Tour {
     const id = crypto.randomUUID().toString()
     const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, dayjs().toDate(), dayjs().toDate())
     localTour.status = TourStatusType.CREATED

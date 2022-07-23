@@ -39,7 +39,7 @@ export default class ToursService extends APIService {
       this.getRequestBody('POST', tour),
       Tour
     )
-    return this.handleTourAddResult(result)
+    return this.handleTourAddResult(result, tour)
   }
 
   public async update (id: string | undefined, tour: UpdateOrCreateTour): Promise<SingleApiResponse<void>> {
@@ -105,8 +105,11 @@ export default class ToursService extends APIService {
     return result
   }
 
-  private async handleTourAddResult (result: SingleApiResponse<Tour>): Promise<SingleApiResponse<Tour>> {
-    if (result.statusCode === 201) {
+  private async handleTourAddResult (result: SingleApiResponse<Tour>, tour: UpdateOrCreateTour): Promise<SingleApiResponse<Tour>> {
+    if (isOfflineResultMessage(result.statusCode, result.statusMessage)) {
+      // save the tour in the local database to not lose the changes if the user refreshes the page
+      await this.localDatabaseService.create(tour)
+    } else if (result.statusCode === 201) {
       await this.localDatabaseService.putTour(result.content!)
     }
     return result
