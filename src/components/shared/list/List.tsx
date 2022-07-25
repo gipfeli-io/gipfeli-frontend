@@ -1,25 +1,42 @@
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import React, { useEffect, useState } from 'react'
-import { Tour } from '../../../types/tour'
 import ListActions, { ListActionsProps } from './ListActions'
 
-type ListProps = {
-  rows: Object[],
+type IdentifiableObject = {
+  id: string;
+}
+
+type ListProps<T extends IdentifiableObject> = {
+  rows: T[],
   loading: boolean,
   columns: GridColDef[],
+  /**
+   * Override function to write custom logic for deletion, e.g. to prevent admins from being deleted.
+   * @param item
+   */
+  customDeleteOverride?: (item: T) => boolean,
 } & Omit<ListActionsProps, 'id'>
 
-const List = ({ loading, rows, columns, canView = false, canEdit = false, canDelete = false }: ListProps) => {
+const List = <T extends IdentifiableObject>({
+  loading,
+  rows,
+  columns,
+  canView = false,
+  canEdit = false,
+  canDelete = false,
+  customDeleteOverride = () => canDelete
+}: ListProps<T>) => {
   const [internalColumns, setInternalColumns] = useState<GridColDef[]>([])
 
-  const getActions = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
-    return <ListActions id={params.row.id} canView={canView} canEdit={canEdit} canDelete={canDelete}/>
+  const getActions = (params: GridValueGetterParams<T, T>): JSX.Element => {
+    console.log(customDeleteOverride(params.row))
+    return <ListActions id={params.row.id} canView={canView} canEdit={canEdit} canDelete={customDeleteOverride(params.row)}/>
   }
 
   useEffect(() => {
     if (canView || canEdit || canDelete) {
       const actionsColumn: GridColDef = { field: 'actions', headerName: 'Actions', flex: 0.5, renderCell: getActions }
-      setInternalColumns(prevState => ([
+      setInternalColumns(() => ([
         ...columns,
         actionsColumn
       ]))
@@ -29,15 +46,17 @@ const List = ({ loading, rows, columns, canView = false, canEdit = false, canDel
   }, [])
 
   return (
-    <div style={{ width: '100%' }}>
-      <DataGrid
-        loading={loading}
-        autoHeight
-        disableColumnSelector
-        disableSelectionOnClick
-        rows={rows}
-        columns={internalColumns}/>
-    </div>
+    <>
+      <div style={{ width: '100%' }}>
+        <DataGrid
+          loading={loading}
+          autoHeight
+          disableColumnSelector
+          disableSelectionOnClick
+          rows={rows}
+          columns={internalColumns}/>
+      </div>
+    </>
   )
 }
 export default List

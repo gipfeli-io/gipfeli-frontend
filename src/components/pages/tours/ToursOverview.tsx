@@ -1,9 +1,7 @@
 import Typography from '@mui/material/Typography'
 import { Button, Grid } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import TourListContext from '../../app/tour-list/TourListContext'
-import { TourDeleteConfirmation } from '../../app/tour-list/TourDeleteConfirmation'
-import TourList from '../../app/tour-list/TourList'
+import TourList from '../../app/TourList'
 import ToursService from '../../../services/tours/tours-service'
 import { Tour } from '../../../types/tour'
 import useAuth from '../../../hooks/use-auth'
@@ -14,6 +12,8 @@ import { TourListContextProperties } from '../../../types/contexts'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
+import DeleteConfirmation from '../../shared/DeleteConfirmation'
+import ListContext from '../../shared/list/ListContext'
 
 const ToursOverview = () => {
   const { token } = useAuth()
@@ -95,10 +95,10 @@ const ToursOverview = () => {
           </Button>
         </Grid>
       </Grid>
-      <TourListContext.Provider value={deleteHandler}>
+      <ListContext.Provider value={deleteHandler}>
         <TourList rows={tourList} loading={loading}/>
-      </TourListContext.Provider>
-      <TourDeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
+      </ListContext.Provider>
+      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
     </>
   )
 }

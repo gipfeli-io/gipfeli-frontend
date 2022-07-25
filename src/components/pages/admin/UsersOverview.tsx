@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { TourDeleteConfirmation } from '../../app/tour-list/TourDeleteConfirmation'
 import useAuth from '../../../hooks/use-auth'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import { ListContextProperties } from '../../../types/contexts'
 import UsersService from '../../../services/users/users-service'
 import { User } from '../../../types/user'
-import UserList from '../../app/user-list/UserList'
+import UserList from '../../app/UserList'
 import ListContext from '../../shared/list/ListContext'
+import DeleteConfirmation from '../../shared/DeleteConfirmation'
+import { Alert } from '@mui/material'
 
 const UsersOverview = () => {
   const { token } = useAuth()
@@ -63,10 +64,11 @@ const UsersOverview = () => {
 
   return (
     <>
+      <Alert severity="info" sx={{ mt: 2, mb: 2 }}>Currently, only normal users can be deleted.</Alert>
       <ListContext.Provider value={deleteHandler}>
         <UserList rows={userList} loading={loading}/>
       </ListContext.Provider>
-      <TourDeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
+      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
     </>
   )
 }
