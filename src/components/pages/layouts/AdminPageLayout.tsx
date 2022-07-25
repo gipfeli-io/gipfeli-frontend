@@ -88,7 +88,7 @@ const AdminPageLayout = () => {
     return routeMatch?.pattern?.path
   }
   return (
-    <RequireAuth>
+    <RequireAuth requireAdmin>
       <>
         <Container maxWidth={'lg'}>
           <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>

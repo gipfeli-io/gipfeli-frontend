@@ -2,13 +2,13 @@ import { Box, Container } from '@mui/material'
 import React from 'react'
 import Typography from '@mui/material/Typography'
 import Copyright from '../shared/Copyright'
-import { ReactComponent as NotFoundIllustration } from '../../static/img/server-error/server_error.svg'
+import { ReactComponent as ServerErrorIllustration } from '../../static/img/server-error/server_error.svg'
 
-type ServerErrorProps = {
+type ErrorPageProps = {
   error?: Error
 }
 
-const ServerError = ({ error }: ServerErrorProps) => {
+const ServerError = ({ error }: ErrorPageProps) => {
   return (
     <Box
       sx={{
@@ -17,7 +17,7 @@ const ServerError = ({ error }: ServerErrorProps) => {
       }}
     >
       <Container maxWidth="sm">
-        <NotFoundIllustration className="not-found-illustration" />
+        <ServerErrorIllustration className="not-found-illustration" />
         <Typography
           variant="h1"
           align="center"
