@@ -26,6 +26,9 @@ import ActivateUser from './components/pages/user/ActivateUser'
 import { ConnectionStatusProvider } from './components/providers/ConnectionStatusProvider'
 import PasswordReset from './components/pages/user/PasswordReset'
 import SetNewPassword from './components/pages/user/SetNewPassword'
+import AdminPageLayout from './components/pages/layouts/AdminPageLayout'
+import Statistics from './components/pages/admin/Statistics'
+import UsersOverview from './components/pages/admin/UsersOverview'
 
 const RoutesWrapper = initializeSentry(process.env.REACT_APP_SENTRY_DSN, process.env.REACT_APP_SENTRY_ENVIRONMENT)
 
@@ -49,6 +52,10 @@ root.render(
                             <Route path="create" element={<TourCreate/>}/>
                             <Route path=":id/edit" element={<TourEdit/>}/>
                             <Route path=":id" element={<TourDetail/>}/>
+                          </Route>
+                          <Route path="/admin" element={<AdminPageLayout/>}>
+                            <Route index element={<Statistics/>}/>
+                            <Route path="users" element={<UsersOverview/>}/>
                           </Route>
                         </Route>
                         <Route path="/" element={<AuthPageLayout/>}>

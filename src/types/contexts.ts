@@ -8,8 +8,13 @@ export interface TourListContextProperties {
   deleteEvent: (id: string) => void
 }
 
+export interface ListContextProperties {
+  deleteEvent: (id: string) => void
+}
+
 export interface AuthenticationContextType {
   email: string | undefined
+  isAdmin: boolean
   token: string | undefined
   signIn: (email: string, password: string, callback: () => void) => void
   signOut: (callback: () => void) => void
