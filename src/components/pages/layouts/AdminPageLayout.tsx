@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container } from '@mui/material'
+import { Alert, Container } from '@mui/material'
 import RequireAuth from '../../auth/RequireAuth'
 import { matchPath, Outlet, PathMatch, useLocation } from 'react-router'
 import Tabs from '@mui/material/Tabs'
@@ -7,6 +7,7 @@ import Tab from '@mui/material/Tab'
 import { Link } from 'react-router-dom'
 import { ParamParseKey } from 'react-router/lib/router'
 import Typography from '@mui/material/Typography'
+import useConnectionStatus from '../../../hooks/use-connection-status'
 
 /**
  * Tab navigation is based on https://mui.com/material-ui/guides/routing/#tabs, but adapted to suit our needs.
@@ -36,6 +37,8 @@ const adminNavigationLinks: TabRouteLink[] = [
 ]
 
 const AdminPageLayout = () => {
+  const { isOffline } = useConnectionStatus()
+
   /**
    * Checks a given pathName against all possible routes in adminNavigationLinks.
    * @param pathName
@@ -99,7 +102,10 @@ const AdminPageLayout = () => {
               <Tab key={index} label={adminRoute.label} value={adminRoute.value} to={adminRoute.to} component={Link}/>
             )}
           </Tabs>
-          <Outlet/>
+          {isOffline()
+            ? <Alert severity={'info'} sx={{ mt: 2 }}>You are offline - administration requires a working connection.</Alert>
+            : <Outlet/>
+          }
         </Container>
       </>
     </RequireAuth>

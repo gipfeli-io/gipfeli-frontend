@@ -26,7 +26,7 @@ const UserList = ({ loading, rows }: UserListProps) => {
     }
   ]
 
-  const preventAdminsFromBeingDeleted = (user: User) => {
+  const preventAdminsFromBeingDeleted = (user: User) : boolean => {
     return user.role !== UserRole.ADMINISTRATOR
   }
 

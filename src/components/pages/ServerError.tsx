@@ -4,11 +4,11 @@ import Typography from '@mui/material/Typography'
 import Copyright from '../shared/Copyright'
 import { ReactComponent as ServerErrorIllustration } from '../../static/img/server-error/server_error.svg'
 
-type ErrorPageProps = {
+type ServerErrorProps = {
   error?: Error
 }
 
-const ServerError = ({ error }: ErrorPageProps) => {
+const ServerError = ({ error }: ServerErrorProps) => {
   return (
     <Box
       sx={{

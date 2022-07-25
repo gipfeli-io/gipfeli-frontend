@@ -29,7 +29,6 @@ const List = <T extends IdentifiableObject>({
   const [internalColumns, setInternalColumns] = useState<GridColDef[]>([])
 
   const getActions = (params: GridValueGetterParams<T, T>): JSX.Element => {
-    console.log(customDeleteOverride(params.row))
     return <ListActions id={params.row.id} canView={canView} canEdit={canEdit} canDelete={customDeleteOverride(params.row)}/>
   }
 
