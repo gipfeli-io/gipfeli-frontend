@@ -1,13 +1,13 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import React from 'react'
 
-type TourDeleteConfirmationProps = {
+type DeleteConfirmationProps = {
   open: boolean,
   onClose: () => void,
   onClick: () => Promise<void>
 }
 
-export function TourDeleteConfirmation ({ onClick, onClose, open }: TourDeleteConfirmationProps) {
+const DeleteConfirmation = ({ onClick, onClose, open }: DeleteConfirmationProps) => {
   return <Dialog
     open={open}
     onClose={onClose}
@@ -30,3 +30,5 @@ export function TourDeleteConfirmation ({ onClick, onClose, open }: TourDeleteCo
     </DialogActions>
   </Dialog>
 }
+
+export default DeleteConfirmation
