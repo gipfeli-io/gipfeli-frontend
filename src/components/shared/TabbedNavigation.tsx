@@ -45,7 +45,7 @@ const TabbedNavigation = ({ title, navLinks, navBasePath, children }:TabbedNavig
 
   /**
    * Returns the current route path match to select a given tab. This allows us to show the current location. If the
-   * given route is not a top-level admin link, it tries to recursively remove URL segments to find a match. This allows
+   * given route is not a top-level link, it tries to recursively remove URL segments to find a match. This allows
    * nested urls such as /admin/users/:id/edit to map to /admin/users as well.
    */
   const getCurrentUrl: () => (PathMatch<ParamParseKey<string>> | null) = () => {
@@ -76,6 +76,7 @@ const TabbedNavigation = ({ title, navLinks, navBasePath, children }:TabbedNavig
 
     return routeMatch?.pattern?.path
   }
+
   return (
       <>
         <Container maxWidth={'lg'}>
