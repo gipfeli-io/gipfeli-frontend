@@ -29,6 +29,9 @@ import SetNewPassword from './components/pages/user/SetNewPassword'
 import AdminPageLayout from './components/pages/layouts/AdminPageLayout'
 import Statistics from './components/pages/admin/Statistics'
 import UsersOverview from './components/pages/admin/UsersOverview'
+import Profile from './components/pages/settings/Profile'
+import ProfilePageLayout from './components/pages/layouts/ProfilePageLayout'
+import Reset from './components/pages/settings/Reset'
 
 const RoutesWrapper = initializeSentry(process.env.REACT_APP_SENTRY_DSN, process.env.REACT_APP_SENTRY_ENVIRONMENT)
 
@@ -52,6 +55,10 @@ root.render(
                             <Route path="create" element={<TourCreate/>}/>
                             <Route path=":id/edit" element={<TourEdit/>}/>
                             <Route path=":id" element={<TourDetail/>}/>
+                          </Route>
+                          <Route path="/profile" element={<ProfilePageLayout/>}>
+                            <Route index element={<Profile/>}/>
+                            <Route path="reset" element={<Reset/>}/>
                           </Route>
                           <Route path="/admin" element={<AdminPageLayout/>}>
                             <Route index element={<Statistics/>}/>

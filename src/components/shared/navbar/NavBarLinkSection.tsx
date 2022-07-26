@@ -13,9 +13,14 @@ const NavBarLinkSection = () => {
         gipfeli.io
       </Typography>
       {email &&
-          <Typography variant="body1" component="div">
-              <Button component={Link} to="tours" variant="text" color="inherit">My Tours</Button>
-          </Typography>
+          <>
+              <Typography variant="body1" component="div">
+                  <Button component={Link} to="tours" variant="text" color="inherit">My Tours</Button>
+              </Typography>
+              <Typography variant="body1" component="div">
+                  <Button component={Link} to="profile" variant="text" color="inherit">Profile</Button>
+              </Typography>
+          </>
       }
       {isAdmin &&
           <Typography variant="body1" component="div">
