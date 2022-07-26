@@ -20,10 +20,7 @@ import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
 import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import { formatDate } from '../../../utils/date-conversion-helper'
-import { isOfflineResultMessage } from '../../../utils/offline-helper'
-import useNotifications from '../../../hooks/use-notifications'
-import HeartbeatService from '../../../services/heartbeat-service'
-
+import useCheckConnection from '../../../hooks/use-check-connection'
 const TourDetail = () => {
   const navigate = useNavigate()
   const { id } = useParams()
@@ -34,18 +31,10 @@ const TourDetail = () => {
   const [geoReferencedImages, setGeoReferencedImages] = useState<ImageUpload[]>([])
   const throwError = useApiError()
   const { isOffline } = useConnectionStatus()
-  const { triggerOfflineNotification } = useNotifications()
+  const checkConnection = useCheckConnection()
   const localDatabaseService = new LocalDatabaseService()
-  const heartBeatService = new HeartbeatService()
 
   useEffect(() => {
-    async function checkConnectivity () {
-      const result = await heartBeatService.checkHeartbeat()
-      if (isOfflineResultMessage(result.statusCode, result.statusMessage)) {
-        triggerOfflineNotification()
-      }
-    }
-
     async function fetchTour () {
       const localTour = await localDatabaseService.getOne(id)
       if (isOffline() || localTour?.status === TourStatusType.CREATED) {
@@ -65,7 +54,7 @@ const TourDetail = () => {
     }
     fetchTour()
     if (!isOffline()) {
-      checkConnectivity()
+      checkConnection()
     }
   }, [])
 

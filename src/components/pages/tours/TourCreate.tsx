@@ -15,31 +15,24 @@ import ImageUploadContext from '../../shared/images/upload/image-upload-context'
 import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
-import HeartbeatService from '../../../services/heartbeat-service'
-import { isOfflineResultMessage } from '../../../utils/offline-helper'
+import useCheckConnection from '../../../hooks/use-check-connection'
 
 const TourCreate = () => {
   const auth = useAuth()
   const navigate = useNavigate()
   const { isOffline } = useConnectionStatus()
-  const { triggerSuccessNotification, triggerOfflineNotification } = useNotifications()
+  const { triggerSuccessNotification } = useNotifications()
   const toursService = new ToursService(auth.token)
   const mediaService = new MediaService(auth.token)
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
+  const checkConnection = useCheckConnection()
   const localDatabaseService = new LocalDatabaseService()
-  const heartBeatService = new HeartbeatService()
 
   useEffect(() => {
-    async function checkConnectivity () {
-      const result = await heartBeatService.checkHeartbeat()
-      if (isOfflineResultMessage(result.statusCode, result.statusMessage)) {
-        triggerOfflineNotification()
-      }
-    }
     if (!isOffline()) {
-      checkConnectivity()
+      checkConnection()
     }
   }, [])
 
