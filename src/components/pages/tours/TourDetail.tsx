@@ -19,7 +19,7 @@ import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
 import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import { formatDate } from '../../../utils/date-conversion-helper'
-import DeleteConfirmation from '../../shared/DeleteConfirmation'
+import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -145,7 +145,7 @@ const TourDetail = () => {
               </Grid>
           </Grid>
       }
-      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
+      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onAccept={handleDelete}/>
     </>
   )
 }

@@ -7,8 +7,8 @@ import UsersService from '../../../services/users/users-service'
 import { User } from '../../../types/user'
 import UserList from '../../app/UserList'
 import ListContext from '../../shared/list/ListContext'
-import DeleteConfirmation from '../../shared/DeleteConfirmation'
 import { Alert } from '@mui/material'
+import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
 
 const UsersOverview = () => {
   const { token } = useAuth()
@@ -68,7 +68,7 @@ const UsersOverview = () => {
       <ListContext.Provider value={deleteHandler}>
         <UserList rows={userList} loading={loading}/>
       </ListContext.Provider>
-      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
+      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onAccept={handleDelete}/>
     </>
   )
 }

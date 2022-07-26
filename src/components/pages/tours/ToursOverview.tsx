@@ -12,8 +12,8 @@ import { TourListContextProperties } from '../../../types/contexts'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
-import DeleteConfirmation from '../../shared/DeleteConfirmation'
 import ListContext from '../../shared/list/ListContext'
+import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
 
 const ToursOverview = () => {
   const { token } = useAuth()
@@ -98,7 +98,7 @@ const ToursOverview = () => {
       <ListContext.Provider value={deleteHandler}>
         <TourList rows={tourList} loading={loading}/>
       </ListContext.Provider>
-      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
+      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onAccept={handleDelete}/>
     </>
   )
 }
