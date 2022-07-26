@@ -1,15 +1,16 @@
-import { Button, Stack } from '@mui/material'
+import { Button, IconButton, Stack } from '@mui/material'
 import React from 'react'
-import Typography from '@mui/material/Typography'
 import { Link } from 'react-router-dom'
 import useAuth from '../../../hooks/use-auth'
 import { useNavigate } from 'react-router'
+import ThemeSwitcher from './ThemeSwitcher'
+import LogoutIcon from '@mui/icons-material/Logout'
 
 const NavBarUserSection = () => {
-  const auth = useAuth()
+  const { email, signOut } = useAuth()
   const navigate = useNavigate()
 
-  if (!auth.email) {
+  if (!email) {
     return (
       <Stack spacing={2} direction={'row'}>
         <Button component={Link} to="signup" variant={'contained'} id={'join-button'}>Join</Button>
@@ -20,11 +21,10 @@ const NavBarUserSection = () => {
 
   return (
     <Stack spacing={2} direction={'row'}>
-      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-        Hello, {auth.email}!
-      </Typography>
-      <Button variant={'outlined'} color="inherit" id={'logout-button'}
-              onClick={() => auth.signOut(() => navigate('/login'))}>Logout</Button>
+      <ThemeSwitcher/>
+      <IconButton onClick={() => signOut(() => navigate('/login'))} color="inherit" title="switch theme">
+        <LogoutIcon/>
+      </IconButton>
     </Stack>
   )
 }
