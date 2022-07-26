@@ -20,8 +20,8 @@ import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import { formatDate } from '../../../utils/date-conversion-helper'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
-
 import useCheckConnection from '../../../hooks/use-check-connection'
+
 const TourDetail = () => {
   const navigate = useNavigate()
   const { id } = useParams()
