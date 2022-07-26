@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 import useAuth from '../../../hooks/use-auth'
 import ToursService from '../../../services/tours/tours-service'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { BaseTour, UpdateOrCreateTour } from '../../../types/tour'
 import { handleSave } from '../../../types/handle-save'
 import Typography from '@mui/material/Typography'
@@ -15,6 +15,7 @@ import ImageUploadContext from '../../shared/images/upload/image-upload-context'
 import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
+import useCheckConnection from '../../../hooks/use-check-connection'
 
 const TourCreate = () => {
   const auth = useAuth()
@@ -26,7 +27,14 @@ const TourCreate = () => {
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
+  const checkConnection = useCheckConnection()
   const localDatabaseService = new LocalDatabaseService()
+
+  useEffect(() => {
+    if (!isOffline()) {
+      checkConnection()
+    }
+  }, [])
 
   const tour: BaseTour = new BaseTour('', { // Todo: make empty and add points in edit
     type: 'Point',

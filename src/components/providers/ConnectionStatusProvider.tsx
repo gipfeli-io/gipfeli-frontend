@@ -4,12 +4,14 @@ import { ConnectionStatus } from '../../enums/connection-status'
 import { ConnectionStatusContextType } from '../../types/contexts'
 import { LocalStorageKey } from '../../enums/local-storage-key'
 import LocalStorageService from '../../services/local-storage-service'
-import { useNavigate } from 'react-router'
+import HeartbeatService from '../../services/heartbeat-service'
+import { useLocation, useNavigate } from 'react-router'
 
 export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) => {
   const localStorageService = new LocalStorageService()
+  const heartBeatService = new HeartbeatService()
   const navigate = useNavigate()
-  const requestUrl: string = process.env.REACT_APP_PUBLIC_BACKEND_API || 'http://localhost:3000'
+  const location = useLocation()
   const pollingDelay: string = process.env.REACT_APP_ONLINE_POLLING_DELAY || '20000'
   // eslint-disable-next-line no-undef
   let intervalId: NodeJS.Timer
@@ -51,8 +53,8 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
   }
 
   const checkIfApplicationIsOnline = async () : Promise<void> => {
-    const request = await fetch(requestUrl + '/heartbeat')
-    if (request.status === 200) {
+    const result = await heartBeatService.checkHeartbeat()
+    if (result.statusCode === 200) {
       clearInterval(intervalId)
       updateGoOnlineButtonVisibility(true)
       updateOnlineInfoBannerVisibility(true)
@@ -86,7 +88,11 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
     } else {
       updateGoOnlineButtonVisibility(false)
     }
-    navigate('/tours', { replace: true })
+    if (location.pathname !== '/tours/create') {
+      navigate(0)
+    } else {
+      navigate('/tours', { replace: true })
+    }
   }
 
   const isOffline = () => connectionStatus === ConnectionStatus.OFFLINE

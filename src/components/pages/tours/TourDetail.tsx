@@ -20,6 +20,7 @@ import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import { formatDate } from '../../../utils/date-conversion-helper'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
+import useCheckConnection from '../../../hooks/use-check-connection'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -31,17 +32,24 @@ const TourDetail = () => {
   const [geoReferencedImages, setGeoReferencedImages] = useState<ImageUpload[]>([])
   const throwError = useApiError()
   const { isOffline } = useConnectionStatus()
+  const checkConnection = useCheckConnection()
   const localDatabaseService = new LocalDatabaseService()
 
   useEffect(() => {
+    function setLocalTour (localTour: Tour | undefined) {
+      if (localTour) {
+        setTour(localTour)
+      } else {
+        console.log('tour-detail::error fetching tour') // todo: throw error
+      }
+    }
     async function fetchTour () {
       const localTour = await localDatabaseService.getOne(id)
-      if (isOffline() || localTour?.status === TourStatusType.CREATED) {
-        if (localTour) {
-          setTour(localTour)
-        } else {
-          console.log('tour-detail::error fetching tour') // todo: throw error
-        }
+      if (isOffline()) {
+        setLocalTour(localTour)
+      } else if (localTour?.status === TourStatusType.CREATED) {
+        setLocalTour(localTour)
+        checkConnection()
       } else {
         const data = await service.findOne(id)
         if (data.success) {
@@ -51,7 +59,6 @@ const TourDetail = () => {
         }
       }
     }
-
     fetchTour()
   }, [])
 
