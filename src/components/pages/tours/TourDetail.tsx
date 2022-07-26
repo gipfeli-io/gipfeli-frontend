@@ -36,14 +36,20 @@ const TourDetail = () => {
   const localDatabaseService = new LocalDatabaseService()
 
   useEffect(() => {
+    function setLocalTour (localTour: Tour | undefined) {
+      if (localTour) {
+        setTour(localTour)
+      } else {
+        console.log('tour-detail::error fetching tour') // todo: throw error
+      }
+    }
     async function fetchTour () {
       const localTour = await localDatabaseService.getOne(id)
-      if (isOffline() || localTour?.status === TourStatusType.CREATED) {
-        if (localTour) {
-          setTour(localTour)
-        } else {
-          console.log('tour-detail::error fetching tour') // todo: throw error
-        }
+      if (isOffline()) {
+        setLocalTour(localTour)
+      } else if (localTour?.status === TourStatusType.CREATED) {
+        setLocalTour(localTour)
+        checkConnection()
       } else {
         const data = await service.findOne(id)
         if (data.success) {
@@ -54,9 +60,6 @@ const TourDetail = () => {
       }
     }
     fetchTour()
-    if (!isOffline()) {
-      checkConnection()
-    }
   }, [])
 
   useEffect(() => {
