@@ -8,7 +8,6 @@ export default class LocalDatabaseService {
   public async reset (): Promise<void> {
     await localDB.delete()
     await localDB.open()
-    console.log('test')
   }
 
   public async addTourList (tours: Tour[]): Promise<void> {
