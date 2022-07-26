@@ -24,6 +24,8 @@ type TabbedNavigationProps = {
  * Tab navigation is based on https://mui.com/material-ui/guides/routing/#tabs, but adapted to suit our needs.
  */
 const TabbedNavigation = ({ title, navLinks, navBasePath, children }:TabbedNavigationProps) => {
+  const { pathname } = useLocation()
+
   /**
    * Checks a given pathName against all possible routes in navLinks.
    * @param pathName
@@ -47,7 +49,6 @@ const TabbedNavigation = ({ title, navLinks, navBasePath, children }:TabbedNavig
    * nested urls such as /admin/users/:id/edit to map to /admin/users as well.
    */
   const getCurrentUrl: () => (PathMatch<ParamParseKey<string>> | null) = () => {
-    let { pathname } = useLocation()
     const baseMatch = patternMatcher(pathname)
 
     if (baseMatch) {
@@ -56,10 +57,10 @@ const TabbedNavigation = ({ title, navLinks, navBasePath, children }:TabbedNavig
 
     // Recursively remove the last URL segment to match against parent segments
     while (pathname.length !== 0) {
-      pathname = pathname.replace(/.([^/]*$)/, '')
+      const shortenedPathname = pathname.replace(/.([^/]*$)/, '')
 
       if (pathname !== navBasePath) {
-        const subMatch = patternMatcher(pathname)
+        const subMatch = patternMatcher(shortenedPathname)
 
         if (subMatch) {
           return subMatch
