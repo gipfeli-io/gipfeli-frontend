@@ -23,7 +23,20 @@ type Config = {
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
 };
 
-export function register (config?: Config) {
+export function register () {
+  /**
+   * This configuration allows the serviceworker to re-register once a newer one is available.
+   */
+  const config: Config = {
+    onUpdate: registration => {
+      alert('New version of this app available! Ready to update?')
+      if (registration && registration.waiting) {
+        registration.waiting.postMessage({ type: 'SKIP_WAITING' })
+      }
+      window.location.reload()
+    }
+  }
+
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href)

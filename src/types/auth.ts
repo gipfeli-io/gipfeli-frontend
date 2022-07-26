@@ -1,3 +1,5 @@
+import { UserRole } from '../enums/user-role'
+
 export class AuthObject {
   accessToken: string
   refreshToken: string
@@ -22,6 +24,7 @@ interface JwtTokenPayloadBase {
 export interface UserIdentifier {
   sub: string;
   email: string;
+  role: UserRole;
 }
 
 /**

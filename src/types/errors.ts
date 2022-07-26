@@ -1,6 +1,14 @@
 import { ErrorType } from '../enums/error-type'
 
 /**
+ * Generic error class that is thrown when authenticated users try to access the admin page without being an admin. This
+ * is never thrown inside API requests, so it does not extend from GenericApiError.
+ */
+export class UnauthorizedAdminAccess extends Error {
+  message = 'Unauthorized admin access.'
+}
+
+/**
  * This base error class is used to throw any non-specific errors that happen during any API calls. If not extending
  * NonCriticalApiError, these are handled by displaying a 500 error page.
  */
@@ -84,15 +92,5 @@ export class OfflineError extends NonCriticalApiError {
   constructor (message: string) {
     super(message)
     this.name = ErrorType.OFFLINE
-  }
-}
-
-/**
- * Displayed on login if either password or user or both are wrong
- */
-export class LoginError extends NonCriticalApiError {
-  constructor (message: string) {
-    super(message)
-    this.name = ErrorType.LOGIN_ERROR
   }
 }

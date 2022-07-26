@@ -2,6 +2,8 @@ import React, { Component, ErrorInfo, ReactNode } from 'react'
 import NotificationContext from '../../contexts/notification-context'
 import ServerError from '../pages/ServerError'
 import { NotificationContextType } from '../../types/contexts'
+import { UnauthorizedAdminAccess } from '../../types/errors'
+import AdminAccessPrevention from '../pages/AdminAccessPrevention'
 
 type ErrorBoundaryProps = {
   children?: ReactNode;
@@ -37,10 +39,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
    * the component tree.
    */
   public render () {
-    return this.state.hasError ? this.render500Page() : this.props.children
+    return this.state.hasError ? this.renderErrorPage() : this.props.children
   }
 
-  private render500Page () {
+  private renderErrorPage () {
+    if (this.state.error instanceof UnauthorizedAdminAccess) {
+      return <AdminAccessPrevention />
+    }
+
     return <ServerError error={this.state.error}/>
   }
 }

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import AuthenticationContext from '../../contexts/authentication-context'
 import AuthService from '../../services/auth/auth-service'
 import LocalStorageService from '../../services/local-storage-service'
@@ -13,9 +13,11 @@ import useInterval from '../../hooks/use-interval'
 import tokenNeedsRefresh from '../../utils/token-needs-refresh'
 import { AccessToken, AuthObject } from '../../types/auth'
 import { useNavigate } from 'react-router'
+import { UserRole } from '../../enums/user-role'
 
 const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
+  const [userRole, setUserRole] = useState<UserRole | undefined>(undefined)
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
   const [refreshToken, setRefreshToken] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(true)
@@ -31,7 +33,10 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     localStorageService.addItem(LocalStorageKey.RefreshToken, refreshToken)
     setAccessToken(accessToken)
     setRefreshToken(refreshToken)
-    setEmail(jwtDecode<AccessToken>(accessToken).email)
+
+    const { email, role } = jwtDecode<AccessToken>(accessToken)
+    setEmail(email)
+    setUserRole(role)
   }
 
   const unsetTokensInLocalStorageAndState = () => {
@@ -40,7 +45,16 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     setAccessToken(undefined)
     setRefreshToken(undefined)
     setEmail(undefined)
+    setUserRole(undefined)
   }
+
+  const isAdmin = useMemo(() => {
+    if (userRole === undefined) {
+      return false
+    }
+
+    return userRole === UserRole.ADMINISTRATOR
+  }, [userRole])
 
   const signIn = async (email: string, password: string, callback: () => void) => {
     const data = await authService.login(
@@ -138,7 +152,7 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
    */
   useInterval(checkAndRefreshToken, 2000)
 
-  const value: AuthenticationContextType = { email, token: accessToken, signIn, signOut }
+  const value: AuthenticationContextType = { email, isAdmin, token: accessToken, signIn, signOut }
 
   if (loading) {
     return <Loader/>

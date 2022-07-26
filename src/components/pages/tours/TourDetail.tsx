@@ -7,7 +7,6 @@ import { useNavigate, useParams } from 'react-router'
 import useAuth from '../../../hooks/use-auth'
 import WayPointMarkerLayer from '../../shared/map/layers/WayPointMarkerLayer'
 import ToursService from '../../../services/tours/tours-service'
-import { TourDeleteConfirmation } from '../../app/tour-list/TourDeleteConfirmation'
 import MapWrapper from '../../shared/map/MapWrapper'
 import { Tour, TourPoint } from '../../../types/tour'
 import { Link } from 'react-router-dom'
@@ -20,6 +19,8 @@ import GpsImageMarkerLayer from '../../shared/map/layers/GpsImageMarkerLayer'
 import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import { formatDate } from '../../../utils/date-conversion-helper'
+import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
+
 import useCheckConnection from '../../../hooks/use-check-connection'
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -148,7 +149,7 @@ const TourDetail = () => {
               </Grid>
           </Grid>
       }
-      <TourDeleteConfirmation open={open} onClose={handleDeleteModalClose} onClick={handleDelete}/>
+      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onAccept={handleDelete}/>
     </>
   )
 }
