@@ -5,6 +5,12 @@ import { TourStatusType } from '../enums/tour-status-type'
 import { IndexableType } from 'dexie'
 
 export default class LocalDatabaseService {
+  public async reset (): Promise<void> {
+    await localDB.delete()
+    await localDB.open()
+    console.log('test')
+  }
+
   public async addTourList (tours: Tour[]): Promise<void> {
     for (const tour of tours) {
       const localTour = await localDB.tours.get(tour.id)
