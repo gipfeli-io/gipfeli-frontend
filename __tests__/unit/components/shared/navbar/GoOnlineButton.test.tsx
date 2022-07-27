@@ -4,7 +4,7 @@ import React from 'react'
 import 'reflect-metadata'
 // @ts-ignore
 import renderer from 'react-test-renderer'
-import GoOnlineButton from '../../../../../src/components/shared/navbar/GoOnlineButton'
+import GoOnlineButton from '../../../../../src/components/shared/GoOnlineButton'
 import { ConnectionStatusProvider } from '../../../../../src/components/providers/ConnectionStatusProvider'
 
 const mockConnectionStatusContext: any = {
