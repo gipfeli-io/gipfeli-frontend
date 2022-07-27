@@ -1,7 +1,7 @@
 import { Box, Container } from '@mui/material'
 import React from 'react'
 import Typography from '@mui/material/Typography'
-import Copyright from '../shared/Copyright'
+import Footer from '../shared/Footer'
 import { ReactComponent as ServerErrorIllustration } from '../../static/img/server-error/server_error.svg'
 
 type ServerErrorProps = {
@@ -33,7 +33,7 @@ const ServerError = ({ error }: ServerErrorProps) => {
               {error.name}: {error.message}
             </Typography>
         }
-        <Copyright/>
+        <Footer/>
       </Container>
     </Box>
   )

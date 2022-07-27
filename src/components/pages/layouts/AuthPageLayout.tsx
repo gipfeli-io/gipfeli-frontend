@@ -5,7 +5,7 @@ import React from 'react'
 import { AppBar, IconButton, Toolbar } from '@mui/material'
 import LandscapeIcon from '@mui/icons-material/Landscape'
 import Typography from '@mui/material/Typography'
-import Copyright from '../../shared/Copyright'
+import Footer from '../../shared/Footer'
 import { Link, Outlet } from 'react-router-dom'
 
 const AuthPageLayout = () => (
@@ -53,7 +53,7 @@ const AuthPageLayout = () => (
           <Outlet/>
 
         </Box>
-        <Copyright/>
+        <Footer/>
       </Grid>
     </Grid>
   </>

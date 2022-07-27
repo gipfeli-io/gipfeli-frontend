@@ -1,5 +1,5 @@
 import React from 'react'
-import Copyright from '../../shared/Copyright'
+import Footer from '../../shared/Footer'
 import { Outlet } from 'react-router-dom'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import Banner from '../../shared/Banner'
@@ -20,7 +20,7 @@ const MainLayout = () => {
       {offlineBanner}
       <Outlet/>
       <OnlineNotificationSnackbar/>
-      <Copyright/>
+      <Footer/>
     </>
   )
 }

@@ -32,6 +32,7 @@ import UsersOverview from './components/pages/admin/UsersOverview'
 import Profile from './components/pages/settings/Profile'
 import ProfilePageLayout from './components/pages/layouts/ProfilePageLayout'
 import Reset from './components/pages/settings/Reset'
+import Imprint from './components/pages/Imprint'
 
 const RoutesWrapper = initializeSentry(process.env.REACT_APP_SENTRY_DSN, process.env.REACT_APP_SENTRY_ENVIRONMENT)
 
@@ -50,6 +51,7 @@ root.render(
                       <RoutesWrapper>
                         <Route path="/" element={<MainLayout/>}>
                           <Route index element={<Home/>}/>
+                          <Route path="imprint" element={<Imprint/>}/>
                           <Route path="tours" element={<AppPageLayout/>}>
                             <Route index element={<ToursOverview/>}/>
                             <Route path="create" element={<TourCreate/>}/>
