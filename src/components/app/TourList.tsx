@@ -37,11 +37,12 @@ const TourList = ({ loading, rows }: TourListProps) => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name', flex: 2, renderCell: getName },
+    { field: 'name', headerName: 'Name', flex: 2, minWidth: 200, renderCell: getName },
     {
       field: 'createdAt',
       headerName: 'Created at',
       type: 'dateTime',
+      minWidth: 100,
       valueFormatter: (params: GridValueFormatterParams) => {
         return formatDate(params.value)
       },
@@ -51,6 +52,7 @@ const TourList = ({ loading, rows }: TourListProps) => {
       field: 'updatedAt',
       headerName: 'Updated at',
       type: 'dateTime',
+      minWidth: 100,
       valueFormatter: (params: GridValueFormatterParams) => {
         return formatDate(params.value)
       },

@@ -1,1 +1,1 @@
-export const dateTimeFormat: string = 'DD.MM.YYYY HH:mm'
+export const dateTimeFormat: string = 'DD.MM.YYYY'

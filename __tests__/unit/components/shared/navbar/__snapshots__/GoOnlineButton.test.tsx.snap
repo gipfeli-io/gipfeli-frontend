@@ -4,7 +4,7 @@ exports[`GoOnlineButton will not show button if user is online 1`] = `null`;
 
 exports[`GoOnlineButton will show button if user offline with connection 1`] = `
 <button
-  className="MuiButton-root MuiButton-outlined MuiButton-outlinedInherit MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInherit MuiButtonBase-root  css-1vsri9o-MuiButtonBase-root-MuiButton-root"
+  className="MuiButtonBase-root MuiFab-root MuiFab-extended MuiFab-sizeLarge MuiFab-primary css-7wtvd9-MuiButtonBase-root-MuiFab-root"
   disabled={false}
   onBlur={[Function]}
   onClick={[Function]}
@@ -22,21 +22,17 @@ exports[`GoOnlineButton will show button if user offline with connection 1`] = `
   tabIndex={0}
   type="button"
 >
-  <span
-    className="MuiButton-startIcon MuiButton-iconSizeMedium css-1d6wzja-MuiButton-startIcon"
+  <svg
+    aria-hidden={true}
+    className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-elhp89-MuiSvgIcon-root"
+    data-testid="WifiIcon"
+    focusable="false"
+    viewBox="0 0 24 24"
   >
-    <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-      data-testid="WifiIcon"
-      focusable="false"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="m1 9 2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8 3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4 2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"
-      />
-    </svg>
-  </span>
+    <path
+      d="m1 9 2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8 3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4 2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"
+    />
+  </svg>
   Go online
 </button>
 `;

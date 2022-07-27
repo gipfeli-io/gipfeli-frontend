@@ -4,8 +4,10 @@ import React from 'react'
 import 'reflect-metadata'
 // @ts-ignore
 import renderer from 'react-test-renderer'
-import GoOnlineButton from '../../../../../src/components/shared/navbar/GoOnlineButton'
+import GoOnlineButton from '../../../../../src/components/shared/GoOnlineButton'
 import { ConnectionStatusProvider } from '../../../../../src/components/providers/ConnectionStatusProvider'
+import { ThemeContextType } from '../../../../../src/types/contexts'
+import DarkMode from '../../../../../src/themes/dark-mode'
 
 const mockConnectionStatusContext: any = {
   showGoOnlineButton: false
@@ -26,8 +28,14 @@ const mockUseLocationValue = {
   state: null
 }
 
+const mockThemeContext: ThemeContextType = {
+  activeTheme: DarkMode,
+  toggleTheme: jest.fn()
+}
+
 jest.mock('../../../../../src/hooks/use-connection-status', () => jest.fn().mockImplementation(() => mockConnectionStatusContext))
 jest.mock('../../../../../src/hooks/use-notifications', () => jest.fn().mockImplementation(() => mockNotificationContext))
+jest.mock('../../../../../src/hooks/use-theme', () => jest.fn().mockImplementation(() => mockThemeContext))
 jest.mock('../../../../../src/hooks/use-auth', () => jest.fn().mockImplementation(() => mockAuthContext))
 
 jest.mock('react-router', () => ({

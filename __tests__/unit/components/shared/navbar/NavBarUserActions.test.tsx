@@ -3,9 +3,11 @@ import '@testing-library/jest-dom'
 import React from 'react'
 // @ts-ignore
 import renderer from 'react-test-renderer'
-import NavBarUserSection from '../../../../../src/components/shared/navbar/NavBarUserSection'
+import NavBarUserActions from '../../../../../src/components/shared/navbar/NavBarUserActions'
 import { MemoryRouter } from 'react-router'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
+import { ThemeContextType } from '../../../../../src/types/contexts'
+import DarkMode from '../../../../../src/themes/dark-mode'
 
 const mockSignIn: jest.Mock = jest.fn()
 const mockSignOut: jest.Mock = jest.fn()
@@ -23,10 +25,15 @@ const mockUseLocationValue = {
   state: null
 }
 
+const mockThemeContext: ThemeContextType = {
+  activeTheme: DarkMode,
+  toggleTheme: jest.fn()
+}
+
 const mockEmail = 'test@gipfeli.io'
 const mockToken = 'mockedToken'
-
 jest.mock('../../../../../src/hooks/use-auth', () => jest.fn().mockImplementation(() => mockAuthenticationContext))
+jest.mock('../../../../../src/hooks/use-theme', () => jest.fn().mockImplementation(() => mockThemeContext))
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router') as any,
@@ -35,7 +42,7 @@ jest.mock('react-router', () => ({
   useHref: () => jest.fn()
 }))
 
-describe('NavBarUserSection', () => {
+describe('NavBarUserActions', () => {
   describe('test with logged in user', () => {
     beforeEach(() => {
       mockAuthenticationContext.token = mockToken
@@ -44,24 +51,27 @@ describe('NavBarUserSection', () => {
 
     it('behaves consistently when logged in', () => {
       const tree = renderer
-        .create(<MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>)
+        .create(<MemoryRouter initialEntries={['/currentUri']}><NavBarUserActions/></MemoryRouter>)
         .toJSON()
       expect(tree).toMatchSnapshot()
     })
-    it('shows logout button and name of user if logged in', async () => {
+
+    it('shows logout button with name of user on hover as well as the theme switcher if logged in', async () => {
       mockAuthenticationContext.email = mockEmail
       mockAuthenticationContext.token = mockToken
-      const { container, queryByText } = render(
-        <MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>
+      const { container, findByText } = render(
+        <MemoryRouter initialEntries={['/currentUri']}><NavBarUserActions/></MemoryRouter>
       )
 
       const logoutButton = container.querySelector('#logout-button')
       const joinButton = container.querySelector('#join-button')
-      // @ts-ignore
-      const greeting = queryByText('test@gipfeli.io', { exact: false })
+      const themeSwitcher = container.querySelector('#theme-switcher')
 
       expect(logoutButton).toBeInTheDocument()
+      expect(themeSwitcher).toBeInTheDocument()
       expect(joinButton).not.toBeInTheDocument()
+      fireEvent.mouseOver(logoutButton!)
+      const greeting = await findByText('Logout test@gipfeli.io', { exact: false })
       expect(greeting).toBeInTheDocument()
     })
   })
@@ -74,20 +84,24 @@ describe('NavBarUserSection', () => {
 
     it('behaves consistently when not logged in', () => {
       const tree = renderer
-        .create(<MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>)
+        .create(<MemoryRouter initialEntries={['/currentUri']}><NavBarUserActions/></MemoryRouter>)
         .toJSON()
       expect(tree).toMatchSnapshot()
     })
 
-    it('shows login button if not logged in', async () => {
+    it('shows join and login button and theme switcher if not logged in', async () => {
       const { container } = render(
-        <MemoryRouter initialEntries={['/currentUri']}><NavBarUserSection/></MemoryRouter>
+        <MemoryRouter initialEntries={['/currentUri']}><NavBarUserActions/></MemoryRouter>
       )
 
       const joinButton = container.querySelector('#join-button')
+      const loginButton = container.querySelector('#login-button')
       const logoutButton = container.querySelector('#logout-button')
+      const themeSwitcher = container.querySelector('#theme-switcher')
 
       expect(joinButton).toBeInTheDocument()
+      expect(loginButton).toBeInTheDocument()
+      expect(themeSwitcher).toBeInTheDocument()
       expect(logoutButton).not.toBeInTheDocument()
     })
   })

@@ -29,12 +29,25 @@ const List = <T extends IdentifiableObject>({
   const [internalColumns, setInternalColumns] = useState<GridColDef[]>([])
 
   const getActions = (params: GridValueGetterParams<T, T>): JSX.Element => {
-    return <ListActions id={params.row.id} canView={canView} canEdit={canEdit} canDelete={customDeleteOverride(params.row)}/>
+    return <ListActions id={params.row.id} canView={canView} canEdit={canEdit}
+                        canDelete={customDeleteOverride(params.row)}/>
   }
 
   useEffect(() => {
     if (canView || canEdit || canDelete) {
-      const actionsColumn: GridColDef = { field: 'actions', headerName: 'Actions', flex: 0.5, renderCell: getActions }
+      const actionsColumn: GridColDef = {
+        hideSortIcons: true,
+        sortable: false,
+        filterable: false,
+        disableColumnMenu: true,
+        field: 'actions',
+        headerName: 'Actions',
+        flex: 1,
+        minWidth: 100,
+        maxWidth: 100,
+        align: 'center',
+        renderCell: getActions
+      }
       setInternalColumns(() => ([
         ...columns,
         actionsColumn
