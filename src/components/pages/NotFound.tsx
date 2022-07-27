@@ -2,7 +2,7 @@ import { Box, Button, Container, Stack } from '@mui/material'
 import React from 'react'
 import Typography from '@mui/material/Typography'
 import { Link } from 'react-router-dom'
-import Copyright from '../shared/Copyright'
+import Footer from '../shared/Footer'
 import { ReactComponent as NotFoundIllustration } from '../../static/img/not-found/not_found.svg'
 
 const NotFound = () => {
@@ -32,7 +32,7 @@ const NotFound = () => {
           >
             <Button component={Link} to="/" variant="contained">Back to main</Button>
           </Stack>
-          <Copyright/>
+          <Footer/>
       </Container>
     </Box>
   )

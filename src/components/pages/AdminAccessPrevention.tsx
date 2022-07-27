@@ -1,7 +1,7 @@
 import { Box, Container } from '@mui/material'
 import React from 'react'
 import Typography from '@mui/material/Typography'
-import Copyright from '../shared/Copyright'
+import Footer from '../shared/Footer'
 import { ReactComponent as AdminRequiredIllustration } from '../../static/img/admin-required/admin_required.svg'
 
 const AdminAccessPrevention = () => {
@@ -24,7 +24,7 @@ const AdminAccessPrevention = () => {
         <Typography variant="h5" align="center" color="text.secondary" paragraph>
           This page is meant for admins only. Your access request has been logged.
         </Typography>
-        <Copyright/>
+        <Footer/>
       </Container>
     </Box>
   )
