@@ -6,7 +6,6 @@ import renderer from 'react-test-renderer'
 import NavBarUserActions from '../../../../../src/components/shared/navbar/NavBarUserActions'
 import { MemoryRouter } from 'react-router'
 import { fireEvent, render } from '@testing-library/react'
-import useTheme from '../../../../../src/hooks/use-theme'
 import { ThemeContextType } from '../../../../../src/types/contexts'
 import DarkMode from '../../../../../src/themes/dark-mode'
 
@@ -67,7 +66,6 @@ describe('NavBarUserActions', () => {
       const logoutButton = container.querySelector('#logout-button')
       const joinButton = container.querySelector('#join-button')
       const themeSwitcher = container.querySelector('#theme-switcher')
-
 
       expect(logoutButton).toBeInTheDocument()
       expect(themeSwitcher).toBeInTheDocument()
