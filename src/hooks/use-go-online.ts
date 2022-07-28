@@ -17,7 +17,11 @@ const useGoOnline = async () => {
       const results = await tourSyncService.synchronizeTourData()
       results.forEach((result: SingleApiResponse<unknown>) => {
         if (result.error) {
-          triggerSyncFailedNotification(result.error.message!)
+          const { message } = result.error
+
+          if (message !== undefined) {
+            Array.isArray(message) ? triggerSyncFailedNotification('An error occurred') : triggerSyncFailedNotification(message)
+          }
         }
       })
     }

@@ -10,11 +10,19 @@ export interface ApiResponseWrapper {
 }
 
 /**
+ * Validation errors as reported by the backend.
+ */
+export interface ValidationError {
+  property: string;
+  errors: string[];
+}
+
+/**
  * Contains an error object that always has an error (e.g. BadRequest) as well as an optional message.
  */
 export interface ErrorContent {
   error: string
-  message?: string
+  message?: string | ValidationError[]
 }
 
 /**

@@ -5,7 +5,8 @@ import {
   ForbiddenError,
   GenericApiError,
   NonCriticalApiError,
-  NotFoundError, OfflineError,
+  NotFoundError,
+  OfflineError,
   PayLoadTooLarge,
   ServerError,
   UnauthorizedError
@@ -38,7 +39,8 @@ const useApiError = () => {
     error,
     message
   }: ErrorContent) => {
-    const displayMessage = message ?? error
+    // display either the error message if no detailed message is given or we have an array of error messages, indicating we have form errors.
+    const displayMessage = message === undefined || Array.isArray(message) ? error : message
 
     switch (statusCode) {
       case 400:

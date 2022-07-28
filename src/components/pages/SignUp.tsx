@@ -9,12 +9,14 @@ import useApiError from '../../hooks/use-api-error'
 import useNotifications from '../../hooks/use-notifications'
 import { useNavigate } from 'react-router'
 import AuthFormLinks from '../shared/AuthFormLinks'
+import useFormErrors from '../../hooks/use-form-errors'
 
 const SignUp = () => {
   const authService = new AuthService()
   const throwError = useApiError()
   const { triggerSuccessNotification } = useNotifications()
   const navigate = useNavigate()
+  const { setFormErrorContainer, hasErrors, getFieldErrors } = useFormErrors()
 
   const signUp = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -32,6 +34,7 @@ const SignUp = () => {
       navigate('/')
     } else {
       throwError(result, false)
+      setFormErrorContainer(result)
     }
   }
 
@@ -52,49 +55,54 @@ const SignUp = () => {
               label="Email Address"
               autoComplete="email"
               autoFocus
-              required
+              error={hasErrors('email')}
+              helperText={getFieldErrors('email')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               margin="normal"
-              required
               id="firstName"
               label="First Name"
               name="firstName"
               fullWidth
+              error={hasErrors('firstName')}
+              helperText={getFieldErrors('firstName')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               margin="normal"
-              required
               id="lastName"
               label="Last Name"
               name="lastName"
               fullWidth
+              error={hasErrors('lastName')}
+              helperText={getFieldErrors('lastName')}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               margin="normal"
-              required
               fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
+              error={hasErrors('password')}
+              helperText={getFieldErrors('password')}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               margin="normal"
-              required
               fullWidth
               name="passwordConfirm"
               label="Confirm password"
               type="password"
               id="passwordConfirm"
+              error={hasErrors('passwordConfirm')}
+              helperText={getFieldErrors('passwordConfirm')}
             />
           </Grid>
         </Grid>
