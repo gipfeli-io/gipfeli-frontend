@@ -11,14 +11,11 @@ export default class LocalDatabaseService {
   }
 
   public async addTourList (tours: Tour[]): Promise<void> {
-    for (const tour of tours) {
-      const localTour = await localDB.tours.get(tour.id)
-      // only update/add tour to indexed db if it is
-      // not yet added or if it is marked as synced
-      if (!localTour || localTour?.status === TourStatusType.SYNCED) {
-        await localDB.tours.put(tour)
-      }
-    }
+    // remove all synced tours
+    const syncedTours = await localDB.tours.where('status').equals(TourStatusType.SYNCED).toArray()
+    await localDB.tours.bulkDelete(syncedTours.map((tour: Tour) => tour.id))
+    // add tours from remote
+    await localDB.tours.bulkAdd(tours)
   }
 
   public async findAllTours (): Promise<Tour[]> {
