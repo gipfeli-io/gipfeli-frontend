@@ -10,18 +10,28 @@ const useGoOnline = async () => {
   const auth = useAuth()
   const { triggerSyncFailedNotification } = useNotifications()
   const tourSyncService: ToursSyncService = new ToursSyncService(auth.token)
-  const { updateConnectionStatus } = useConnectionStatus()
+  const { updateConnectionStatus, updateOnlineInfoBannerVisibility } = useConnectionStatus()
 
   return useCallback(() => {
+    function getMessageString (errors: string[]): string {
+      return errors.join('\n')
+    }
     async function syncData () {
       const results = await tourSyncService.synchronizeTourData()
+      const errorMessages: string[] = []
       results.forEach((result: SingleApiResponse<unknown>) => {
         if (result.error) {
-          triggerSyncFailedNotification(result.error.message!)
+          errorMessages.push(result.error.message!)
         }
       })
+
+      if (errorMessages.length !== 0) {
+        triggerSyncFailedNotification(getMessageString(errorMessages))
+      }
+      updateOnlineInfoBannerVisibility(false)
+      updateConnectionStatus(ConnectionStatus.ONLINE)
     }
-    updateConnectionStatus(ConnectionStatus.ONLINE)
+
     syncData()
   }, [])
 }
