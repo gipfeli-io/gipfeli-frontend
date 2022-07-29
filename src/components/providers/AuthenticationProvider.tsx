@@ -18,6 +18,7 @@ import { UserRole } from '../../enums/user-role'
 const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
   const [userRole, setUserRole] = useState<UserRole | undefined>(undefined)
+  const [userId, setUserId] = useState<string | undefined>(undefined)
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
   const [refreshToken, setRefreshToken] = useState<string | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(true)
@@ -33,10 +34,10 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     localStorageService.addItem(LocalStorageKey.RefreshToken, refreshToken)
     setAccessToken(accessToken)
     setRefreshToken(refreshToken)
-
-    const { email, role } = jwtDecode<AccessToken>(accessToken)
+    const { email, role, sub } = jwtDecode<AccessToken>(accessToken)
     setEmail(email)
     setUserRole(role)
+    setUserId(sub)
   }
 
   const unsetTokensInLocalStorageAndState = () => {
@@ -46,6 +47,7 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     setRefreshToken(undefined)
     setEmail(undefined)
     setUserRole(undefined)
+    setUserId(undefined)
   }
 
   const isAdmin = useMemo(() => {
@@ -152,7 +154,7 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
    */
   useInterval(checkAndRefreshToken, 2000)
 
-  const value: AuthenticationContextType = { email, isAdmin, token: accessToken, signIn, signOut }
+  const value: AuthenticationContextType = { userId, email, isAdmin, token: accessToken, signIn, signOut }
 
   if (loading) {
     return <Loader/>

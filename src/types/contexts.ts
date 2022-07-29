@@ -13,6 +13,7 @@ export interface ListContextProperties {
 }
 
 export interface AuthenticationContextType {
+  userId: string | undefined
   email: string | undefined
   isAdmin: boolean
   token: string | undefined
