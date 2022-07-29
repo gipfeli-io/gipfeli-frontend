@@ -34,12 +34,12 @@ const EditTour = () => {
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
   const { isOffline } = useConnectionStatus()
-  const localDatabaseService = new LocalDatabaseService()
+  const localDatabaseService = new LocalDatabaseService(auth.token)
 
   useEffect(() => {
     const setResult = (fetchedTour: Tour) => {
-      const { description, endLocation, startLocation, name, status, images: imageList } = fetchedTour
-      setTour({ description, endLocation, startLocation, name, status, images: [] })
+      const { description, endLocation, startLocation, name, userId, status, images: imageList } = fetchedTour
+      setTour({ description, endLocation, startLocation, name, userId, status, images: [] })
       if (!isOffline()) {
         setImages(imageList)
       }

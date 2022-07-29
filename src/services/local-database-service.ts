@@ -3,8 +3,21 @@ import { localDB } from '../utils/local-database/local-db'
 import dayjs from 'dayjs'
 import { TourStatusType } from '../enums/tour-status-type'
 import { IndexableType } from 'dexie'
+import jwtDecode from 'jwt-decode'
+import { AccessToken } from '../types/auth'
 
 export default class LocalDatabaseService {
+  private readonly userId: string | undefined
+
+  constructor (token: string | undefined) {
+    let userId
+    if (token) {
+      const { sub } = jwtDecode<AccessToken>(token)
+      userId = sub
+    }
+    this.userId = userId
+  }
+
   public async reset (): Promise<void> {
     await localDB.delete()
     await localDB.open()
@@ -19,7 +32,7 @@ export default class LocalDatabaseService {
   }
 
   public async findAllTours (): Promise<Tour[]> {
-    return localDB.tours.where('status').notEqual(TourStatusType.DELETED).toArray()
+    return localDB.tours.where('status').notEqual(TourStatusType.DELETED).and((tour: Tour) => tour.userId === this.userId).toArray()
   }
 
   public async create (tour: UpdateOrCreateTour) : Promise<IndexableType> {
@@ -54,7 +67,7 @@ export default class LocalDatabaseService {
 
   private createLocalTour (tour: UpdateOrCreateTour): Tour {
     const id = crypto.randomUUID().toString()
-    const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, dayjs().toDate(), dayjs().toDate())
+    const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, this.userId!, dayjs().toDate(), dayjs().toDate())
     localTour.status = TourStatusType.CREATED
     return localTour
   }
@@ -65,11 +78,11 @@ export default class LocalDatabaseService {
     if (!localTour) {
       return
     }
-    const localUpdateTour = this.updateLocalTour(localTour, updatedTour, statusType)
+    const localUpdateTour = LocalDatabaseService.updateLocalTour(localTour, updatedTour, statusType)
     return localDB.tours.put(localUpdateTour)
   }
 
-  private updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Tour {
+  private static updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Tour {
     localTour.name = updatedTour.name
     localTour.startLocation = updatedTour.startLocation
     localTour.endLocation = updatedTour.endLocation

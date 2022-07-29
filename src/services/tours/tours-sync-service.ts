@@ -9,13 +9,12 @@ export default class ToursSyncService {
   private tourService: ToursService
 
   constructor (token: string | undefined) {
-    this.localDatabaseService = new LocalDatabaseService()
+    this.localDatabaseService = new LocalDatabaseService(token)
     this.tourService = new ToursService(token)
   }
 
   public async synchronizeTourData (): Promise<SingleApiResponse<unknown>[]> {
-    const localDatabaseService = new LocalDatabaseService()
-    const toursToSync: Tour[] = await localDatabaseService.getToursToSynchronize()
+    const toursToSync: Tour[] = await this.localDatabaseService.getToursToSynchronize()
     const resultList: SingleApiResponse<unknown>[] = []
     for (const tour of toursToSync) {
       resultList.push(await this.handleTourSync(tour))
