@@ -28,7 +28,7 @@ const TourCreate = () => {
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
   const checkConnection = useCheckConnection()
-  const localDatabaseService = new LocalDatabaseService()
+  const localDatabaseService = new LocalDatabaseService(auth.token)
 
   useEffect(() => {
     if (!isOffline()) {
@@ -42,7 +42,9 @@ const TourCreate = () => {
   }, {
     type: 'Point',
     coordinates: []
-  }, '')
+  },
+  '',
+  '')
 
   const triggerSuccess = (id: string) => {
     triggerSuccessNotification('Created new tour!')

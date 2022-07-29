@@ -33,7 +33,7 @@ const TourDetail = () => {
   const throwError = useApiError()
   const { isOffline } = useConnectionStatus()
   const checkConnection = useCheckConnection()
-  const localDatabaseService = new LocalDatabaseService()
+  const localDatabaseService = new LocalDatabaseService(auth.token)
 
   useEffect(() => {
     function setLocalTour (localTour: Tour | undefined) {

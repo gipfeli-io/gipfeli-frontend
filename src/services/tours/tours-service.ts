@@ -12,7 +12,7 @@ export default class ToursService extends APIService {
   constructor (token: string | undefined) {
     super()
     this.accessToken = token
-    this.localDatabaseService = new LocalDatabaseService()
+    this.localDatabaseService = new LocalDatabaseService(token)
   }
 
   public async findAll (): Promise<ArrayApiResponse<Tour>> {

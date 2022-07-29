@@ -7,7 +7,7 @@ import { LoadingButton } from '@mui/lab'
 
 const ResetApp = () => {
   const { triggerSuccessNotification } = useNotifications()
-  const dbService = new LocalDatabaseService()
+  const dbService = new LocalDatabaseService(undefined)
   const [open, setOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const title = 'Do you really want to reset the application?'

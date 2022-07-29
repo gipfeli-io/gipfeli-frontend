@@ -33,7 +33,6 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     localStorageService.addItem(LocalStorageKey.RefreshToken, refreshToken)
     setAccessToken(accessToken)
     setRefreshToken(refreshToken)
-
     const { email, role } = jwtDecode<AccessToken>(accessToken)
     setEmail(email)
     setUserRole(role)

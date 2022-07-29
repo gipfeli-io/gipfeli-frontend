@@ -25,7 +25,7 @@ const ToursOverview = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const throwError = useApiError()
   const { isOffline } = useConnectionStatus()
-  const localDatabaseService = new LocalDatabaseService()
+  const localDatabaseService = new LocalDatabaseService(token)
 
   useEffect(() => {
     async function fetchTours () {

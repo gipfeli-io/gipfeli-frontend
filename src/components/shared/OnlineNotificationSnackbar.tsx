@@ -16,7 +16,7 @@ const OnlineNotificationSnackbar = () => {
 
   const goOnline = async (_event: React.SyntheticEvent | Event, reason?:string): Promise<void> => {
     if (reason === 'clickaway') { return }
-    (await activateOnlineMode)()
+    activateOnlineMode()
     handleClose(_event)
   }
 

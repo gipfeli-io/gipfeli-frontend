@@ -6,7 +6,7 @@ import ToursSyncService from '../services/tours/tours-sync-service'
 import useConnectionStatus from './use-connection-status'
 import { useCallback } from 'react'
 
-const useGoOnline = async () => {
+const useGoOnline = () => {
   const auth = useAuth()
   const { triggerSyncFailedNotification } = useNotifications()
   const tourSyncService: ToursSyncService = new ToursSyncService(auth.token)

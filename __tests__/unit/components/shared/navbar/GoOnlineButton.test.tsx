@@ -19,7 +19,7 @@ const mockNotificationContext: any = {
 }
 
 const mockAuthContext: any = {
-  token: '1234'
+  token: undefined
 }
 const mockUseLocationValue = {
   pathname: '/localhost:3000/tours',
