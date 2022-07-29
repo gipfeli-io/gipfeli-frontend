@@ -25,10 +25,13 @@ export default class LocalDatabaseService {
 
   public async addTourList (tours: Tour[]): Promise<void> {
     // remove all synced tours
-    const syncedTours = await localDB.tours.where('status').equals(TourStatusType.SYNCED).toArray()
+    const syncedTours = await localDB.tours.where('status').equals(TourStatusType.SYNCED)
+      .and((tour: Tour) => tour.userId === this.userId!).toArray()
     await localDB.tours.bulkDelete(syncedTours.map((tour: Tour) => tour.id))
-    // add tours from remote
-    await localDB.tours.bulkAdd(tours)
+
+    for (const tour of tours) {
+      await localDB.tours.put(tour)
+    }
   }
 
   public async findAllTours (): Promise<Tour[]> {
@@ -50,7 +53,7 @@ export default class LocalDatabaseService {
   }
 
   public async getOne (id: string | undefined): Promise<Tour|undefined> {
-    return localDB.tours.get(id!)
+    return localDB.tours.where('userId').equals(this.userId!).and((tour: Tour) => tour.id === id!).first()
   }
 
   public async markTourAsDeleted (id: string | undefined): Promise<void> {

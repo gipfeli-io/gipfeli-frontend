@@ -88,7 +88,6 @@ const EditTour = () => {
       }
     } else {
       if (baseTour.status === TourStatusType.CREATED) {
-        console.log('sync offline tour', baseTour, id, tourToSave)
         data = await toursSyncService.synchronizeCreatedTour(id, tourToSave)
         id = data.content!.id
       } else {

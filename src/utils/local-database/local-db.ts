@@ -6,7 +6,7 @@ class LocalDB extends Dexie {
 
   constructor () {
     super('localDB')
-    this.version(1).stores({
+    this.version(2).stores({
       tours: '++id, status, userId'
     })
     this.tours.mapToClass(Tour)
