@@ -26,7 +26,8 @@ const SignUp = () => {
       data.get('email')!.toString(),
       data.get('firstName')!.toString(),
       data.get('lastName')!.toString(),
-      data.get('password')!.toString()
+      data.get('password')!.toString(),
+      data.get('passwordConfirmation')!.toString()
     )
 
     if (result.success) {
@@ -48,6 +49,7 @@ const SignUp = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
+              required
               margin="normal"
               fullWidth
               id="email"
@@ -61,6 +63,7 @@ const SignUp = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              required
               margin="normal"
               id="firstName"
               label="First Name"
@@ -72,6 +75,7 @@ const SignUp = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              required
               margin="normal"
               id="lastName"
               label="Last Name"
@@ -83,6 +87,7 @@ const SignUp = () => {
           </Grid>
           <Grid item xs={12}>
             <TextField
+              required
               margin="normal"
               fullWidth
               name="password"
@@ -95,14 +100,15 @@ const SignUp = () => {
           </Grid>
           <Grid item xs={12}>
             <TextField
+              required
               margin="normal"
               fullWidth
-              name="passwordConfirm"
+              name="passwordConfirmation"
               label="Confirm password"
               type="password"
-              id="passwordConfirm"
-              error={hasErrors('passwordConfirm')}
-              helperText={getFieldErrors('passwordConfirm')}
+              id="passwordConfirmation"
+              error={hasErrors('passwordConfirmation')}
+              helperText={getFieldErrors('passwordConfirmation')}
             />
           </Grid>
         </Grid>

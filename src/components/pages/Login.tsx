@@ -14,8 +14,8 @@ const Login = () => {
   const login = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    // todo: handle error
-    await auth.signIn(
+
+    auth.signIn(
       data.get('email')!.toString(),
       data.get('password')!.toString(),
       () => navigate('/')
