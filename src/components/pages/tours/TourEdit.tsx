@@ -20,6 +20,7 @@ import { TourStatusType } from '../../../enums/tour-status-type'
 import ToursSyncService from '../../../services/tours/tours-sync-service'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
+import useFormErrors from '../../../hooks/use-form-errors'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -35,6 +36,7 @@ const EditTour = () => {
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
   const { isOffline } = useConnectionStatus()
   const localDatabaseService = new LocalDatabaseService()
+  const { setFormErrorContainer, formErrors } = useFormErrors()
 
   useEffect(() => {
     const setResult = (fetchedTour: Tour) => {
@@ -98,7 +100,8 @@ const EditTour = () => {
       if (data.success) {
         triggerSuccess()
       } else {
-        throwError(data)
+        throwError(data, false)
+        setFormErrorContainer(data)
       }
     }
   }
@@ -130,7 +133,7 @@ const EditTour = () => {
           <Button onClick={() => handleImageUpload([])}/>
         </Typography>
         <ImageUploadContext.Provider value={imageContextProps}>
-          <TourForm tour={tour} saveHandler={updateTour} type={getFormType()}/>
+          <TourForm tour={tour} saveHandler={updateTour} formErrors={formErrors} type={getFormType()}/>
         </ImageUploadContext.Provider>
       </>
     )

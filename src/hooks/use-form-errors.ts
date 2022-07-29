@@ -3,8 +3,19 @@ import { ApiResponseWrapper, ValidationError } from '../types/api'
 
 const useFormErrors = () => {
   const [formErrorContainer, setFormErrorContainer] = useState<ApiResponseWrapper>()
+  const [overrideFormErrors, setOverrideFormErrors] = useState<ValidationError[] | undefined>()
 
+  /**
+   * Contains the current formErrors. Either extracts them from the given formErrorContainer or, if overrideFormErrors
+   * is set, from that one. The overrideFormErrors can be used if the form handler is in a parent component, but the
+   * children needs to display the errors - if so, pass down formErrors object and use setOverrideFormErrors in the
+   * child component; then you can use the normal formErrors handlers. This is done so in the TourForm for example.
+   */
   const formErrors = useMemo<ValidationError[]>(() => {
+    if (overrideFormErrors !== undefined) {
+      return overrideFormErrors
+    }
+
     if (!formErrorContainer) {
       return []
     }
@@ -17,7 +28,7 @@ const useFormErrors = () => {
     }
 
     return []
-  }, [formErrorContainer])
+  }, [formErrorContainer, overrideFormErrors])
 
   /**
    * Checks whether a given fieldname has a form error attached.
@@ -39,7 +50,7 @@ const useFormErrors = () => {
     }
   }
 
-  return { hasErrors, setFormErrorContainer, getFieldErrors }
+  return { hasErrors, setFormErrorContainer, getFieldErrors, setOverrideFormErrors, formErrors }
 }
 
 export default useFormErrors

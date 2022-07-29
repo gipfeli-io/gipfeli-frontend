@@ -21,7 +21,6 @@ const SignUp = () => {
   const signUp = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    // todo: validation
     const result = await authService.signUp(
       data.get('email')!.toString(),
       data.get('firstName')!.toString(),
