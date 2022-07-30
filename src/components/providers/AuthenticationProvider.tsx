@@ -43,7 +43,6 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const unsetTokensInLocalStorageAndState = () => {
     localStorageService.removeItem(LocalStorageKey.AccessToken)
     localStorageService.removeItem(LocalStorageKey.RefreshToken)
-    localStorageService.removeItem(LocalStorageKey.SessionExpirationMessageShown)
     setAccessToken(undefined)
     setRefreshToken(undefined)
     setEmail(undefined)
@@ -100,46 +99,26 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     }
   }
 
-  const isSessionExpirationMessageShown = () => {
-    const localStorageEntry = localStorageService.getItem(LocalStorageKey.SessionExpirationMessageShown)
-    if (!localStorageEntry) {
-      return false
-    }
-
-    return JSON.parse(localStorageEntry) === true
-  }
-
-  const handleOfflineTokenRefresh = (decodedToken: JwtToken) => {
-    // no sense in fetching new tokens. We just need to check if token is still valid
-    if (tokenNeedsRefresh(decodedToken, 30)) {
-      triggerErrorNotification('Your session is about to expire in 30 minutes. Please go online and update it by refreshing the current page.' +
-        'Otherwise you will be logged out.')
-      localStorageService.addItem(LocalStorageKey.SessionExpirationMessageShown, String(true))
-    }
-  }
-
   /**
    * Checks whether a token is still valid and handles its refresh or force logout.
    */
   const checkAndRefreshToken = () => {
     // We only check for the token if we actually have a token
-    if (!accessToken) {
+    // We also don't need to check the token if the user is offline as we cannot refresh the jwt token anyway
+    if (!accessToken || isOffline()) {
       return
     }
-    const decodedToken: JwtToken = jwtDecode(accessToken)
-    if (isOffline() && !isSessionExpirationMessageShown()) {
-      handleOfflineTokenRefresh(decodedToken)
-    } else {
-      if (tokenNeedsRefresh(decodedToken)) {
-        if (refreshToken) {
-          const refresh = async () => {
-            await fetchNewTokens(refreshToken)
-          }
 
-          refresh()
-        } else {
-          forceLogOut()
+    const decodedToken: JwtToken = jwtDecode(accessToken)
+    if (tokenNeedsRefresh(decodedToken)) {
+      if (refreshToken) {
+        const refresh = async () => {
+          await fetchNewTokens(refreshToken)
         }
+
+        refresh()
+      } else {
+        forceLogOut()
       }
     }
   }
@@ -151,8 +130,9 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     const localAccessToken = localStorageService.getItem(LocalStorageKey.AccessToken)
     const localRefreshToken = localStorageService.getItem(LocalStorageKey.RefreshToken)
 
-    if (localAccessToken && localRefreshToken) {
+    if (localAccessToken && localRefreshToken && !isOffline()) {
       const decodedAccessToken: JwtToken = jwtDecode<AccessToken>(localAccessToken)
+
       if (tokenNeedsRefresh(decodedAccessToken)) {
         const refresh = async () => {
           await fetchNewTokens(localRefreshToken)
