@@ -30,7 +30,7 @@ const ToursOverview = () => {
   useEffect(() => {
     async function fetchTours () {
       if (isOffline()) {
-        const tours = await localDatabaseService.findAllTours() // todo: handle dexie error
+        const tours = await localDatabaseService.findAllTours()
         setTourList(tours)
         setLoading(false)
       } else {

@@ -63,8 +63,10 @@ const TourCreate = () => {
       const result = await localDatabaseService.create(tourToSave)
       if (result) {
         triggerSuccess(result.toString())
+      } else {
+        const errorResponse = localDatabaseService.getErrorResponse(false, 500, `Could not create local tour. ${result}`)
+        throwError(errorResponse)
       }
-      // todo throwDexieError
     } else {
       const data = await toursService.create(tourToSave)
       if (data.success) {

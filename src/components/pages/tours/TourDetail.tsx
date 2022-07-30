@@ -40,7 +40,7 @@ const TourDetail = () => {
       if (localTour) {
         setTour(localTour)
       } else {
-        console.log('tour-detail::error fetching tour') // todo: throw error
+        throwError(localDatabaseService.getTourNotFoundResponse())
       }
     }
     async function fetchTour () {

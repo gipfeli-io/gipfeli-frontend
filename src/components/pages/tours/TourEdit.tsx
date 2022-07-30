@@ -50,7 +50,7 @@ const EditTour = () => {
         if (localTour) {
           setResult(localTour)
         } else {
-          console.log('tour-edit::error fetching tour') // todo: throw error
+          throwError(localDatabaseService.getTourNotFoundResponse())
         }
       } else {
         const data = await toursService.findOne(id)
@@ -84,7 +84,8 @@ const EditTour = () => {
       if (result) {
         triggerSuccess()
       } else {
-        console.log('tour-edit::error while editing') // todo add error handling
+        const errorResponse = localDatabaseService.getErrorResponse(false, 500, 'Could not edit local tour')
+        throwError(errorResponse)
       }
     } else {
       if (baseTour.status === TourStatusType.CREATED) {
