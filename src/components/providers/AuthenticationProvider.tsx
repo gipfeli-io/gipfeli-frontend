@@ -15,6 +15,7 @@ import { AccessToken, AuthObject } from '../../types/auth'
 import { useNavigate } from 'react-router'
 import { UserRole } from '../../enums/user-role'
 import useConnectionStatus from '../../hooks/use-connection-status'
+import { isOfflineResultMessage } from '../../utils/offline-helper'
 
 const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
@@ -68,6 +69,8 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
       callback()
     } else if (data.statusCode === 404) {
       triggerErrorNotification('Combination of password and user does not exist.')
+    } else if (isOfflineResultMessage(data.statusCode, data.statusMessage)) {
+      triggerErrorNotification('You don\'t have connection to the internet so we cannot log you in.')
     } else {
       throwError(data)
     }
@@ -104,7 +107,7 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
    */
   const checkAndRefreshToken = () => {
     // We only check for the token if we actually have a token
-    // We also don't need to check the token if the user is offline as we cannot refresh the jwt token anyway
+    // We also don't need to check the token if the user is in offline mode as we might or might not be able to refresh the jwt token
     if (!accessToken || isOffline()) {
       return
     }
@@ -130,7 +133,13 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     const localAccessToken = localStorageService.getItem(LocalStorageKey.AccessToken)
     const localRefreshToken = localStorageService.getItem(LocalStorageKey.RefreshToken)
 
-    if (localAccessToken && localRefreshToken && !isOffline()) {
+    if (localAccessToken && localRefreshToken) {
+      if (isOffline()) {
+        setTokensInLocalStorageAndState({ accessToken: localAccessToken, refreshToken: localRefreshToken })
+        setLoading(false)
+        return
+      }
+
       const decodedAccessToken: JwtToken = jwtDecode<AccessToken>(localAccessToken)
 
       if (tokenNeedsRefresh(decodedAccessToken)) {
