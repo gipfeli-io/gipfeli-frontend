@@ -14,6 +14,8 @@ import tokenNeedsRefresh from '../../utils/token-needs-refresh'
 import { AccessToken, AuthObject } from '../../types/auth'
 import { useNavigate } from 'react-router'
 import { UserRole } from '../../enums/user-role'
+import useConnectionStatus from '../../hooks/use-connection-status'
+import { isOfflineResultMessage } from '../../utils/offline-helper'
 
 const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const [email, setEmail] = useState<string | undefined>(undefined)
@@ -26,15 +28,16 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const throwError = useApiError()
   const { triggerErrorNotification } = useNotifications()
   const navigate = useNavigate()
+  const { isOffline } = useConnectionStatus()
 
   const setTokensInLocalStorageAndState = (tokens: AuthObject) => {
-    const { accessToken, refreshToken } = tokens
-    localStorageService.addItem(LocalStorageKey.AccessToken, accessToken)
-    localStorageService.addItem(LocalStorageKey.RefreshToken, refreshToken)
-    setAccessToken(accessToken)
-    setRefreshToken(refreshToken)
-    const { email, role } = jwtDecode<AccessToken>(accessToken)
-    setEmail(email)
+    const { accessToken: localAccessToken, refreshToken: localRefreshToken } = tokens
+    localStorageService.addItem(LocalStorageKey.AccessToken, localAccessToken)
+    localStorageService.addItem(LocalStorageKey.RefreshToken, localRefreshToken)
+    setAccessToken(localAccessToken)
+    setRefreshToken(localRefreshToken)
+    const { email: userEmail, role } = jwtDecode<AccessToken>(localAccessToken)
+    setEmail(userEmail)
     setUserRole(role)
   }
 
@@ -55,9 +58,9 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     return userRole === UserRole.ADMINISTRATOR
   }, [userRole])
 
-  const signIn = async (email: string, password: string, callback: () => void) => {
+  const signIn = async (emailAddress: string, password: string, callback: () => void): Promise<void> => {
     const data = await authService.login(
-      email,
+      emailAddress,
       password
     )
 
@@ -66,13 +69,14 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
       callback()
     } else if (data.statusCode === 404) {
       triggerErrorNotification('Combination of password and user does not exist.')
+    } else if (isOfflineResultMessage(data.statusCode, data.statusMessage)) {
+      triggerErrorNotification('You don\'t have connection to the internet so we cannot log you in.')
     } else {
       throwError(data)
-      callback()
     }
   }
 
-  const signOut = async (callback: () => void) => {
+  const signOut = (callback: () => void): void => {
     // Todo: do we need a signout request at all?
     unsetTokensInLocalStorageAndState()
     callback()
@@ -86,10 +90,10 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
 
   /**
    * Create a request to refresh our tokens - or force logout.
-   * @param refreshToken
+   * @param refreshTokenValue
    */
-  const fetchNewTokens = async (refreshToken: string) => {
-    const data = await authService.refreshTokens(refreshToken)
+  const fetchNewTokens = async (refreshTokenValue: string) => {
+    const data = await authService.refreshTokens(refreshTokenValue)
 
     if (data.success) {
       setTokensInLocalStorageAndState(data.content!)
@@ -103,11 +107,12 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
    */
   const checkAndRefreshToken = () => {
     // We only check for the token if we actually have a token
-    if (!accessToken) {
+    // We also don't need to check the token if the user is in offline mode as we might or might not be able to refresh the jwt token
+    if (!accessToken || isOffline()) {
       return
     }
-    const decodedToken: JwtToken = jwtDecode(accessToken)
 
+    const decodedToken: JwtToken = jwtDecode(accessToken)
     if (tokenNeedsRefresh(decodedToken)) {
       if (refreshToken) {
         const refresh = async () => {
@@ -125,20 +130,27 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
    * Handle a new page load and check whether we still have a session or not.
    */
   useEffect(() => {
-    const accessToken = localStorageService.getItem(LocalStorageKey.AccessToken)
-    const refreshToken = localStorageService.getItem(LocalStorageKey.RefreshToken)
+    const localAccessToken = localStorageService.getItem(LocalStorageKey.AccessToken)
+    const localRefreshToken = localStorageService.getItem(LocalStorageKey.RefreshToken)
 
-    if (accessToken && refreshToken) {
-      const decodedAccessToken: JwtToken = jwtDecode<AccessToken>(accessToken)
+    if (localAccessToken && localRefreshToken) {
+      if (isOffline()) {
+        setTokensInLocalStorageAndState({ accessToken: localAccessToken, refreshToken: localRefreshToken })
+        setLoading(false)
+        return
+      }
+
+      const decodedAccessToken: JwtToken = jwtDecode<AccessToken>(localAccessToken)
+
       if (tokenNeedsRefresh(decodedAccessToken)) {
         const refresh = async () => {
-          await fetchNewTokens(refreshToken)
+          await fetchNewTokens(localRefreshToken)
           setLoading(false)
         }
 
         refresh()
       } else {
-        setTokensInLocalStorageAndState({ accessToken, refreshToken })
+        setTokensInLocalStorageAndState({ accessToken: localAccessToken, refreshToken: localRefreshToken })
         setLoading(false)
       }
     } else {

@@ -10,11 +10,9 @@ import AuthFormLinks from '../shared/AuthFormLinks'
 const Login = () => {
   const navigate = useNavigate()
   const auth = useAuth()
-
   const login = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    // todo: handle error
     await auth.signIn(
       data.get('email')!.toString(),
       data.get('password')!.toString(),

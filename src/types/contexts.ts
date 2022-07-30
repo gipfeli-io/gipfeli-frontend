@@ -16,7 +16,7 @@ export interface AuthenticationContextType {
   email: string | undefined
   isAdmin: boolean
   token: string | undefined
-  signIn: (email: string, password: string, callback: () => void) => void
+  signIn: (email: string, password: string, callback: () => void) => Promise<void>
   signOut: (callback: () => void) => void
 }
 
