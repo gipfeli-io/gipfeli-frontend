@@ -3,6 +3,7 @@ import { AppTheme } from './theme'
 import { handleSave } from './handle-save'
 import { CurrentUpload, ImageUpload } from './media'
 import { ConnectionStatus } from '../enums/connection-status'
+import { ErrorInfo } from 'react'
 
 export interface TourListContextProperties {
   deleteEvent: (id: string) => void
@@ -49,4 +50,8 @@ export interface ImageUploadContextType {
   save: handleSave<File[]>
   remove: (id: string) => void
   currentUploads: CurrentUpload[]
+}
+
+export interface ErrorBoundaryContextType{
+  triggerError: (error: Error, errorInfo?: ErrorInfo) => void
 }

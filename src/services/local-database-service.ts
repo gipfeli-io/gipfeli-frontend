@@ -5,6 +5,7 @@ import { TourStatusType } from '../enums/tour-status-type'
 import { IndexableType } from 'dexie'
 import jwtDecode from 'jwt-decode'
 import { AccessToken } from '../types/auth'
+import { SingleApiResponse } from '../types/api'
 
 export default class LocalDatabaseService {
   private readonly userId: string | undefined
@@ -23,15 +24,26 @@ export default class LocalDatabaseService {
     await localDB.open()
   }
 
-  public async addTourList (tours: Tour[]): Promise<void> {
-    // remove all synced tours
-    const syncedTours = await localDB.tours.where('status').equals(TourStatusType.SYNCED)
-      .and((tour: Tour) => tour.userId === this.userId!).toArray()
-    await localDB.tours.bulkDelete(syncedTours.map((tour: Tour) => tour.id))
+  public getTourNotFoundResponse (): SingleApiResponse<Tour> {
+    return this.getErrorResponse(false, 404, 'Tour was not found')
+  }
 
-    for (const tour of tours) {
-      await localDB.tours.put(tour)
-    }
+  public getErrorResponse (success: boolean, statusCode: number, statusMessage: string): SingleApiResponse<Tour> {
+    const wrapper = { success, statusCode, statusMessage }
+    return { ...wrapper }
+  }
+
+  public async addTourList (tours: Tour[]): Promise<void> {
+    await localDB.transaction('rw', localDB.tours, async () => {
+      // remove all synced tours
+      const syncedTours = await localDB.tours.where('status').equals(TourStatusType.SYNCED)
+        .and((tour: Tour) => tour.userId === this.userId!).toArray()
+      await localDB.tours.bulkDelete(syncedTours.map((tour: Tour) => tour.id))
+
+      for (const tour of tours) {
+        await localDB.tours.put(tour)
+      }
+    })
   }
 
   public async findAllTours (): Promise<Tour[]> {
@@ -68,13 +80,6 @@ export default class LocalDatabaseService {
     await localDB.tours.delete(id!)
   }
 
-  private createLocalTour (tour: UpdateOrCreateTour): Tour {
-    const id = crypto.randomUUID().toString()
-    const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, this.userId!, dayjs().toDate(), dayjs().toDate())
-    localTour.status = TourStatusType.CREATED
-    return localTour
-  }
-
   public async update (tourId: string|undefined, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Promise<IndexableType|undefined> {
     if (!tourId) { return }
     const localTour = await localDB.tours.get(tourId)
@@ -83,6 +88,15 @@ export default class LocalDatabaseService {
     }
     const localUpdateTour = LocalDatabaseService.updateLocalTour(localTour, updatedTour, statusType)
     return localDB.tours.put(localUpdateTour)
+  }
+
+  public async getToursToSynchronize (): Promise<Tour[]> {
+    return localDB.tours.where('status').anyOf(TourStatusType.UPDATED, TourStatusType.DELETED).toArray()
+  }
+
+  public async updateTourStatus (tour: Tour, status: TourStatusType): Promise<void> {
+    tour.status = status
+    await localDB.tours.put(tour)
   }
 
   private static updateLocalTour (localTour: Tour, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Tour {
@@ -96,12 +110,10 @@ export default class LocalDatabaseService {
     return localTour
   }
 
-  public async getToursToSynchronize (): Promise<Tour[]> {
-    return localDB.tours.where('status').anyOf(TourStatusType.UPDATED, TourStatusType.DELETED).toArray()
-  }
-
-  public async updateTourStatus (tour: Tour, status: TourStatusType): Promise<void> {
-    tour.status = status
-    await localDB.tours.put(tour)
+  private createLocalTour (tour: UpdateOrCreateTour): Tour {
+    const id = crypto.randomUUID().toString()
+    const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, this.userId!, dayjs().toDate(), dayjs().toDate())
+    localTour.status = TourStatusType.CREATED
+    return localTour
   }
 }
