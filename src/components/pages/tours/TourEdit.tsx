@@ -106,11 +106,10 @@ const EditTour = () => {
     } else {
       if (baseTour.status === TourStatusType.CREATED) {
         data = await toursSyncService.synchronizeCreatedTour(id, tourToSave)
-        id = data.content!.id
+        id = data.success ? data.content!.id : undefined
       } else {
         data = await toursService.update(id, tourToSave)
       }
-
       if (data.success) {
         triggerSuccess()
       } else {
