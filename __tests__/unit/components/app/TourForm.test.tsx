@@ -48,7 +48,7 @@ describe('TourForm', () => {
     const { container } = render(
       <MemoryRouter initialEntries={['/currentUri']}>
         <ConnectionStatusProvider>
-          <TourForm tour={getTour()} type='Edit' saveHandler={jest.fn}/>
+          <TourForm tour={getTour()} formErrors={[]} type='Edit' saveHandler={jest.fn}/>
         </ConnectionStatusProvider>
       </MemoryRouter>)
 
@@ -64,7 +64,7 @@ describe('TourForm', () => {
     const { container } = render(
       <MemoryRouter initialEntries={['/currentUri']}>
         <ConnectionStatusProvider>
-          <TourForm tour={getTour()} type='Edit' saveHandler={jest.fn}/>
+          <TourForm tour={getTour()} formErrors={[]} type='Edit' saveHandler={jest.fn}/>
         </ConnectionStatusProvider>
       </MemoryRouter>)
 

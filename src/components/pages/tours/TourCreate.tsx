@@ -16,6 +16,7 @@ import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
 import useCheckConnection from '../../../hooks/use-check-connection'
+import useFormErrors from '../../../hooks/use-form-errors'
 import useErrorHandling from '../../../hooks/use-error-handling'
 
 const TourCreate = () => {
@@ -31,6 +32,7 @@ const TourCreate = () => {
   const checkConnection = useCheckConnection()
   const { triggerError } = useErrorHandling()
   const localDatabaseService = new LocalDatabaseService(auth.token)
+  const { setFormErrorContainer, formErrors } = useFormErrors()
 
   useEffect(() => {
     if (!isOffline()) {
@@ -76,7 +78,8 @@ const TourCreate = () => {
         if (data.success) {
           triggerSuccess(data.content!.id)
         } else {
-          throwError(data)
+          throwError(data, false)
+          setFormErrorContainer(data)
         }
       }
     } catch (error: unknown) {
@@ -101,7 +104,7 @@ const TourCreate = () => {
         Create Tour
       </Typography>
       <ImageUploadContext.Provider value={imageContextProps}>
-        <TourForm tour={tour} saveHandler={saveTour} type={'Create'}/>
+        <TourForm tour={tour} saveHandler={saveTour} formErrors={formErrors} type={'Create'}/>
       </ImageUploadContext.Provider>
     </>
   )

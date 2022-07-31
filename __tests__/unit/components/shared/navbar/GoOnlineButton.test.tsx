@@ -21,6 +21,11 @@ const mockNotificationContext: any = {
 const mockAuthContext: any = {
   token: undefined
 }
+
+const errorBoundaryContext: any = {
+  triggerError: jest.fn()
+}
+
 const mockUseLocationValue = {
   pathname: '/localhost:3000/tours',
   search: '',
@@ -37,6 +42,7 @@ jest.mock('../../../../../src/hooks/use-connection-status', () => jest.fn().mock
 jest.mock('../../../../../src/hooks/use-notifications', () => jest.fn().mockImplementation(() => mockNotificationContext))
 jest.mock('../../../../../src/hooks/use-theme', () => jest.fn().mockImplementation(() => mockThemeContext))
 jest.mock('../../../../../src/hooks/use-auth', () => jest.fn().mockImplementation(() => mockAuthContext))
+jest.mock('../../../../../src/hooks/use-error-handling', () => jest.fn().mockImplementation(() => errorBoundaryContext))
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router') as any,

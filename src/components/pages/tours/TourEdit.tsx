@@ -21,6 +21,7 @@ import ToursSyncService from '../../../services/tours/tours-sync-service'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
 import useErrorHandling from '../../../hooks/use-error-handling'
+import useFormErrors from '../../../hooks/use-form-errors'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -37,6 +38,7 @@ const EditTour = () => {
   const { isOffline } = useConnectionStatus()
   const { triggerError } = useErrorHandling()
   const localDatabaseService = new LocalDatabaseService(auth.token)
+  const { setFormErrorContainer, formErrors } = useFormErrors()
 
   const setResult = (fetchedTour: Tour) => {
     const { description, endLocation, startLocation, name, userId, status, images: imageList } = fetchedTour
@@ -104,15 +106,15 @@ const EditTour = () => {
     } else {
       if (baseTour.status === TourStatusType.CREATED) {
         data = await toursSyncService.synchronizeCreatedTour(id, tourToSave)
-        id = data.content!.id
+        id = data.success ? data.content!.id : undefined
       } else {
         data = await toursService.update(id, tourToSave)
       }
-
       if (data.success) {
         triggerSuccess()
       } else {
-        throwError(data)
+        throwError(data, false)
+        setFormErrorContainer(data)
       }
     }
   }
@@ -144,7 +146,7 @@ const EditTour = () => {
           <Button onClick={() => handleImageUpload([])}/>
         </Typography>
         <ImageUploadContext.Provider value={imageContextProps}>
-          <TourForm tour={tour} saveHandler={updateTour} type={getFormType()}/>
+          <TourForm tour={tour} saveHandler={updateTour} formErrors={formErrors} type={getFormType()}/>
         </ImageUploadContext.Provider>
       </>
     )

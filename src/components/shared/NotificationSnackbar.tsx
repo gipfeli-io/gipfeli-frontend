@@ -4,15 +4,17 @@ import useNotifications from '../../hooks/use-notifications'
 import { NotificationType } from '../../enums/notification-type'
 import useConnectionStatus from '../../hooks/use-connection-status'
 import { ConnectionStatus } from '../../enums/connection-status'
+import { useLocation, useNavigate } from 'react-router'
 
 const NotificationSnackbar = () => {
   const { notification, resetNotification } = useNotifications()
   const { updateConnectionStatus, resetOnlineInfoBanner } = useConnectionStatus()
+  const navigate = useNavigate()
+  const location = useLocation()
   const handleClose = (_event: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return
     }
-
     resetNotification()
   }
 
@@ -21,6 +23,13 @@ const NotificationSnackbar = () => {
     updateConnectionStatus(ConnectionStatus.OFFLINE)
     resetOnlineInfoBanner()
     handleClose(_event)
+
+    // refresh page to get application working offline
+    if (location.pathname !== '/tours/create') {
+      navigate(0)
+    } else {
+      navigate('/tours', { replace: true })
+    }
   }
 
   const offlineAction = (

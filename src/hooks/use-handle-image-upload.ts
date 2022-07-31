@@ -42,7 +42,10 @@ const useHandleImageUpload = (mediaService: MediaService, records: ImageUpload[]
             setRecords(prevState => [...prevState, data.content!])
             handleSuccess(uploadedImage.name)
           } else {
-            handleError(uploadedImage.name, data.error?.message)
+            const message = data.error?.message
+            Array.isArray(message)
+              ? handleError(uploadedImage.name, 'Something bad happened')
+              : handleError(uploadedImage.name, message)
             throwError(data, false)
           }
         })

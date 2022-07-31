@@ -24,10 +24,10 @@ export default class AuthService extends APIService {
     )
   }
 
-  public async signUp (email: string, firstName: string, lastName: string, password: string): Promise<SingleApiResponse<void>> {
+  public async signUp (email: string, firstName: string, lastName: string, password: string, passwordConfirmation: string): Promise<SingleApiResponse<void>> {
     return this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, 'signup'),
-      this.getRequestBody('POST', { email, firstName, lastName, password })
+      this.getRequestBody('POST', { email, firstName, lastName, password, passwordConfirmation })
     )
   }
 
@@ -46,10 +46,10 @@ export default class AuthService extends APIService {
     )
   }
 
-  async performPasswordReset (userId: string, token: string, password: string) {
+  async performPasswordReset (userId: string, token: string, password: string, passwordConfirmation: string) {
     return this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, 'password-reset-set'),
-      this.getRequestBody('POST', { userId, token, password })
+      this.getRequestBody('POST', { userId, token, password, passwordConfirmation })
     )
   }
 }

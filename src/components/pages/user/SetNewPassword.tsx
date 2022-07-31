@@ -8,6 +8,7 @@ import useApiError from '../../../hooks/use-api-error'
 import useNotifications from '../../../hooks/use-notifications'
 import { useNavigate, useParams } from 'react-router'
 import AuthFormLinks from '../../shared/AuthFormLinks'
+import useFormErrors from '../../../hooks/use-form-errors'
 
 const SetNewPassword = () => {
   const { userId, token } = useParams()
@@ -15,6 +16,7 @@ const SetNewPassword = () => {
   const throwError = useApiError()
   const { triggerSuccessNotification } = useNotifications()
   const navigate = useNavigate()
+  const { setFormErrorContainer, hasErrors, getFieldErrors } = useFormErrors()
 
   const resetPassword = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -22,14 +24,16 @@ const SetNewPassword = () => {
     const result = await authService.performPasswordReset(
       userId!,
       token!,
-      data.get('password')!.toString()
+      data.get('password')!.toString(),
+      data.get('passwordConfirmation')!.toString()
     )
 
     if (result.success) {
       triggerSuccessNotification('Password has been set, you may now log in.')
       navigate('/')
     } else {
-      throwError(result)
+      throwError(result, false)
+      setFormErrorContainer(result)
     }
   }
 
@@ -47,15 +51,19 @@ const SetNewPassword = () => {
           label="New Password"
           type="password"
           id="password"
+          error={hasErrors('password')}
+          helperText={getFieldErrors('password')}
         />
         <TextField
           margin="normal"
           required
           fullWidth
-          name="passwordConfirm"
+          name="passwordConfirmation"
           label="Confirm new password"
           type="password"
-          id="passwordConfirm"
+          id="passwordConfirmation"
+          error={hasErrors('passwordConfirmation')}
+          helperText={getFieldErrors('passwordConfirmation')}
         />
         <Button
           type="submit"
