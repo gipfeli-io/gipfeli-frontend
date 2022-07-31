@@ -1,5 +1,5 @@
 import { ConnectionStatus } from '../enums/connection-status'
-import { SingleApiResponse } from '../types/api'
+import { SingleApiResponse, ValidationError } from '../types/api'
 import useAuth from './use-auth'
 import useNotifications from './use-notifications'
 import ToursSyncService from '../services/tours/tours-sync-service'
@@ -15,15 +15,24 @@ const useGoOnline = () => {
   const { triggerError } = useErrorHandling()
 
   return useCallback(() => {
+    function getMessageString (validationErrors: string | ValidationError[]): string {
+      let message: string = 'An error occurred while synchronizing data.\n'
+      if (Array.isArray(validationErrors)) {
+        validationErrors.forEach((validationError: ValidationError) => { message = `${message}"${validationError.errors.join('\n')}"` })
+      } else {
+        message = `${message}${validationErrors}`
+      }
+      return message
+    }
+
     async function syncData () {
       try {
         const results = await tourSyncService.synchronizeTourData()
         results.forEach((result: SingleApiResponse<unknown>) => {
           if (result.error) {
             const { message } = result.error
-
             if (message !== undefined) {
-              Array.isArray(message) ? triggerSyncFailedNotification('An error occurred') : triggerSyncFailedNotification(message)
+              triggerSyncFailedNotification(getMessageString(message))
             }
           }
         })
