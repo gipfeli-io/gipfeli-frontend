@@ -20,6 +20,7 @@ import { TourStatusType } from '../../../enums/tour-status-type'
 import ToursSyncService from '../../../services/tours/tours-sync-service'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
+import useErrorHandling from '../../../hooks/use-error-handling'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -34,34 +35,47 @@ const EditTour = () => {
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
   const { isOffline } = useConnectionStatus()
+  const { triggerError } = useErrorHandling()
   const localDatabaseService = new LocalDatabaseService(auth.token)
 
-  useEffect(() => {
-    const setResult = (fetchedTour: Tour) => {
-      const { description, endLocation, startLocation, name, userId, status, images: imageList } = fetchedTour
-      setTour({ description, endLocation, startLocation, name, userId, status, images: [] })
-      if (!isOffline()) {
-        setImages(imageList)
-      }
+  const setResult = (fetchedTour: Tour) => {
+    const { description, endLocation, startLocation, name, userId, status, images: imageList } = fetchedTour
+    setTour({ description, endLocation, startLocation, name, userId, status, images: [] })
+    if (!isOffline()) {
+      setImages(imageList)
     }
-    async function fetchTour () {
-      const localTour = await localDatabaseService.getOne(id)
-      if (isOffline() || localTour?.status === TourStatusType.CREATED) {
-        if (localTour) {
-          setResult(localTour)
-        } else {
-          throwError(localDatabaseService.getTourNotFoundResponse())
-        }
-      } else {
-        const data = await toursService.findOne(id)
-        if (data.success) {
-          setResult(data.content!)
-        } else {
-          throwError(data)
-        }
-      }
-    }
+  }
 
+  const setLocalData = (localTour: Tour|undefined): void => {
+    if (localTour) {
+      setResult(localTour)
+    } else {
+      throwError(localDatabaseService.getTourNotFoundResponse())
+    }
+  }
+
+  const setRemoteData = async (): Promise<void> => {
+    const data = await toursService.findOne(id)
+    if (data.success) {
+      setResult(data.content!)
+    } else {
+      throwError(data)
+    }
+  }
+
+  useEffect(() => {
+    async function fetchTour () {
+      try {
+        const localTour = await localDatabaseService.getOne(id)
+        if (isOffline() || localTour?.status === TourStatusType.CREATED) {
+          setLocalData(localTour)
+        } else {
+          await setRemoteData()
+        }
+      } catch (error: unknown) {
+        triggerError(error as Error)
+      }
+    }
     fetchTour()
   }, [])
 

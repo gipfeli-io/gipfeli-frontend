@@ -14,6 +14,7 @@ import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import ListContext from '../../shared/list/ListContext'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
+import useErrorHandling from '../../../hooks/use-error-handling'
 
 const ToursOverview = () => {
   const { token } = useAuth()
@@ -25,22 +26,27 @@ const ToursOverview = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const throwError = useApiError()
   const { isOffline } = useConnectionStatus()
+  const { triggerError } = useErrorHandling()
   const localDatabaseService = new LocalDatabaseService(token)
 
   useEffect(() => {
     async function fetchTours () {
-      if (isOffline()) {
-        const tours = await localDatabaseService.findAllTours()
-        setTourList(tours)
-        setLoading(false)
-      } else {
-        const data = await service.findAll()
-        if (data.success) {
-          setTourList(data.content!)
+      try {
+        if (isOffline()) {
+          const tours = await localDatabaseService.findAllTours()
+          setTourList(tours)
+          setLoading(false)
         } else {
-          throwError(data)
+          const data = await service.findAll()
+          if (data.success) {
+            setTourList(data.content!)
+          } else {
+            throwError(data)
+          }
+          setLoading(false)
         }
-        setLoading(false)
+      } catch (error: unknown) {
+        triggerError(error as Error)
       }
     }
 
