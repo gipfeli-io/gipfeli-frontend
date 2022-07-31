@@ -27,8 +27,6 @@ export default class ToursSyncService {
     if (result.success) {
       // we can delete the local tour here as it was freshly added with the correct id
       await this.localDatabaseService.deleteTour(id)
-    } else if (result.error) {
-      result.error.message = `Synchronization of offline created tour "${tour.name}" was not successful. Error: ${result.error?.message}`
     }
     return result
   }
@@ -61,6 +59,10 @@ export default class ToursSyncService {
   private async handleUpdatedTourSync (tour: Tour): Promise<SingleApiResponse<unknown>> {
     await this.localDatabaseService.updateTourStatus(tour, TourStatusType.SYNCING)
     const result = await this.tourService.findOne(tour.id)
+    if (!result.success && result.error) {
+      result.error.message = `Synchronization of updated tour "${tour.name}" was not successful. Please re-load the page.`
+      return result
+    }
     const mergedTour = ToursSyncService.mergeTour(tour, result.content!)
     return this.tourService.update(tour.id, mergedTour)
   }
