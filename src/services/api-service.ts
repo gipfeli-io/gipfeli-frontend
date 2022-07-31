@@ -87,7 +87,7 @@ export default abstract class APIService {
     return wrapper
   }
 
-  protected createResponseWrapper (success: boolean, statusCode: number, statusMessage: string): ApiResponseWrapper {
+  private createResponseWrapper (success: boolean, statusCode: number, statusMessage: string): ApiResponseWrapper {
     return { success, statusCode, statusMessage }
   }
 

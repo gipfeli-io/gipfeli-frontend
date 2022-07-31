@@ -21,6 +21,7 @@ import { TourStatusType } from '../../../enums/tour-status-type'
 import { formatDate } from '../../../utils/date-conversion-helper'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
 import useCheckConnection from '../../../hooks/use-check-connection'
+import useErrorHandling from '../../../hooks/use-error-handling'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -33,30 +34,35 @@ const TourDetail = () => {
   const throwError = useApiError()
   const { isOffline } = useConnectionStatus()
   const checkConnection = useCheckConnection()
-  const localDatabaseService = new LocalDatabaseService()
+  const { triggerError } = useErrorHandling()
+  const localDatabaseService = new LocalDatabaseService(auth.token)
 
   useEffect(() => {
     function setLocalTour (localTour: Tour | undefined) {
       if (localTour) {
         setTour(localTour)
       } else {
-        console.log('tour-detail::error fetching tour') // todo: throw error
+        throwError(localDatabaseService.getTourNotFoundResponse())
       }
     }
     async function fetchTour () {
-      const localTour = await localDatabaseService.getOne(id)
-      if (isOffline()) {
-        setLocalTour(localTour)
-      } else if (localTour?.status === TourStatusType.CREATED) {
-        setLocalTour(localTour)
-        checkConnection()
-      } else {
-        const data = await service.findOne(id)
-        if (data.success) {
-          setTour(data.content)
+      try {
+        const localTour = await localDatabaseService.getOne(id)
+        if (isOffline()) {
+          setLocalTour(localTour)
+        } else if (localTour?.status === TourStatusType.CREATED) {
+          setLocalTour(localTour)
+          checkConnection()
         } else {
-          throwError(data)
+          const data = await service.findOne(id)
+          if (data.success) {
+            setTour(data.content)
+          } else {
+            throwError(data)
+          }
         }
+      } catch (error: unknown) {
+        triggerError(error as Error)
       }
     }
     fetchTour()

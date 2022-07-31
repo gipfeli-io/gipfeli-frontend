@@ -4,14 +4,15 @@ import ServerError from '../pages/ServerError'
 import { NotificationContextType } from '../../types/contexts'
 import { UnauthorizedAdminAccess } from '../../types/errors'
 import AdminAccessPrevention from '../pages/AdminAccessPrevention'
+import ErrorBoundaryContext from '../../contexts/error-boundary-context'
 
 type ErrorBoundaryProps = {
-  children?: ReactNode;
+  children?: ReactNode
 }
 
 interface ErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
+  hasError: boolean
+  error?: Error
 }
 
 /**
@@ -29,9 +30,16 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  public componentDidCatch (error: Error, errorInfo: ErrorInfo) {
+  public componentDidCatch (error: Error, _errorInfo: ErrorInfo) {
     // todo log to sentry
     console.log(error)
+  }
+
+  public triggerError = (error: Error, _errorInfo?: ErrorInfo) => {
+    // todo log to sentry
+    console.log(error)
+
+    this.setState({ hasError: true })
   }
 
   /**
@@ -39,7 +47,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
    * the component tree.
    */
   public render () {
-    return this.state.hasError ? this.renderErrorPage() : this.props.children
+    return <>
+      <ErrorBoundaryContext.Provider value={{ triggerError: this.triggerError }}>
+        {this.state.hasError
+          ? this.renderErrorPage()
+          : this.props.children
+        }
+      </ErrorBoundaryContext.Provider>
+    </>
   }
 
   private renderErrorPage () {

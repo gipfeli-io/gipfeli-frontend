@@ -21,6 +21,9 @@ export class BaseTour {
   @Type(() => ImageUpload)
     images: ImageUpload[]
 
+  @Expose()
+    userId: string
+
   /**
    * This is a frontend property only and is not saved/fetched to/from the database
    * It is helps us finding out which entries were mutated while offline and
@@ -29,11 +32,12 @@ export class BaseTour {
   @Exclude()
     status: TourStatusType = TourStatusType.SYNCED
 
-  constructor (name: string, startLocation: Point, endLocation: Point, description: string, images: ImageUpload[] = []) {
+  constructor (name: string, startLocation: Point, endLocation: Point, description: string, userId: string, images: ImageUpload[] = []) {
     this.name = name
     this.startLocation = startLocation
     this.endLocation = endLocation
     this.description = description
+    this.userId = userId
     this.images = images
   }
 }
@@ -48,8 +52,9 @@ export class Tour extends BaseTour {
   @Type(() => Date)
     updatedAt: Date
 
-  constructor (id: string, name: string, startLocation: Point, endLocation: Point, description: string, createdAt: Date, updatedAt: Date) {
-    super(name, startLocation, endLocation, description)
+  constructor (id: string, name: string, startLocation: Point, endLocation: Point,
+    description: string, userId: string, createdAt: Date, updatedAt: Date) {
+    super(name, startLocation, endLocation, description, userId)
     this.id = id
     this.createdAt = createdAt
     this.updatedAt = updatedAt

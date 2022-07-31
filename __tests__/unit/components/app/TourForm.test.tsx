@@ -39,7 +39,8 @@ const point = {
 } as Point
 
 const getTour = () => {
-  return new Tour('34efc307-3ee9-4dc8-8b1f-7a5893348455', 'Test Tour', point, point, 'Some Description', new Date(), new Date())
+  return new Tour('34efc307-3ee9-4dc8-8b1f-7a5893348455', 'Test Tour', point, point,
+    'Some Description', 'cda5263c-ad01-4d39-b9ec-04ffdb7e6a77', new Date(), new Date())
 }
 
 describe('TourForm', () => {

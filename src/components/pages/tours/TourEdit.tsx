@@ -20,6 +20,7 @@ import { TourStatusType } from '../../../enums/tour-status-type'
 import ToursSyncService from '../../../services/tours/tours-sync-service'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
+import useErrorHandling from '../../../hooks/use-error-handling'
 import useFormErrors from '../../../hooks/use-form-errors'
 
 const EditTour = () => {
@@ -35,35 +36,48 @@ const EditTour = () => {
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
   const { isOffline } = useConnectionStatus()
-  const localDatabaseService = new LocalDatabaseService()
+  const { triggerError } = useErrorHandling()
+  const localDatabaseService = new LocalDatabaseService(auth.token)
   const { setFormErrorContainer, formErrors } = useFormErrors()
 
-  useEffect(() => {
-    const setResult = (fetchedTour: Tour) => {
-      const { description, endLocation, startLocation, name, status, images: imageList } = fetchedTour
-      setTour({ description, endLocation, startLocation, name, status, images: [] })
-      if (!isOffline()) {
-        setImages(imageList)
-      }
+  const setResult = (fetchedTour: Tour) => {
+    const { description, endLocation, startLocation, name, userId, status, images: imageList } = fetchedTour
+    setTour({ description, endLocation, startLocation, name, userId, status, images: [] })
+    if (!isOffline()) {
+      setImages(imageList)
     }
-    async function fetchTour () {
-      const localTour = await localDatabaseService.getOne(id)
-      if (isOffline() || localTour?.status === TourStatusType.CREATED) {
-        if (localTour) {
-          setResult(localTour)
-        } else {
-          console.log('tour-edit::error fetching tour') // todo: throw error
-        }
-      } else {
-        const data = await toursService.findOne(id)
-        if (data.success) {
-          setResult(data.content!)
-        } else {
-          throwError(data)
-        }
-      }
-    }
+  }
 
+  const setLocalData = (localTour: Tour|undefined): void => {
+    if (localTour) {
+      setResult(localTour)
+    } else {
+      throwError(localDatabaseService.getTourNotFoundResponse())
+    }
+  }
+
+  const setRemoteData = async (): Promise<void> => {
+    const data = await toursService.findOne(id)
+    if (data.success) {
+      setResult(data.content!)
+    } else {
+      throwError(data)
+    }
+  }
+
+  useEffect(() => {
+    async function fetchTour () {
+      try {
+        const localTour = await localDatabaseService.getOne(id)
+        if (isOffline() || localTour?.status === TourStatusType.CREATED) {
+          setLocalData(localTour)
+        } else {
+          await setRemoteData()
+        }
+      } catch (error: unknown) {
+        triggerError(error as Error)
+      }
+    }
     fetchTour()
   }, [])
 
@@ -86,11 +100,11 @@ const EditTour = () => {
       if (result) {
         triggerSuccess()
       } else {
-        console.log('tour-edit::error while editing') // todo add error handling
+        const errorResponse = localDatabaseService.getErrorResponse(false, 500, 'Could not edit local tour')
+        throwError(errorResponse)
       }
     } else {
       if (baseTour.status === TourStatusType.CREATED) {
-        console.log('sync offline tour', baseTour, id, tourToSave)
         data = await toursSyncService.synchronizeCreatedTour(id, tourToSave)
         id = data.content!.id
       } else {

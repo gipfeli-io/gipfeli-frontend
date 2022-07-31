@@ -17,6 +17,7 @@ import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
 import useCheckConnection from '../../../hooks/use-check-connection'
 import useFormErrors from '../../../hooks/use-form-errors'
+import useErrorHandling from '../../../hooks/use-error-handling'
 
 const TourCreate = () => {
   const auth = useAuth()
@@ -29,7 +30,8 @@ const TourCreate = () => {
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
   const checkConnection = useCheckConnection()
-  const localDatabaseService = new LocalDatabaseService()
+  const { triggerError } = useErrorHandling()
+  const localDatabaseService = new LocalDatabaseService(auth.token)
   const { setFormErrorContainer, formErrors } = useFormErrors()
 
   useEffect(() => {
@@ -44,7 +46,9 @@ const TourCreate = () => {
   }, {
     type: 'Point',
     coordinates: []
-  }, '')
+  },
+  '',
+  '')
 
   const triggerSuccess = (id: string) => {
     triggerSuccessNotification('Created new tour!')
@@ -52,27 +56,34 @@ const TourCreate = () => {
   }
 
   const saveTour: handleSave<BaseTour> = async (baseTour: BaseTour) => {
-    const tourToSave: UpdateOrCreateTour = {
-      name: baseTour.name,
-      startLocation: baseTour.startLocation,
-      endLocation: baseTour.endLocation,
-      description: baseTour.description,
-      images
-    }
-    if (isOffline()) {
-      const result = await localDatabaseService.create(tourToSave)
-      if (result) {
-        triggerSuccess(result.toString())
+    try {
+      const tourToSave: UpdateOrCreateTour = {
+        name: baseTour.name,
+        startLocation: baseTour.startLocation,
+        endLocation: baseTour.endLocation,
+        description: baseTour.description,
+        images
       }
-      // todo throwDexieError
-    } else {
-      const data = await toursService.create(tourToSave)
-      if (data.success) {
-        triggerSuccess(data.content!.id)
+
+      if (isOffline()) {
+        const result = await localDatabaseService.create(tourToSave)
+        if (result) {
+          triggerSuccess(result.toString())
+        } else {
+          const errorResponse = localDatabaseService.getErrorResponse(false, 500, `Could not create local tour. ${result}`)
+          throwError(errorResponse)
+        }
       } else {
-        throwError(data, false)
-        setFormErrorContainer(data)
+        const data = await toursService.create(tourToSave)
+        if (data.success) {
+          triggerSuccess(data.content!.id)
+        } else {
+          throwError(data, false)
+          setFormErrorContainer(data)
+        }
       }
+    } catch (error: unknown) {
+      triggerError(error as Error)
     }
   }
 

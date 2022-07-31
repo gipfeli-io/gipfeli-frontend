@@ -6,11 +6,11 @@ import ToursSyncService from '../services/tours/tours-sync-service'
 import useConnectionStatus from './use-connection-status'
 import { useCallback } from 'react'
 
-const useGoOnline = async () => {
+const useGoOnline = () => {
   const auth = useAuth()
   const { triggerSyncFailedNotification } = useNotifications()
   const tourSyncService: ToursSyncService = new ToursSyncService(auth.token)
-  const { updateConnectionStatus } = useConnectionStatus()
+  const { updateConnectionStatus, updateOnlineInfoBannerVisibility } = useConnectionStatus()
 
   return useCallback(() => {
     async function syncData () {
@@ -24,8 +24,10 @@ const useGoOnline = async () => {
           }
         }
       })
+      updateOnlineInfoBannerVisibility(false)
+      updateConnectionStatus(ConnectionStatus.ONLINE)
     }
-    updateConnectionStatus(ConnectionStatus.ONLINE)
+
     syncData()
   }, [])
 }
