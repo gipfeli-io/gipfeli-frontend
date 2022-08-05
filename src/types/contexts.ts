@@ -56,7 +56,7 @@ export interface GpxFileUploadContextType {
   file: GpxFileUpload
   save: handleSave<File>
   remove: (id: string) => void
-  currentUpload: CurrentUpload
+  currentUpload?: CurrentUpload
 }
 
 export interface ErrorBoundaryContextType{

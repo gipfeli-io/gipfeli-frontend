@@ -2,6 +2,7 @@ import MediaService from '../services/media/media-service'
 import { Dispatch, SetStateAction, useCallback, useState } from 'react'
 import useApiError from './use-api-error'
 import { CurrentUpload, GpxFileUpload, UploadError } from '../types/media'
+import { SingleApiResponse } from '../types/api'
 
 const useHandleGpxFileUpload = (mediaService: MediaService, record: GpxFileUpload, setRecord: Dispatch<SetStateAction<GpxFileUpload>>) => {
   const throwError = useApiError()
@@ -37,9 +38,10 @@ const useHandleGpxFileUpload = (mediaService: MediaService, record: GpxFileUploa
         name: uploadedGpxFile.name
       }))
 
-      mediaService.uploadGpxFile(uploadedGpxFile).then((data) => {
+      mediaService.uploadGpxFile(uploadedGpxFile).then((data: SingleApiResponse<GpxFileUpload>) => {
         if (data.success) {
-          setRecord(prevState => ({ ...prevState, data }))
+          const result = data.content as GpxFileUpload
+          setRecord(prevState => ({ ...prevState, result }))
           handleSuccess(uploadedGpxFile.name)
         } else {
           const message = data.error?.message

@@ -10,7 +10,6 @@ import Loader from '../../shared/Loader'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import { OfflineBoltOutlined } from '@mui/icons-material'
-import { Button } from '@mui/material'
 import ImageUploadContext from '../../../contexts/image-upload-context'
 import { GpxFileUploadContextType, ImageUploadContextType } from '../../../types/contexts'
 import { GpxFileUpload, ImageUpload } from '../../../types/media'
@@ -45,10 +44,14 @@ const EditTour = () => {
   const { setFormErrorContainer, formErrors } = useFormErrors()
 
   const setResult = (fetchedTour: Tour) => {
-    const { description, endLocation, startLocation, name, userId, status, images: imageList } = fetchedTour
-    setTour({ description, endLocation, startLocation, name, userId, status, images: [] })
+    const { description, endLocation, startLocation, name, userId, status, images: imageList, gpxFile } = fetchedTour
+    setTour({ description, endLocation, startLocation, name, userId, status, images: [], gpxFile: undefined })
     if (!isOffline()) {
       setImages(imageList)
+    }
+
+    if (!isOffline()) {
+      setGpxFile(gpxFile!)
     }
   }
 
@@ -158,7 +161,6 @@ const EditTour = () => {
           Edit Tour
           { tour.status !== TourStatusType.SYNCED &&
               <span title={'This tour is not synchronized with the database.'}><OfflineBoltOutlined color={'warning'} sx={{ ml: 2 }}/></span>}
-          <Button onClick={() => handleImageUpload([])}/>
         </Typography>
         <ImageUploadContext.Provider value={imageContextProps}>
           <GpxFileUploadContext.Provider value={gpxFileContextProps}>
