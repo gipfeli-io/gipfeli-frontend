@@ -11,9 +11,9 @@ import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import { OfflineBoltOutlined } from '@mui/icons-material'
 import { Button } from '@mui/material'
-import ImageUploadContext from '../../shared/images/upload/image-upload-context'
-import { ImageUploadContextType } from '../../../types/contexts'
-import { ImageUpload } from '../../../types/media'
+import ImageUploadContext from '../../../contexts/image-upload-context'
+import { GpxFileUploadContextType, ImageUploadContextType } from '../../../types/contexts'
+import { GpxFileUpload, ImageUpload } from '../../../types/media'
 import MediaService from '../../../services/media/media-service'
 import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 import { TourStatusType } from '../../../enums/tour-status-type'
@@ -22,6 +22,8 @@ import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
 import useErrorHandling from '../../../hooks/use-error-handling'
 import useFormErrors from '../../../hooks/use-form-errors'
+import useHandleGpxFileUpload from '../../../hooks/use-handle-gpx-file-upload'
+import GpxFileUploadContext from '../../../contexts/gpx-file-upload-context'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -35,6 +37,8 @@ const EditTour = () => {
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
+  const [gpxFile, setGpxFile] = useState<GpxFileUpload>(null!)
+  const { handleGpxFileUpload, currentGpxUpload } = useHandleGpxFileUpload(mediaService, gpxFile, setGpxFile)
   const { isOffline } = useConnectionStatus()
   const { triggerError } = useErrorHandling()
   const localDatabaseService = new LocalDatabaseService(auth.token)
@@ -130,6 +134,13 @@ const EditTour = () => {
     currentUploads
   }
 
+  const gpxFileContextProps: GpxFileUploadContextType = {
+    save: handleGpxFileUpload,
+    file: gpxFile,
+    remove: removeItem,
+    currentUpload: currentGpxUpload
+  }
+
   if (!tour) {
     return (<Loader/>)
   } else {
@@ -146,7 +157,9 @@ const EditTour = () => {
           <Button onClick={() => handleImageUpload([])}/>
         </Typography>
         <ImageUploadContext.Provider value={imageContextProps}>
-          <TourForm tour={tour} saveHandler={updateTour} formErrors={formErrors} type={getFormType()}/>
+          <GpxFileUploadContext.Provider value={gpxFileContextProps}>
+            <TourForm tour={tour} saveHandler={updateTour} formErrors={formErrors} type={getFormType()}/>
+          </GpxFileUploadContext.Provider>
         </ImageUploadContext.Provider>
       </>
     )
