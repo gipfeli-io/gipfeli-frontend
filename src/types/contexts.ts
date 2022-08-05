@@ -1,7 +1,7 @@
 import { Notification } from './notifications'
 import { AppTheme } from './theme'
 import { handleSave } from './handle-save'
-import { CurrentUpload, ImageUpload } from './media'
+import { CurrentUpload, GpxFileUpload, ImageUpload } from './media'
 import { ConnectionStatus } from '../enums/connection-status'
 import { ErrorInfo } from 'react'
 
@@ -50,6 +50,13 @@ export interface ImageUploadContextType {
   save: handleSave<File[]>
   remove: (id: string) => void
   currentUploads: CurrentUpload[]
+}
+
+export interface GpxFileUploadContextType {
+  file: GpxFileUpload
+  save: handleSave<File>
+  remove: (id: string) => void
+  currentUpload: CurrentUpload
 }
 
 export interface ErrorBoundaryContextType{

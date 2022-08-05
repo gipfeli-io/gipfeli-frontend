@@ -29,6 +29,16 @@ export class ImageUpload extends GeometryObject implements MediaObject {
   }
 }
 
+export class GpxFileUpload implements MediaObject {
+  id: string
+  identifier: string
+
+  constructor (id: string, identifier: string) {
+    this.id = id
+    this.identifier = identifier
+  }
+}
+
 export interface UploadError {
   reason: string;
 }
