@@ -123,21 +123,25 @@ const EditTour = () => {
     }
   }
 
-  const removeItem = useCallback((tourId: string) => {
+  const removeImage = useCallback((tourId: string) => {
     setImages(prevState => prevState.filter((element) => element.id !== tourId))
   }, [images])
+
+  const removeGpxFile = useCallback(() => {
+    setGpxFile(null!)
+  }, [gpxFile])
 
   const imageContextProps: ImageUploadContextType = {
     save: handleImageUpload,
     files: images,
-    remove: removeItem,
+    remove: removeImage,
     currentUploads
   }
 
   const gpxFileContextProps: GpxFileUploadContextType = {
     save: handleGpxFileUpload,
     file: gpxFile,
-    remove: removeItem,
+    remove: removeGpxFile,
     currentUpload: currentGpxUpload
   }
 

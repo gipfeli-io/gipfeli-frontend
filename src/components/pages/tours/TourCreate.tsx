@@ -9,8 +9,8 @@ import TourForm from '../../app/TourForm'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import MediaService from '../../../services/media/media-service'
-import { ImageUpload } from '../../../types/media'
-import { ImageUploadContextType } from '../../../types/contexts'
+import { GpxFileUpload, ImageUpload } from '../../../types/media'
+import { GpxFileUploadContextType, ImageUploadContextType } from '../../../types/contexts'
 import ImageUploadContext from '../../../contexts/image-upload-context'
 import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 import useConnectionStatus from '../../../hooks/use-connection-status'
@@ -18,6 +18,8 @@ import LocalDatabaseService from '../../../services/local-database-service'
 import useCheckConnection from '../../../hooks/use-check-connection'
 import useFormErrors from '../../../hooks/use-form-errors'
 import useErrorHandling from '../../../hooks/use-error-handling'
+import useHandleGpxFileUpload from '../../../hooks/use-handle-gpx-file-upload'
+import GpxFileUploadContext from '../../../contexts/gpx-file-upload-context'
 
 const TourCreate = () => {
   const auth = useAuth()
@@ -29,6 +31,8 @@ const TourCreate = () => {
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
+  const [gpxFile, setGpxFile] = useState<GpxFileUpload>(null!)
+  const { handleGpxFileUpload, currentGpxUpload } = useHandleGpxFileUpload(mediaService, gpxFile, setGpxFile)
   const checkConnection = useCheckConnection()
   const { triggerError } = useErrorHandling()
   const localDatabaseService = new LocalDatabaseService(auth.token)
@@ -87,15 +91,26 @@ const TourCreate = () => {
     }
   }
 
-  const removeItem = useCallback((id: string) => {
+  const removeImage = useCallback((id: string) => {
     setImages(prevState => prevState.filter((element) => element.id !== id))
   }, [images])
 
   const imageContextProps: ImageUploadContextType = {
     save: handleImageUpload,
     files: images,
-    remove: removeItem,
+    remove: removeImage,
     currentUploads
+  }
+
+  const removeGpxFile = useCallback(() => {
+    setGpxFile(null!)
+  }, [gpxFile])
+
+  const gpxFileContextProps: GpxFileUploadContextType = {
+    save: handleGpxFileUpload,
+    file: gpxFile,
+    remove: removeGpxFile,
+    currentUpload: currentGpxUpload
   }
 
   return (
@@ -104,7 +119,9 @@ const TourCreate = () => {
         Create Tour
       </Typography>
       <ImageUploadContext.Provider value={imageContextProps}>
-        <TourForm tour={tour} saveHandler={saveTour} formErrors={formErrors} type={'Create'}/>
+        <GpxFileUploadContext.Provider value={gpxFileContextProps}>
+          <TourForm tour={tour} saveHandler={saveTour} formErrors={formErrors} type={'Create'}/>
+        </GpxFileUploadContext.Provider>
       </ImageUploadContext.Provider>
     </>
   )
