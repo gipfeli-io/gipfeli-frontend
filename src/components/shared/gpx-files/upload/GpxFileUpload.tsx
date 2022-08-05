@@ -1,10 +1,11 @@
 import React from 'react'
 import { useDropzone } from 'react-dropzone'
-import styles from './ImageUpload.module.scss'
+
 import Typography from '@mui/material/Typography'
-import useGpxFileUpload from '../../../hooks/use-gpx-file-upload'
-import MediaUploadProgress from '../media/upload/MediaUploadProgress'
+import useGpxFileUpload from '../../../../hooks/use-gpx-file-upload'
+import GpxFileUploadProgress from './GpxFileUploadProgress'
 import GpxFileUploadEntry from './GpxFileUploadEntry'
+import styles from '../../media/upload/MediaUpload.module.scss'
 
 const GpxFileUpload = () => {
   const { save } = useGpxFileUpload()
@@ -28,7 +29,7 @@ const GpxFileUpload = () => {
       <Typography variant="caption" component="div">
         Only gpx files (.gpx) with a maximum size of 2MB are supported.
       </Typography>
-      <MediaUploadProgress />
+      <GpxFileUploadProgress />
       <GpxFileUploadEntry/>
     </>
   )

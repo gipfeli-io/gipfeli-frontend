@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useImageUpload from '../../../../hooks/use-image-upload'
 import { Stack } from '@mui/material'
 import ImageUploadErrorList, { ImageUploadErrorListItem } from './ImageUploadErrorList'
-import ImageUploadIndicator from './ImageUploadIndicator'
+import MediaUploadIndicator from '../../media/upload/MediaUploadIndicator'
 
 const ImageUploadProgress = () => {
   const { currentUploads } = useImageUpload()
@@ -23,7 +23,7 @@ const ImageUploadProgress = () => {
       <Stack>
         {
           currentUploads.map((upload) => {
-            return !upload.error ? <ImageUploadIndicator key={upload.name} upload={upload}/> : ''
+            return !upload.error ? <MediaUploadIndicator key={upload.name} upload={upload}/> : ''
           })
         }
       </Stack>

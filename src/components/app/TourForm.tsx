@@ -12,7 +12,7 @@ import GpsImageMarkerLayer from '../shared/map/layers/GpsImageMarkerLayer'
 import useImageUpload from '../../hooks/use-image-upload'
 import { ValidationError } from '../../types/api'
 import useFormErrors from '../../hooks/use-form-errors'
-import GpxFileUpload from '../shared/gpx-files/GpxFileUpload'
+import GpxFileUpload from '../shared/gpx-files/upload/GpxFileUpload'
 
 type TourFormProps = {
   tour: BaseTour
