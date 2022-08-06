@@ -12,6 +12,7 @@ import GpsImageMarkerLayer from '../shared/map/layers/GpsImageMarkerLayer'
 import useImageUpload from '../../hooks/use-image-upload'
 import { ValidationError } from '../../types/api'
 import useFormErrors from '../../hooks/use-form-errors'
+import GpxFileUpload from '../shared/gpx-files/upload/GpxFileUpload'
 
 type TourFormProps = {
   tour: BaseTour
@@ -96,6 +97,11 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
                     <GpsImageMarkerLayer features={files}/>
                 </MapWrapper>
             </div>
+        }
+      </Grid>
+      <Grid item xs={12}>
+        {!isOffline() &&
+            <div id={'gpx-file-upload'}><GpxFileUpload/></div>
         }
       </Grid>
       <Grid item xs={12}>

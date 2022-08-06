@@ -10,10 +10,9 @@ import Loader from '../../shared/Loader'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
 import { OfflineBoltOutlined } from '@mui/icons-material'
-import { Button } from '@mui/material'
-import ImageUploadContext from '../../shared/images/upload/image-upload-context'
-import { ImageUploadContextType } from '../../../types/contexts'
-import { ImageUpload } from '../../../types/media'
+import ImageUploadContext from '../../../contexts/image-upload-context'
+import { GpxFileUploadContextType, ImageUploadContextType } from '../../../types/contexts'
+import { GpxFileUpload, ImageUpload } from '../../../types/media'
 import MediaService from '../../../services/media/media-service'
 import useHandleImageUpload from '../../../hooks/use-handle-image-upload'
 import { TourStatusType } from '../../../enums/tour-status-type'
@@ -22,6 +21,8 @@ import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
 import useErrorHandling from '../../../hooks/use-error-handling'
 import useFormErrors from '../../../hooks/use-form-errors'
+import useHandleGpxFileUpload from '../../../hooks/use-handle-gpx-file-upload'
+import GpxFileUploadContext from '../../../contexts/gpx-file-upload-context'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -35,16 +36,22 @@ const EditTour = () => {
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
+  const [gpxFile, setGpxFile] = useState<GpxFileUpload>(null!)
+  const { handleGpxFileUpload, currentGpxUpload } = useHandleGpxFileUpload(mediaService, gpxFile, setGpxFile)
   const { isOffline } = useConnectionStatus()
   const { triggerError } = useErrorHandling()
   const localDatabaseService = new LocalDatabaseService(auth.token)
   const { setFormErrorContainer, formErrors } = useFormErrors()
 
   const setResult = (fetchedTour: Tour) => {
-    const { description, endLocation, startLocation, name, userId, status, images: imageList } = fetchedTour
-    setTour({ description, endLocation, startLocation, name, userId, status, images: [] })
+    const { description, endLocation, startLocation, name, userId, status, images: imageList, gpxFile } = fetchedTour
+    setTour({ description, endLocation, startLocation, name, userId, status, images: [], gpxFile: undefined })
     if (!isOffline()) {
       setImages(imageList)
+    }
+
+    if (!isOffline()) {
+      setGpxFile(gpxFile!)
     }
   }
 
@@ -87,12 +94,14 @@ const EditTour = () => {
   }
 
   const updateTour: handleSave<BaseTour> = async (baseTour: BaseTour) => {
+    console.log('gpxfile', gpxFile)
     const tourToSave: UpdateOrCreateTour = {
       name: baseTour.name,
       startLocation: baseTour.startLocation,
       endLocation: baseTour.endLocation,
       description: baseTour.description,
-      images
+      images,
+      gpxFile
     }
     let data
     if (isOffline()) {
@@ -119,15 +128,26 @@ const EditTour = () => {
     }
   }
 
-  const removeItem = useCallback((tourId: string) => {
+  const removeImage = useCallback((tourId: string) => {
     setImages(prevState => prevState.filter((element) => element.id !== tourId))
   }, [images])
+
+  const removeGpxFile = useCallback(() => {
+    setGpxFile(null!)
+  }, [gpxFile])
 
   const imageContextProps: ImageUploadContextType = {
     save: handleImageUpload,
     files: images,
-    remove: removeItem,
+    remove: removeImage,
     currentUploads
+  }
+
+  const gpxFileContextProps: GpxFileUploadContextType = {
+    save: handleGpxFileUpload,
+    file: gpxFile,
+    remove: removeGpxFile,
+    currentUpload: currentGpxUpload
   }
 
   if (!tour) {
@@ -143,10 +163,11 @@ const EditTour = () => {
           Edit Tour
           { tour.status !== TourStatusType.SYNCED &&
               <span title={'This tour is not synchronized with the database.'}><OfflineBoltOutlined color={'warning'} sx={{ ml: 2 }}/></span>}
-          <Button onClick={() => handleImageUpload([])}/>
         </Typography>
         <ImageUploadContext.Provider value={imageContextProps}>
-          <TourForm tour={tour} saveHandler={updateTour} formErrors={formErrors} type={getFormType()}/>
+          <GpxFileUploadContext.Provider value={gpxFileContextProps}>
+            <TourForm tour={tour} saveHandler={updateTour} formErrors={formErrors} type={getFormType()}/>
+          </GpxFileUploadContext.Provider>
         </ImageUploadContext.Provider>
       </>
     )

@@ -16,6 +16,11 @@ const mockImageUploadContext: any = {
   currentUploads: []
 }
 
+const mockGpxFileUploadContext: any = {
+  file: undefined,
+  currentUpload: undefined
+}
+
 const mockUseLocationValue = {
   pathname: '/localhost:3000',
   search: '',
@@ -25,6 +30,7 @@ const mockUseLocationValue = {
 
 jest.mock('../../../../src/hooks/use-connection-status', () => jest.fn().mockImplementation(() => mockConnectionStatusContext))
 jest.mock('../../../../src/hooks/use-image-upload', () => jest.fn().mockImplementation(() => mockImageUploadContext))
+jest.mock('../../../../src/hooks/use-gpx-file-upload', () => jest.fn().mockImplementation(() => mockGpxFileUploadContext))
 
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router') as any,

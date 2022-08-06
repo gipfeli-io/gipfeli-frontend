@@ -3,11 +3,11 @@ import { CircularProgress, Stack } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 
-type ImageUploadIndicatorProps = {
+type MediaUploadIndicatorProps = {
   upload: CurrentUpload
 }
 
-const ImageUploadIndicator = ({ upload }: ImageUploadIndicatorProps) => {
+const MediaUploadIndicator = ({ upload }: MediaUploadIndicatorProps) => {
   return (
     <Stack direction={'row'} gap={1}>
       <CircularProgress size={'1vh'}/>
@@ -18,4 +18,4 @@ const ImageUploadIndicator = ({ upload }: ImageUploadIndicatorProps) => {
   )
 }
 
-export default ImageUploadIndicator
+export default MediaUploadIndicator

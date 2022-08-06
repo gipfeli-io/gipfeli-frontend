@@ -2,9 +2,11 @@ import MediaService from '../services/media/media-service'
 import { Dispatch, SetStateAction, useCallback, useState } from 'react'
 import useApiError from './use-api-error'
 import { CurrentUpload, ImageUpload, UploadError } from '../types/media'
+import useErrorHandling from './use-error-handling'
 
 const useHandleImageUpload = (mediaService: MediaService, records: ImageUpload[], setRecords: Dispatch<SetStateAction<ImageUpload[]>>) => {
   const throwError = useApiError()
+  const { triggerError } = useErrorHandling()
   const [currentUploads, setCurrentUploads] = useState<CurrentUpload[]>([])
 
   /**
@@ -37,7 +39,8 @@ const useHandleImageUpload = (mediaService: MediaService, records: ImageUpload[]
       ])
 
       for (const uploadedImage of uploadedImages) {
-        mediaService.uploadImage(uploadedImage).then((data) => {
+        try {
+          const data = await mediaService.uploadImage(uploadedImage)
           if (data.success) {
             setRecords(prevState => [...prevState, data.content!])
             handleSuccess(uploadedImage.name)
@@ -48,7 +51,9 @@ const useHandleImageUpload = (mediaService: MediaService, records: ImageUpload[]
               : handleError(uploadedImage.name, message)
             throwError(data, false)
           }
-        })
+        } catch (error: unknown) {
+          triggerError(error as Error)
+        }
       }
     }, [records])
 

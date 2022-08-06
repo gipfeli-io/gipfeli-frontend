@@ -1,6 +1,6 @@
 import { GeoJsonObject, Point } from 'geojson'
 import { Exclude, Expose, Type } from 'class-transformer'
-import { ImageUpload } from './media'
+import { GpxFileUpload, ImageUpload } from './media'
 import { TourStatusType } from '../enums/tour-status-type'
 import { GeometryObject } from './map'
 
@@ -22,6 +22,10 @@ export class BaseTour {
     images: ImageUpload[]
 
   @Expose()
+  @Type(() => GpxFileUpload)
+    gpxFile?: GpxFileUpload
+
+  @Expose()
     userId: string
 
   /**
@@ -32,13 +36,16 @@ export class BaseTour {
   @Exclude()
     status: TourStatusType = TourStatusType.SYNCED
 
-  constructor (name: string, startLocation: Point, endLocation: Point, description: string, userId: string, images: ImageUpload[] = []) {
+  constructor (name: string, startLocation: Point, endLocation: Point,
+    description: string, userId: string, images: ImageUpload[] = [],
+    gpxFile?: GpxFileUpload) {
     this.name = name
     this.startLocation = startLocation
     this.endLocation = endLocation
     this.description = description
     this.userId = userId
     this.images = images
+    this.gpxFile = gpxFile
   }
 }
 
@@ -62,7 +69,7 @@ export class Tour extends BaseTour {
 }
 
 // todo: switch to baseTour
-export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images'>
+export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images' | 'gpxFile'>
 
 /**
  * A generic tourpoint which extends from GeometryObject and can be added to the map.

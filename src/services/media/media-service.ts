@@ -1,6 +1,6 @@
 import APIService from '../api-service'
 import { RequestBody, SingleApiResponse } from '../../types/api'
-import { ImageUpload } from '../../types/media'
+import { GpxFileUpload, ImageUpload } from '../../types/media'
 
 export default class MediaService extends APIService {
   private prefix: string = 'media'
@@ -15,6 +15,15 @@ export default class MediaService extends APIService {
       this.getRequestUrl(this.prefix, 'upload-image'),
       this.getRequestBody('POST', image, 'image'),
       ImageUpload
+    )
+  }
+
+  public async uploadGpxFile (gpxFile: File): Promise<SingleApiResponse<GpxFileUpload>> {
+    // todo: set correct content type. is there a mapper?
+    return this.fetchSingleDataFromApi(
+      this.getRequestUrl(this.prefix, 'upload-gpx'),
+      this.getRequestBody('POST', gpxFile, 'gpxFile'),
+      GpxFileUpload
     )
   }
 
