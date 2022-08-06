@@ -1,11 +1,10 @@
 import React from 'react'
-import { IconButton, Tooltip } from '@mui/material'
+import { Grid, IconButton, Link } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import Typography from '@mui/material/Typography'
 import getCloudStorageUrlForIdentifier from '../../../../utils/storage-helper'
 import useGpxFileUpload from '../../../../hooks/use-gpx-file-upload'
 import DescriptionIcon from '@mui/icons-material/Description'
-import { Link } from 'react-router-dom'
 
 const GpxFileUploadEntry = () => {
   const { file, remove } = useGpxFileUpload()
@@ -19,19 +18,21 @@ const GpxFileUploadEntry = () => {
       <Typography variant="h6" component="div">
         Currently uploaded gpx file:
       </Typography>
-      <div>
-        <Link to={getCloudStorageUrlForIdentifier(file.identifier)}><DescriptionIcon/> {file.id}</Link>
-      </div>
-      <div>
-        <Tooltip title={'Delete image'}>
+      <Grid container mb={2} direction={'row'} spacing={4} alignItems="center">
+        <Grid item>
+          <Link underline="none" color="primary" href={getCloudStorageUrlForIdentifier(file.identifier)}>
+            <DescriptionIcon sx={{ verticalAlign: 'bottom' }}/> <span className="gpx-file-name">{file.name}</span>
+          </Link>
+        </Grid>
+        <Grid item>
           <IconButton
-            sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+            color="error"
             onClick={() => remove(file.id)}
           >
             <Delete/>
           </IconButton>
-        </Tooltip>
-      </div>
+        </Grid>
+      </Grid>
     </>
   )
 }

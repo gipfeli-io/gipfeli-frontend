@@ -32,10 +32,12 @@ export class ImageUpload extends GeometryObject implements MediaObject {
 export class GpxFileUpload implements MediaObject {
   id: string
   identifier: string
+  name: string
 
-  constructor (id: string, identifier: string) {
+  constructor (id: string, identifier: string, name: string) {
     this.id = id
     this.identifier = identifier
+    this.name = name
   }
 }
 

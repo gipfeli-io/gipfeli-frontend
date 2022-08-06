@@ -8,7 +8,7 @@ import GeoReferenceIndicator from './GeoReferenceIndicator'
 
 const ImageUploadEntries = () => {
   const { files, remove } = useImageUpload()
-
+  console.log(files)
   if (!files || files.length === 0) {
     return <></>
   }
