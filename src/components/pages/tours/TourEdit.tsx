@@ -94,12 +94,14 @@ const EditTour = () => {
   }
 
   const updateTour: handleSave<BaseTour> = async (baseTour: BaseTour) => {
+    console.log('gpxfile', gpxFile)
     const tourToSave: UpdateOrCreateTour = {
       name: baseTour.name,
       startLocation: baseTour.startLocation,
       endLocation: baseTour.endLocation,
       description: baseTour.description,
-      images
+      images,
+      gpxFile
     }
     let data
     if (isOffline()) {

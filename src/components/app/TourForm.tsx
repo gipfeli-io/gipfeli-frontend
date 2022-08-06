@@ -100,6 +100,11 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
         }
       </Grid>
       <Grid item xs={12}>
+        {!isOffline() &&
+            <div id={'gpx-file-upload'}><GpxFileUpload/></div>
+        }
+      </Grid>
+      <Grid item xs={12}>
         <TextField
           name="description"
           required
@@ -118,11 +123,6 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
       <Grid item xs={12}>
         {!isOffline() &&
             <div id={'image-gallery'}><ImageUpload/></div>
-        }
-      </Grid>
-      <Grid item xs={12}>
-        {!isOffline() &&
-            <div id={'gpx-file-upload'}><GpxFileUpload/></div>
         }
       </Grid>
     </Grid>

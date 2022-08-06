@@ -69,7 +69,7 @@ export class Tour extends BaseTour {
 }
 
 // todo: switch to baseTour
-export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images'>
+export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images' | 'gpxFile'>
 
 /**
  * A generic tourpoint which extends from GeometryObject and can be added to the map.

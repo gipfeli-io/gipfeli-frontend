@@ -66,7 +66,8 @@ const TourCreate = () => {
         startLocation: baseTour.startLocation,
         endLocation: baseTour.endLocation,
         description: baseTour.description,
-        images
+        images,
+        gpxFile
       }
 
       if (isOffline()) {

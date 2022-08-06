@@ -10,6 +10,7 @@ import ToursService from '../../../services/tours/tours-service'
 import MapWrapper from '../../shared/map/MapWrapper'
 import { Tour, TourPoint } from '../../../types/tour'
 import { Link } from 'react-router-dom'
+
 import Loader from '../../shared/Loader'
 import useApiError from '../../../hooks/use-api-error'
 import ImageGallery from '../../shared/images/gallery/ImageGallery'
@@ -22,6 +23,8 @@ import { formatDate } from '../../../utils/date-conversion-helper'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
 import useCheckConnection from '../../../hooks/use-check-connection'
 import useErrorHandling from '../../../hooks/use-error-handling'
+import getCloudStorageUrlForIdentifier from '../../../utils/storage-helper'
+import DescriptionIcon from '@mui/icons-material/Description'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -130,6 +133,23 @@ const TourDetail = () => {
                   <GpsImageMarkerLayer features={geoReferencedImages}/>
               </MapWrapper>
           </>
+      }
+      {!isOffline() && tour.gpxFile &&
+          <Grid container mb={3} mt={2} direction={'column'}>
+              <Grid item>
+                  <Typography variant="h5" gutterBottom component="div">
+                      Uploaded GPX File
+                  </Typography>
+                  <Typography variant="subtitle1" gutterBottom component="div">
+                      Click on the filename to download it.
+                  </Typography>
+              </Grid>
+              <Grid item>
+                  <MuiLink underline="none" color="primary" href={getCloudStorageUrlForIdentifier(tour.gpxFile.identifier)}>
+                      <DescriptionIcon sx={{ verticalAlign: 'bottom' }}/> <span className="gpx-file-name">{tour.gpxFile.name}</span>
+                  </MuiLink>
+              </Grid>
+          </Grid>
       }
       <Grid container mb={2} mt={2} direction={'column'}>
         <Grid item>

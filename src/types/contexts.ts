@@ -53,7 +53,7 @@ export interface ImageUploadContextType {
 }
 
 export interface GpxFileUploadContextType {
-  file: GpxFileUpload
+  file: GpxFileUpload | undefined
   save: handleSave<File>
   remove: (id: string) => void
   currentUpload?: CurrentUpload
