@@ -13,6 +13,8 @@ import useImageUpload from '../../hooks/use-image-upload'
 import { ValidationError } from '../../types/api'
 import useFormErrors from '../../hooks/use-form-errors'
 import GpxFileUpload from '../shared/gpx-files/upload/GpxFileUpload'
+import GpxDataLayer from '../shared/map/layers/GpxDataLayer'
+import useGpxFileUpload from '../../hooks/use-gpx-file-upload'
 
 type TourFormProps = {
   tour: BaseTour
@@ -26,6 +28,7 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
   const [currentTour, setCurrentTour] = useState(tour)
   const { isOffline } = useConnectionStatus()
   const { files } = useImageUpload()
+  const { file } = useGpxFileUpload()
   const { setOverrideFormErrors, hasErrors, getFieldErrors } = useFormErrors()
 
   useEffect(() => {
@@ -95,6 +98,7 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
                                          features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
                                          type={type}/>
                     <GpsImageMarkerLayer features={files}/>
+                    <GpxDataLayer gpxFile={file}/>
                 </MapWrapper>
             </div>
         }
