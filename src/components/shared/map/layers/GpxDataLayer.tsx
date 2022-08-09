@@ -24,7 +24,7 @@ type GpsMarkerLayerProps = {
 const GpxDataLayer = ({ gpxFile }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
-  const addGpxDataLayer = (): VectorLayer<any> => {
+  const addGpxDataLayer = (): VectorLayer<VectorSource> => {
     const gpxDataLayer = createVectorLayer(MapLayers.GPX)
     const gpxVectorSource = new VectorSource({
       url: getCloudStorageUrlForIdentifier(gpxFile!.identifier),
@@ -64,7 +64,7 @@ const GpxDataLayer = ({ gpxFile }: GpsMarkerLayerProps) => {
     return [iconFeatureStart, iconFeatureEnd]
   }
 
-  const addMarkerLayer = (gpxDataLayer: VectorLayer<VectorSource>) => {
+  const addMarkerLayer = (gpxDataLayer: VectorLayer<VectorSource>): VectorLayer<VectorSource> => {
     const gpxGeometry = gpxDataLayer.getSource()?.getFeatures()[0].getGeometry() as MultiLineString
 
     const vectorLayer = new VectorLayer({
@@ -74,6 +74,7 @@ const GpxDataLayer = ({ gpxFile }: GpsMarkerLayerProps) => {
     })
 
     map!.addLayer(vectorLayer)
+    return vectorLayer
   }
 
   useEffect(() => {
@@ -82,16 +83,18 @@ const GpxDataLayer = ({ gpxFile }: GpsMarkerLayerProps) => {
     }
 
     const gpxDataLayer = addGpxDataLayer()
-
     gpxDataLayer.getSource()!.on('addfeature', () => {
       setExtent(gpxDataLayer)
     })
+
+    let markerLayer: VectorLayer<VectorSource>
     gpxDataLayer.getSource()!.on('featuresloadend', () => {
-      addMarkerLayer(gpxDataLayer)
+      markerLayer = addMarkerLayer(gpxDataLayer)
     })
 
     return () => {
       map.removeLayer(gpxDataLayer)
+      map.removeLayer(markerLayer)
     }
   }, [map, gpxFile])
 

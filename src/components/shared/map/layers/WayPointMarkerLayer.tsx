@@ -115,6 +115,10 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
         setupDrawInteraction(source, markerId)
       }
     }
+
+    return () => {
+      map.removeLayer(markerLayer)
+    }
   }, [map, features, handleSetMarker, type])
   return null
 }
