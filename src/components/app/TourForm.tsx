@@ -94,11 +94,13 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
             <div id={'map'}>
                 <MapWrapper>
                     <FullScreenControl/>
+                  {!file &&
                     <WayPointMarkerLayer handleSetMarker={handleSetMarker}
-                                         features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
-                                         type={type}/>
-                    <GpsImageMarkerLayer features={files}/>
-                    <GpxDataLayer gpxFile={file}/>
+                                           features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
+                                           type={type}/>
+                  }
+                  <GpxDataLayer gpxFile={file}/>
+                  <GpsImageMarkerLayer features={files}/>
                 </MapWrapper>
             </div>
         }

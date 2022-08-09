@@ -36,73 +36,72 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
     return index === objects.length - 1 ? MapConfigurationService.getEndIcon() : MapConfigurationService.getStartIcon()
   }
 
+  const setupMarkerLayer = (): VectorLayer<VectorSource> => {
+    let markerLayer = map!.getAllLayers().find((layer: Layer) => layer.getProperties().name === MapLayers.WAYPOINT_MARKER) as VectorLayer<VectorSource>
+    let layerExtent: Extent
+    if (!markerLayer) {
+      markerLayer = createVectorLayer(MapLayers.WAYPOINT_MARKER)
+      layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
+      map!.addLayer(markerLayer)
+    } else {
+      markerLayer.getSource()?.clear(true)
+      layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
+    }
+
+    // if no features were added the extent is set to an empty array
+    if (layerExtent.length !== 0) {
+      map!.getView().fit(layerExtent, { size: map!.getSize(), padding: [100, 100, 100, 100] })
+    }
+
+    return markerLayer
+  }
+
+  const initDrawListener = (drawInteraction: Draw, markerId: number): void => {
+    drawInteraction.on('drawend', (evt: DrawEvent) => {
+      const selectedFeature: Geometry = evt.feature.getGeometry()!
+      const point: Point = new Feature(selectedFeature.clone().transform(CoordinateSystems.MAP, CoordinateSystems.DATA)).getGeometry() as Point
+      handleSetMarker!(point.getCoordinates(), markerId)
+      markerId++
+      // remove draw interaction if we reach the max marker count
+      if (markerId >= maxMarkerCount) {
+        map!.removeInteraction(drawInteraction)
+      }
+    })
+  }
+
+  const initModifyListener = (modifyInteraction: Modify): void => {
+    modifyInteraction.on('modifyend', (evt: ModifyEvent) => {
+      const feature = evt.features.getArray()[0]
+      const featureId = feature.getId() as number
+      const modifiedFeature: Geometry = feature.getGeometry() as Geometry
+      const point: Point = new Feature(modifiedFeature.clone().transform(CoordinateSystems.MAP, CoordinateSystems.DATA)).getGeometry() as Point
+      handleSetMarker!(point.getCoordinates(), featureId)
+    })
+  }
+
+  const addModifyInteraction = (vectorSource: VectorSource): void => {
+    const modifyInteraction = new Modify({ source: vectorSource })
+    map!.addInteraction(modifyInteraction)
+
+    initModifyListener(modifyInteraction)
+  }
+
+  const setupDrawInteraction = (vectorSource: VectorSource, markerId: number): void => {
+    const drawInteraction = new Draw({
+      source: vectorSource,
+      type: 'Point',
+      style: markerId === 0 ? MapConfigurationService.getStartIcon() : MapConfigurationService.getEndIcon()
+    })
+
+    map!.addInteraction(drawInteraction)
+
+    initDrawListener(drawInteraction, markerId)
+  }
+
   useEffect(() => {
     // if map or features are not set do nothing
     if (!map || !features) {
       return
-    }
-
-    const setupMarkerLayer = (): VectorLayer<VectorSource> => {
-      let markerLayer = map.getAllLayers().find((layer: Layer) => layer.getProperties().name === MapLayers.WAYPOINT_MARKER) as VectorLayer<VectorSource>
-      let layerExtent: Extent = []
-
-      if (!markerLayer) {
-        markerLayer = createVectorLayer(MapLayers.WAYPOINT_MARKER)
-        layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
-        map.addLayer(markerLayer)
-      } else {
-        markerLayer.getSource()?.clear(true)
-        layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
-      }
-
-      // if no features were added the extent is set to an empty array
-      if (layerExtent.length !== 0) {
-        map.getView().fit(layerExtent, { size: map.getSize(), padding: [100, 100, 100, 100] })
-      }
-
-      return markerLayer
-    }
-
-    const initDrawListener = (drawInteraction: Draw, markerId: number): void => {
-      drawInteraction.on('drawend', (evt: DrawEvent) => {
-        const selectedFeature: Geometry = evt.feature.getGeometry()!
-        const point: Point = new Feature(selectedFeature.clone().transform(CoordinateSystems.MAP, CoordinateSystems.DATA)).getGeometry() as Point
-        handleSetMarker!(point.getCoordinates(), markerId)
-        markerId++
-        // remove draw interaction if we reach the max marker count
-        if (markerId >= maxMarkerCount) {
-          map.removeInteraction(drawInteraction)
-        }
-      })
-    }
-
-    const initModifyListener = (modifyInteraction: Modify): void => {
-      modifyInteraction.on('modifyend', (evt: ModifyEvent) => {
-        const feature = evt.features.getArray()[0]
-        const featureId = feature.getId() as number
-        const modifiedFeature: Geometry = feature.getGeometry() as Geometry
-        const point: Point = new Feature(modifiedFeature.clone().transform(CoordinateSystems.MAP, CoordinateSystems.DATA)).getGeometry() as Point
-        handleSetMarker!(point.getCoordinates(), featureId)
-      })
-    }
-
-    const addModifyInteraction = (vectorSource: VectorSource): void => {
-      const modifyInteraction = new Modify({ source: vectorSource })
-      map.addInteraction(modifyInteraction)
-
-      initModifyListener(modifyInteraction)
-    }
-
-    const setupDrawInteraction = (vectorSource: VectorSource, markerId: number): void => {
-      const drawInteraction = new Draw({
-        source: vectorSource,
-        type: 'Point',
-        style: markerId === 0 ? MapConfigurationService.getStartIcon() : MapConfigurationService.getEndIcon()
-      })
-
-      map.addInteraction(drawInteraction)
-
-      initDrawListener(drawInteraction, markerId)
     }
 
     const markerLayer = setupMarkerLayer()
