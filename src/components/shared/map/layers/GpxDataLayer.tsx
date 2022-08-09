@@ -24,16 +24,12 @@ type GpsMarkerLayerProps = {
 const GpxDataLayer = ({ gpxFile }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
-  useEffect(() => {
-    if (!map || !gpxFile) {
-      return
-    }
+  const addGpxDataLayer = (): VectorLayer<any> => {
+    const gpxDataLayer = createVectorLayer(MapLayers.GPX)
     const gpxVectorSource = new VectorSource({
-      url: getCloudStorageUrlForIdentifier(gpxFile.identifier),
+      url: getCloudStorageUrlForIdentifier(gpxFile!.identifier),
       format: new GPX()
     })
-
-    const gpxDataLayer = createVectorLayer(MapLayers.GPX)
     gpxDataLayer.setSource(gpxVectorSource)
     gpxDataLayer.setStyle(() => new Profile({
       scale: 4,
@@ -44,36 +40,56 @@ const GpxDataLayer = ({ gpxFile }: GpsMarkerLayerProps) => {
       })
     }))
 
-    map.addLayer(gpxDataLayer)
+    map!.addLayer(gpxDataLayer)
+    return gpxDataLayer
+  }
+
+  const setExtent = (gpxDataLayer: VectorLayer<VectorSource>) => {
+    map!.getView().fit(gpxDataLayer.getSource()?.getExtent()!, { size: map!.getSize(), padding: [100, 100, 100, 100] })
+  }
+
+  const getIconFeatures = (gpxGeometry: MultiLineString): Feature[] => {
+    const iconFeatureStart = new Feature({
+      geometry: new Point(gpxGeometry.getFirstCoordinate()),
+      name: 'Start'
+    })
+    iconFeatureStart.setStyle(MapConfigurationService.getStartIcon())
+
+    const iconFeatureEnd = new Feature({
+      geometry: new Point(gpxGeometry.getLastCoordinate()),
+      name: 'End'
+    })
+    iconFeatureEnd.setStyle(MapConfigurationService.getEndIcon())
+
+    return [iconFeatureStart, iconFeatureEnd]
+  }
+
+  const addMarkerLayer = (gpxDataLayer: VectorLayer<VectorSource>) => {
+    const gpxGeometry = gpxDataLayer.getSource()?.getFeatures()[0].getGeometry() as MultiLineString
+
+    const vectorLayer = new VectorLayer({
+      source: new VectorSource({
+        features: getIconFeatures(gpxGeometry)
+      })
+    })
+
+    map!.addLayer(vectorLayer)
+  }
+
+  useEffect(() => {
+    if (!map || !gpxFile) {
+      return
+    }
+
+    const gpxDataLayer = addGpxDataLayer()
 
     gpxDataLayer.getSource()!.on('addfeature', () => {
-      map.getView().fit(gpxDataLayer.getSource()?.getExtent()!, { size: map.getSize(), padding: [100, 100, 100, 100] })
+      setExtent(gpxDataLayer)
     })
-
     gpxDataLayer.getSource()!.on('featuresloadend', () => {
-      const feature = gpxDataLayer.getSource()?.getFeatures()[0].getGeometry() as MultiLineString
-
-      const vectorLayer = new VectorLayer({
-        source: new VectorSource()
-      })
-
-      const iconFeatureStart = new Feature({
-        geometry: new Point(feature.getFirstCoordinate()),
-        name: 'Start'
-      })
-      iconFeatureStart.setStyle(MapConfigurationService.getStartIcon())
-
-      const iconFeatureEnd = new Feature({
-        geometry: new Point(feature.getLastCoordinate()),
-        name: 'End'
-      })
-      iconFeatureEnd.setStyle(MapConfigurationService.getEndIcon())
-
-      vectorLayer.getSource()!.addFeature(iconFeatureStart)
-      vectorLayer.getSource()!.addFeature(iconFeatureEnd)
-
-      map.addLayer(vectorLayer)
+      addMarkerLayer(gpxDataLayer)
     })
+
     return () => {
       map.removeLayer(gpxDataLayer)
     }
