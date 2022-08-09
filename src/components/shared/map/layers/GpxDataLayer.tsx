@@ -32,7 +32,7 @@ const GpxDataLayer = ({ gpxFile }: GpsMarkerLayerProps) => {
     })
     gpxDataLayer.setSource(gpxVectorSource)
     gpxDataLayer.setStyle(() => new Profile({
-      scale: 4,
+      scale: 0.8,
       fill: new Fill({ color: [154, 154, 230, 0.8] }),
       stroke: new Stroke({
         color: '#2a2afa',
