@@ -50,7 +50,9 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
   }
 
   const setExtent = (gpxDataLayer: VectorLayer<VectorSource>) => {
-    map!.getView().fit(gpxDataLayer.getSource()?.getExtent()!, { size: map!.getSize(), padding: [100, 100, 100, 100] })
+    gpxDataLayer.getSource()!.on('addfeature', () => {
+      map!.getView().fit(gpxDataLayer.getSource()?.getExtent()!, { size: map!.getSize(), padding: [100, 100, 100, 100] })
+    })
   }
 
   const extractStartAndDestination = (gpxDataLayer: VectorLayer<VectorSource>): {start: TourPoint, destination: TourPoint} => {
@@ -74,6 +76,23 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     return vectorLayer
   }
 
+  const addStartAndDestinationMarkers = (markerLayerSource: VectorSource, gpxDataLayer: VectorLayer<VectorSource>): void => {
+    gpxDataLayer.getSource()!.on('featuresloadend', () => {
+      const { start, destination } = extractStartAndDestination(gpxDataLayer)
+      addFeaturesToVectorSource<TourPoint>([start, destination], markerLayerSource, MapConfigurationService.iconSelector)
+    })
+  }
+
+  const setStartAndDestinationPointsInTour = (markerLayer: VectorLayer<VectorSource>): void => {
+    markerLayer.getSource()!.on('featuresloadend', () => {
+      const features = markerLayer.getSource()?.getFeatures()
+      features?.forEach((feature: Feature) => {
+        const point: Point = feature.getGeometry()!.transform(CoordinateSystems.MAP, CoordinateSystems.DATA) as Point
+        handleSetMarker!(point.getCoordinates(), feature.getId()! as number)
+      })
+    })
+  }
+
   useEffect(() => {
     if (!map || !gpxFile) {
       return
@@ -82,22 +101,11 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     const gpxDataLayer = addGpxDataLayer()
     const markerLayer = addMarkerLayer()
 
-    gpxDataLayer.getSource()!.on('addfeature', () => {
-      setExtent(gpxDataLayer)
-    })
+    setExtent(gpxDataLayer)
 
-    gpxDataLayer.getSource()!.on('featuresloadend', () => {
-      const { start, destination } = extractStartAndDestination(gpxDataLayer)
-      addFeaturesToVectorSource<TourPoint>([start, destination], markerLayer.getSource()!, MapConfigurationService.iconSelector)
-    })
+    addStartAndDestinationMarkers(markerLayer.getSource()!, gpxDataLayer)
 
-    markerLayer.getSource()!.on('featuresloadend', () => {
-      const features = markerLayer.getSource()?.getFeatures()
-      features?.forEach((feature: Feature) => {
-        const point: Point = feature.getGeometry()!.transform(CoordinateSystems.MAP, CoordinateSystems.DATA) as Point
-        handleSetMarker!(point.getCoordinates(), feature.getId()! as number)
-      })
-    })
+    setStartAndDestinationPointsInTour(markerLayer)
 
     return () => {
       map.removeLayer(markerLayer)
