@@ -9,7 +9,7 @@ import { Fill, Stroke } from 'ol/style'
 import Profile from 'ol-ext/style/Profile'
 import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import { MapLayers } from '../../../../enums/map-layers'
-import { MultiLineString } from 'ol/geom'
+import { Geometry, MultiLineString } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
 import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import { TourPoint } from '../../../../types/tour'
@@ -61,11 +61,11 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     return {
       start: new TourPoint({
         type: 'Point',
-        coordinates: gpxPoint.getFirstCoordinate()
+        coordinates: [gpxPoint.getFirstCoordinate()[0], gpxPoint.getFirstCoordinate()[1]]
       }),
       destination: new TourPoint({
         type: 'Point',
-        coordinates: gpxPoint.getLastCoordinate()
+        coordinates: [gpxPoint.getLastCoordinate()[0], gpxPoint.getLastCoordinate()[1]]
       })
     }
   }
@@ -76,20 +76,22 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     return vectorLayer
   }
 
-  const addStartAndDestinationMarkers = (markerLayerSource: VectorSource, gpxDataLayer: VectorLayer<VectorSource>): void => {
-    gpxDataLayer.getSource()!.on('featuresloadend', () => {
-      const { start, destination } = extractStartAndDestination(gpxDataLayer)
-      addFeaturesToVectorSource<TourPoint>([start, destination], markerLayerSource, MapConfigurationService.iconSelector)
+  const updatePointInTour = (markerLayer: VectorLayer<VectorSource>): void => {
+    const features = markerLayer.getSource()?.getFeatures()
+    features?.forEach((feature: Feature) => {
+      const modifiedFeature: Geometry = feature.getGeometry() as Geometry
+      const point: Point = new Feature(modifiedFeature.clone().transform(CoordinateSystems.MAP, CoordinateSystems.DATA)).getGeometry() as Point
+      if (handleSetMarker) {
+        handleSetMarker(point.getCoordinates(), feature.getId()! as number)
+      }
     })
   }
 
-  const setStartAndDestinationPointsInTour = (markerLayer: VectorLayer<VectorSource>): void => {
-    markerLayer.getSource()!.on('featuresloadend', () => {
-      const features = markerLayer.getSource()?.getFeatures()
-      features?.forEach((feature: Feature) => {
-        const point: Point = feature.getGeometry()!.transform(CoordinateSystems.MAP, CoordinateSystems.DATA) as Point
-        handleSetMarker!(point.getCoordinates(), feature.getId()! as number)
-      })
+  const initSetMarkersHandler = (markerLayer: VectorLayer<VectorSource>, gpxDataLayer: VectorLayer<VectorSource>): void => {
+    gpxDataLayer.getSource()!.on('featuresloadend', () => {
+      const { start, destination } = extractStartAndDestination(gpxDataLayer)
+      addFeaturesToVectorSource<TourPoint>([start, destination], markerLayer.getSource()!, MapConfigurationService.iconSelector)
+      updatePointInTour(markerLayer)
     })
   }
 
@@ -103,15 +105,15 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
 
     setExtent(gpxDataLayer)
 
-    addStartAndDestinationMarkers(markerLayer.getSource()!, gpxDataLayer)
-
-    setStartAndDestinationPointsInTour(markerLayer)
+    initSetMarkersHandler(markerLayer, gpxDataLayer)
 
     return () => {
       map.removeLayer(markerLayer)
       map.removeLayer(gpxDataLayer)
-      handleSetMarker!([], 0)
-      handleSetMarker!([], 1)
+      if (handleSetMarker) {
+        handleSetMarker([], 0)
+        handleSetMarker([], 1)
+      }
     }
   }, [map, gpxFile])
 

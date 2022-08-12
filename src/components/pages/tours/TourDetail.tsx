@@ -25,6 +25,7 @@ import useCheckConnection from '../../../hooks/use-check-connection'
 import useErrorHandling from '../../../hooks/use-error-handling'
 import getCloudStorageUrlForIdentifier from '../../../utils/storage-helper'
 import DescriptionIcon from '@mui/icons-material/Description'
+import GpxDataLayer from '../../shared/map/layers/GpxDataLayer'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -129,8 +130,11 @@ const TourDetail = () => {
       {!isOffline() &&
           <>
               <MapWrapper>
-                  <WayPointMarkerLayer features={getWayPointMarkerFeatures()}/>
-                  <GpsImageMarkerLayer features={geoReferencedImages}/>
+                {!tour.gpxFile &&
+                    <WayPointMarkerLayer features={getWayPointMarkerFeatures()}/>
+                }
+                <GpxDataLayer gpxFile={tour.gpxFile}/>
+                <GpsImageMarkerLayer features={geoReferencedImages}/>
               </MapWrapper>
           </>
       }

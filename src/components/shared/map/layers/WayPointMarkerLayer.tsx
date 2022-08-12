@@ -77,14 +77,16 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
     })
   }
 
-  const addModifyInteraction = (vectorSource: VectorSource): void => {
+  const addModifyInteraction = (vectorSource: VectorSource): Modify => {
     const modifyInteraction = new Modify({ source: vectorSource })
     map!.addInteraction(modifyInteraction)
 
     initModifyListener(modifyInteraction)
+
+    return modifyInteraction
   }
 
-  const setupDrawInteraction = (vectorSource: VectorSource, markerId: number): void => {
+  const setupDrawInteraction = (vectorSource: VectorSource, markerId: number): Draw => {
     const drawInteraction = new Draw({
       source: vectorSource,
       type: 'Point',
@@ -94,6 +96,8 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
     map!.addInteraction(drawInteraction)
 
     initDrawListener(drawInteraction, markerId)
+
+    return drawInteraction
   }
 
   useEffect(() => {
@@ -104,18 +108,21 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
 
     const markerLayer = setupMarkerLayer()
     const source = markerLayer.getSource() as VectorSource
-
+    let drawInteraction: Draw
+    let modifyInteraction: Modify
     // only add interactions when type is set (type = 'edit' or 'create')
     if (type) {
       const markerId = source.getFeatures().length
-      addModifyInteraction(source)
+      modifyInteraction = addModifyInteraction(source)
       if (markerId < maxMarkerCount) {
-        setupDrawInteraction(source, markerId)
+        drawInteraction = setupDrawInteraction(source, markerId)
       }
     }
 
     return () => {
       map.removeLayer(markerLayer)
+      map.removeInteraction(drawInteraction)
+      map.removeInteraction(modifyInteraction)
     }
   }, [map, features, handleSetMarker, type])
   return null
