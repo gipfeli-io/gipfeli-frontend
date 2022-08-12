@@ -6,6 +6,7 @@ import pinDefault from '../../static/img/map/pin_default.png' // Source: https:/
 import { FeatureLike } from 'ol/Feature'
 import { Icon, Stroke, Style } from 'ol/style'
 import { MarkerSize } from '../../enums/marker-size'
+import { TourPoint } from '../../types/tour'
 
 enum StyleCache {
   WAYPOINT_START,
@@ -29,6 +30,10 @@ export default class MapConfigurationService {
    * @private
    */
   private static styleCache: Map<StyleCache, Style> = new Map()
+
+  public static iconSelector (index: number, tourPoints: TourPoint[]) : Style {
+    return index === tourPoints.length - 1 ? MapConfigurationService.getEndIcon() : MapConfigurationService.getStartIcon()
+  }
 
   /**
    * Icon used to designate the start point of a tour.
