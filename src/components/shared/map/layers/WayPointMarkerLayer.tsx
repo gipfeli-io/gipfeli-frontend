@@ -9,7 +9,6 @@ import VectorLayer from 'ol/layer/Vector'
 import { Layer } from 'ol/layer'
 import { DrawEvent } from 'ol/interaction/Draw'
 import { ModifyEvent } from 'ol/interaction/Modify'
-import { StyleSelector } from '../../../../types/map'
 import { MapLayers } from '../../../../enums/map-layers'
 import { TourPoint } from '../../../../types/tour'
 import { Extent } from 'ol/extent'
@@ -29,11 +28,13 @@ type WayPointMarkerLayerProps = {
  */
 const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarkerLayerProps) => {
   const { map } = useContext(MapContext)
-
   const maxMarkerCount = MapConfigurationService.getMaxMarkerCount()
 
-  const iconSelector: StyleSelector<TourPoint> = (index, objects) => {
-    return index === objects.length - 1 ? MapConfigurationService.getEndIcon() : MapConfigurationService.getStartIcon()
+  const fitToExtent = (layerExtent: Extent) => {
+    // check if layer extent is set (if no features were added layer extent is empty array or contains infinite values)
+    if (layerExtent.length !== 0 && layerExtent.filter((value: number) => isFinite(value)).length !== 0) {
+      map!.getView().fit(layerExtent, { size: map!.getSize(), padding: [100, 100, 100, 100] })
+    }
   }
 
   const setupMarkerLayer = (): VectorLayer<VectorSource> => {
@@ -41,17 +42,14 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
     let layerExtent: Extent
     if (!markerLayer) {
       markerLayer = createVectorLayer(MapLayers.WAYPOINT_MARKER)
-      layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
+      layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, MapConfigurationService.iconSelector)
       map!.addLayer(markerLayer)
     } else {
       markerLayer.getSource()?.clear(true)
-      layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, iconSelector)
+      layerExtent = addFeaturesToVectorSource<TourPoint>(features, markerLayer.getSource()!, MapConfigurationService.iconSelector)
     }
 
-    // if no features were added the extent is set to an empty array
-    if (layerExtent.length !== 0) {
-      map!.getView().fit(layerExtent, { size: map!.getSize(), padding: [100, 100, 100, 100] })
-    }
+    fitToExtent(layerExtent)
 
     return markerLayer
   }
@@ -111,7 +109,7 @@ const WayPointMarkerLayer = ({ features, type, handleSetMarker }: WayPointMarker
     if (type) {
       const markerId = source.getFeatures().length
       addModifyInteraction(source)
-      if (type === 'Create' && markerId < maxMarkerCount) {
+      if (markerId < maxMarkerCount) {
         setupDrawInteraction(source, markerId)
       }
     }
