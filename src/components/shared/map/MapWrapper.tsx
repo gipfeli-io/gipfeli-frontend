@@ -54,6 +54,7 @@ const MapWrapper = ({ children }: PropsWithChildren<any>) => {
         a cluster of images, which spread open when clicked. If an image is part of a cluster, its tooltip will point
         at the actual location of the image.
       </Typography>
+      <div className="map-profile"></div>
     </MapContext.Provider>
   )
 }
