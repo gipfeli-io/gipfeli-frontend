@@ -1,12 +1,14 @@
 import Profil from 'ol-ext/control/Profile'
-import { Fill, Style } from 'ol/style'
+import { Fill, RegularShape, Stroke, Style } from 'ol/style'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { CoordinateSystems } from '../../enums/coordinate-systems'
 import { Feature, Map, MapBrowserEvent } from 'ol'
 import Hover, { HoverEvent } from 'ol-ext/interaction/Hover'
-import { Point } from 'ol/geom'
+import { Geometry, Point } from 'ol/geom'
 import { Coordinate } from 'ol/coordinate'
+import { GeoJSON } from 'ol/format'
+import { TourPoint } from '../../types/tour'
 
 type HoverInteraction = {
   type: string,
@@ -29,6 +31,36 @@ export const addProfileControl = (map: Map): Profil => {
   return profile
 }
 
+const style = [
+  new Style({
+    image: new RegularShape({
+      radius: 10,
+      radius2: 5,
+      points: 5,
+      fill: new Fill({ color: 'blue' })
+    }),
+    stroke: new Stroke({
+      color: [255, 0, 0],
+      width: 2
+    })
+  })
+]
+
+const drawPoint = (point?: Feature<Geometry>, hoverInteraction?: HoverInteraction) => {
+  if (!point) {
+    return
+  }
+
+  if (hoverInteraction?.type === 'over') {
+    // Show point at coord
+    point.setGeometry(new Point(hoverInteraction.coordinates!))
+    point.setStyle(style)
+  } else {
+    // hide point
+    point.setStyle([])
+  }
+}
+
 export const setProfil = (profileControl: Profil, gpxDataLayer: VectorLayer<VectorSource>): void => {
   const source = gpxDataLayer.getSource()!
   const feature = source.getFeatures()[0]
@@ -40,27 +72,28 @@ export const setProfil = (profileControl: Profil, gpxDataLayer: VectorLayer<Vect
   })
 }
 
-const drawPoint = (point?: Feature, hoverInteraction?: HoverInteraction) => {
-  if (!point) {
-    return
-  }
+export const setProfilPointOnLayer = (gpxDataLayer: VectorLayer<VectorSource>): Feature<Geometry> => {
+  const initPoint = new TourPoint({
+    type: 'Point',
+    coordinates: [7.1031948, 46.8095952]
+  })
 
-  if (hoverInteraction?.type === 'over') {
-    // Show point at coord
-    point.setGeometry(new Point(hoverInteraction.coordinates!))
-    point.setStyle([])
-  } else {
-    // hide point
-    point.setStyle([])
-  }
+  const jsonFeature = new GeoJSON().readFeature(initPoint.getGeometry(), {
+    dataProjection: CoordinateSystems.DATA,
+    featureProjection: CoordinateSystems.MAP
+  })
+  jsonFeature.setStyle()
+  jsonFeature.setId('profile_point')
+  gpxDataLayer.getSource()!.addFeature(jsonFeature)
+  return jsonFeature
 }
 
-export const addHoverInteraction = (map: Map, gpxDataLayer: VectorLayer<VectorSource>, profil: Profil, point: Feature): Hover => {
+export const addHoverInteraction = (map: Map, gpxDataLayer: VectorLayer<VectorSource>, profil: Profil, point: Feature<Geometry>): Hover => {
   const hover = new Hover({
     cursor: 'pointer',
     hitTolerance: 10,
     handleEvent (_p0: MapBrowserEvent<UIEvent>): boolean {
-      return false
+      return true
     }
   })
   map.addInteraction(hover)
@@ -74,7 +107,7 @@ export const addHoverInteraction = (map: Map, gpxDataLayer: VectorLayer<VectorSo
 
   hover.on('leave', () => {
     profil.showAt([])
-    drawPoint()
+    drawPoint(point)
   })
   return hover
 }

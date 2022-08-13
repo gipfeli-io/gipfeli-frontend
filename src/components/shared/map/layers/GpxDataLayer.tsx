@@ -11,15 +11,20 @@ import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import { MapLayers } from '../../../../enums/map-layers'
 import { Geometry, MultiLineString } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
-import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import { TourPoint } from '../../../../types/tour'
 import Point from 'ol/geom/Point'
 import { Feature } from 'ol'
 import { CoordinateSystems } from '../../../../enums/coordinate-systems'
-import MapConfigurationService from '../../../../services/map/map-configuration-service'
 import Profile from 'ol-ext/style/Profile'
-import { addProfileControl, setProfil } from '../../../../utils/map/profile-control-helper'
+import {
+  addHoverInteraction,
+  addProfileControl,
+  setProfil,
+  setProfilPointOnLayer
+} from '../../../../utils/map/profil-control-helper'
 import Profil from 'ol-ext/control/Profile'
+import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
+import MapConfigurationService from '../../../../services/map/map-configuration-service'
 
 type GpsMarkerLayerProps = {
   gpxFile?: GpxFileUpload,
@@ -31,29 +36,6 @@ type GpsMarkerLayerProps = {
  */
 const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
-
-  /* const style = [
-    new Style({
-      image: new RegularShape({
-        radius: 10,
-        radius2: 5,
-        points: 5,
-        fill: new Fill({ color: 'blue' })
-      }),
-      stroke: new Stroke({
-        color: [255, 0, 0],
-        width: 2
-      })
-    })
-  ]
-  const selStyle = [
-    new Style({
-      stroke: new Stroke({
-        color: [0, 0, 255],
-        width: 2
-      })
-    })
-  ] */
 
   const addGpxDataLayer = (): VectorLayer<VectorSource> => {
     const gpxDataLayer = createVectorLayer(MapLayers.GPX)
@@ -70,7 +52,6 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
         width: 4
       })
     }))
-
     map!.addLayer(gpxDataLayer)
     return gpxDataLayer
   }
@@ -119,6 +100,8 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
       addFeaturesToVectorSource<TourPoint>([start, destination], markerLayer.getSource()!, MapConfigurationService.iconSelector)
       updatePointInTour(markerLayer)
       setProfil(profileControl, gpxDataLayer)
+      const profilePoint = setProfilPointOnLayer(gpxDataLayer)
+      addHoverInteraction(map!, gpxDataLayer, profileControl, profilePoint)
     })
   }
 
