@@ -12,7 +12,7 @@ import { TourPoint } from '../../types/tour'
 
 type HoverInteraction = {
   type: string,
-  coordinates: Coordinate | undefined
+  coord: Coordinate | undefined
 }
 
 export const addProfileControl = (map: Map): Profil => {
@@ -46,14 +46,14 @@ const style = [
   })
 ]
 
-const drawPoint = (point?: Feature<Geometry>, hoverInteraction?: HoverInteraction) => {
+export const drawPoint = (point?: Feature<Geometry>, hoverInteraction?: HoverInteraction) => {
   if (!point) {
     return
   }
 
   if (hoverInteraction?.type === 'over') {
     // Show point at coord
-    point.setGeometry(new Point(hoverInteraction.coordinates!))
+    point.setGeometry(new Point(hoverInteraction.coord!))
     point.setStyle(style)
   } else {
     // hide point
@@ -101,7 +101,7 @@ export const addHoverInteraction = (map: Map, gpxDataLayer: VectorLayer<VectorSo
   hover.on('hover', (event: HoverEvent) => {
     const feature = gpxDataLayer.getSource()?.getFeatures()[0]
     const pointOnLine = feature?.getGeometry()?.getClosestPoint(event.coordinate)
-    drawPoint(point, { type: 'over', coordinates: pointOnLine })
+    drawPoint(point, { type: 'over', coord: pointOnLine })
     profil.showAt(event.coordinate)
   })
 

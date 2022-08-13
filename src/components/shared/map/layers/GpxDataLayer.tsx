@@ -18,7 +18,7 @@ import { CoordinateSystems } from '../../../../enums/coordinate-systems'
 import Profile from 'ol-ext/style/Profile'
 import {
   addHoverInteraction,
-  addProfileControl,
+  addProfileControl, drawPoint,
   setProfil,
   setProfilPointOnLayer
 } from '../../../../utils/map/profil-control-helper'
@@ -57,9 +57,7 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
   }
 
   const setExtent = (gpxDataLayer: VectorLayer<VectorSource>) => {
-    gpxDataLayer.getSource()!.on('addfeature', () => {
       map!.getView().fit(gpxDataLayer.getSource()?.getExtent()!, { size: map!.getSize(), padding: [100, 100, 100, 100] })
-    })
   }
 
   const extractStartAndDestination = (gpxDataLayer: VectorLayer<VectorSource>): {start: TourPoint, destination: TourPoint} => {
@@ -96,11 +94,16 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
 
   const initSetMarkersHandler = (profileControl: Profil, markerLayer: VectorLayer<VectorSource>, gpxDataLayer: VectorLayer<VectorSource>): void => {
     gpxDataLayer.getSource()!.on('featuresloadend', () => {
+      setExtent(gpxDataLayer)
       const { start, destination } = extractStartAndDestination(gpxDataLayer)
       addFeaturesToVectorSource<TourPoint>([start, destination], markerLayer.getSource()!, MapConfigurationService.iconSelector)
       updatePointInTour(markerLayer)
       setProfil(profileControl, gpxDataLayer)
       const profilePoint = setProfilPointOnLayer(gpxDataLayer)
+      // @ts-ignore
+      profileControl.on(['over', 'out'], (event:any) => { // todo: find out what type of event it is
+        drawPoint(profilePoint, event)
+      })
       addHoverInteraction(map!, gpxDataLayer, profileControl, profilePoint)
     })
   }
@@ -113,7 +116,6 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     const gpxDataLayer = addGpxDataLayer()
     const markerLayer = addMarkerLayer()
     const profileControl = addProfileControl(map)
-    setExtent(gpxDataLayer)
 
     initSetMarkersHandler(profileControl, markerLayer, gpxDataLayer)
 
