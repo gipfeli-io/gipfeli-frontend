@@ -1,14 +1,15 @@
 import Profil from 'ol-ext/control/Profile'
-import { Fill, RegularShape, Stroke, Style } from 'ol/style'
+import { Fill, Stroke, Style } from 'ol/style'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { CoordinateSystems } from '../../enums/coordinate-systems'
 import { Feature, Map, MapBrowserEvent } from 'ol'
 import Hover, { HoverEvent } from 'ol-ext/interaction/Hover'
-import { Geometry, Point } from 'ol/geom'
+import { Geometry, LineString, Point } from 'ol/geom'
 import { Coordinate } from 'ol/coordinate'
 import { GeoJSON } from 'ol/format'
 import { TourPoint } from '../../types/tour'
+import CircleStyle from 'ol/style/Circle'
 
 type HoverInteraction = {
   type: string,
@@ -33,11 +34,9 @@ export const addProfileControl = (map: Map): Profil => {
 
 const style = [
   new Style({
-    image: new RegularShape({
-      radius: 10,
-      radius2: 5,
-      points: 5,
-      fill: new Fill({ color: 'blue' })
+    image: new CircleStyle({
+      radius: 6,
+      fill: new Fill({ color: 'red' })
     }),
     stroke: new Stroke({
       color: [255, 0, 0],
@@ -88,7 +87,7 @@ export const setProfilPointOnLayer = (gpxDataLayer: VectorLayer<VectorSource>): 
   return jsonFeature
 }
 
-export const addHoverInteraction = (map: Map, gpxDataLayer: VectorLayer<VectorSource>, profil: Profil, point: Feature<Geometry>): Hover => {
+export const addHoverInteraction = (map: Map, dataLayer: VectorLayer<VectorSource>, profil: Profil, point: Feature<Geometry>): Hover => {
   const hover = new Hover({
     cursor: 'pointer',
     hitTolerance: 10,
@@ -99,7 +98,7 @@ export const addHoverInteraction = (map: Map, gpxDataLayer: VectorLayer<VectorSo
   map.addInteraction(hover)
 
   hover.on('hover', (event: HoverEvent) => {
-    const feature = gpxDataLayer.getSource()?.getFeatures()[0]
+    const feature = dataLayer.getSource()?.getFeatures()[0]
     const pointOnLine = feature?.getGeometry()?.getClosestPoint(event.coordinate)
     drawPoint(point, { type: 'over', coord: pointOnLine })
     profil.showAt(event.coordinate)
@@ -110,4 +109,51 @@ export const addHoverInteraction = (map: Map, gpxDataLayer: VectorLayer<VectorSo
     drawPoint(point)
   })
   return hover
+}
+
+export const addSelectionInteraction = (profil: Profil, dataLayer: VectorLayer<VectorSource>) => {
+  let start = 0
+  let selection: Feature<LineString> | null
+
+  // @ts-ignore
+  profil.on('click', () => {
+    if (selection) {
+      dataLayer.getSource()?.removeFeature(selection)
+      selection = null
+    }
+  })
+
+  // @ts-ignore
+  profil.on('dragstart', (event:any) => {
+    start = event.index
+  })
+
+  // @ts-ignore
+  profil.on(['dragend', 'dragging'], (event: any) => {
+    const profileSelection = profil.getSelection(start, event.index)
+    if (selection) {
+      selection.getGeometry()!.setCoordinates(profileSelection)
+    } else {
+      selection = new Feature<LineString>(new LineString(profileSelection))
+      selection.set('select', true)
+      dataLayer.getSource()?.addFeature(selection)
+    }
+  })
+
+  // @ts-ignore
+  profil.on('zoom', (event: any) => {
+    setTimeout(() => {
+      if (selection) {
+        dataLayer.getSource()?.removeFeature(selection)
+      }
+
+      if (event.geometry) {
+        selection = new Feature<LineString>(event.geometry)
+        selection.set('select', true)
+        dataLayer.getSource()?.addFeature(selection)
+      } else {
+        selection = null
+      }
+    })
+  })
 }

@@ -6,7 +6,6 @@ import 'ol-ext/dist/ol-ext.css'
 import { GpxFileUpload } from '../../../../types/media'
 import getCloudStorageUrlForIdentifier from '../../../../utils/storage-helper'
 import { GPX } from 'ol/format'
-import { Fill, Stroke } from 'ol/style'
 import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import { MapLayers } from '../../../../enums/map-layers'
 import { Geometry, MultiLineString } from 'ol/geom'
@@ -15,16 +14,18 @@ import { TourPoint } from '../../../../types/tour'
 import Point from 'ol/geom/Point'
 import { Feature } from 'ol'
 import { CoordinateSystems } from '../../../../enums/coordinate-systems'
-import Profile from 'ol-ext/style/Profile'
 import {
   addHoverInteraction,
-  addProfileControl, drawPoint,
+  addProfileControl, addSelectionInteraction, drawPoint,
   setProfil,
   setProfilPointOnLayer
 } from '../../../../utils/map/profil-control-helper'
 import Profil from 'ol-ext/control/Profile'
 import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
+import { Stroke, Style } from 'ol/style'
+import { FeatureLike } from 'ol/Feature'
+import Profile from 'ol-ext/style/Profile'
 
 type GpsMarkerLayerProps = {
   gpxFile?: GpxFileUpload,
@@ -37,6 +38,28 @@ type GpsMarkerLayerProps = {
 const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
+  const setGpxDataLayerStyle = (gpxDataLayer: VectorLayer<VectorSource>): void => {
+    gpxDataLayer.setStyle((feature: FeatureLike) => {
+      const multiLineStringStyle =
+        new Style({
+          stroke: feature.get('select')
+            ? new Stroke({
+              color: 'red',
+              width: 4
+            })
+            : new Stroke({
+              color: '#0f0',
+              width: 3
+            })
+        })
+      const profileStyle = new Profile({
+        scale: 0.8
+      })
+
+      return [profileStyle, multiLineStringStyle]
+    })
+  }
+
   const addGpxDataLayer = (): VectorLayer<VectorSource> => {
     const gpxDataLayer = createVectorLayer(MapLayers.GPX)
     const gpxVectorSource = new VectorSource({
@@ -44,14 +67,7 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
       format: new GPX()
     })
     gpxDataLayer.setSource(gpxVectorSource)
-    gpxDataLayer.setStyle(() => new Profile({
-      scale: 0.8,
-      fill: new Fill({ color: [154, 154, 230, 0.8] }),
-      stroke: new Stroke({
-        color: '#2a2afa',
-        width: 4
-      })
-    }))
+    setGpxDataLayerStyle(gpxDataLayer)
     map!.addLayer(gpxDataLayer)
     return gpxDataLayer
   }
@@ -105,6 +121,7 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
         drawPoint(profilePoint, event)
       })
       addHoverInteraction(map!, gpxDataLayer, profileControl, profilePoint)
+      addSelectionInteraction(profileControl, gpxDataLayer)
     })
   }
 
