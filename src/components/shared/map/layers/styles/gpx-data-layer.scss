@@ -1,0 +1,12 @@
+.map-profile {
+  display: table;
+  margin: 0.5rem !important;
+  position: relative;
+  z-index: 1;
+  margin:1rem;
+
+  &.ul{
+    list-style: none;
+    padding-left: 0.5rem;
+  }
+}

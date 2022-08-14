@@ -21,7 +21,6 @@ export const addProfileControl = (map: Map): Profil => {
     target: document.querySelector('.map-profile') as string | HTMLElement | undefined, // fuck is this ugly. is there a better way?
     className: 'ol-profil',
     title: 'Profile',
-    selectable: true,
     style: new Style({
       fill: new Fill({ color: '#ccc' })
     }),

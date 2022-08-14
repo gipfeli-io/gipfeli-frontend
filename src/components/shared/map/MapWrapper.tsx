@@ -4,6 +4,7 @@ import 'ol/ol.css'
 import TileLayer from 'ol/layer/Tile'
 import { TileWMS } from 'ol/source'
 import styles from './MapWrapper.module.scss'
+import './layers/styles/gpx-data-layer.scss'
 import MapContext from './MapContext'
 import { CoordinateSystems } from '../../../enums/coordinate-systems'
 import Typography from '@mui/material/Typography'
@@ -54,7 +55,7 @@ const MapWrapper = ({ children }: PropsWithChildren<any>) => {
         a cluster of images, which spread open when clicked. If an image is part of a cluster, its tooltip will point
         at the actual location of the image.
       </Typography>
-      <div className="map-profile"></div>
+      <div className="map-profile"/>
     </MapContext.Provider>
   )
 }
