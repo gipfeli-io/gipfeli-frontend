@@ -1,22 +1,30 @@
 import { useContext, useEffect } from 'react'
 import MapContext from '../MapContext'
 import VectorSource from 'ol/source/Vector'
+import 'ol/ol.css'
 import 'ol-ext/dist/ol-ext.css'
 import { GpxFileUpload } from '../../../../types/media'
 import getCloudStorageUrlForIdentifier from '../../../../utils/storage-helper'
 import { GPX } from 'ol/format'
-import { Fill, Stroke } from 'ol/style'
-import Profile from 'ol-ext/style/Profile'
 import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import { MapLayers } from '../../../../enums/map-layers'
 import { Geometry, MultiLineString } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
-import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import { TourPoint } from '../../../../types/tour'
 import Point from 'ol/geom/Point'
 import { Feature } from 'ol'
 import { CoordinateSystems } from '../../../../enums/coordinate-systems'
+import {
+  addHoverInteraction, addProfilControlInteraction,
+  addProfileControl,
+  setProfil,
+  setProfilPointOnLayer
+} from '../../../../utils/map/profil-control-helper'
+import Profil from 'ol-ext/control/Profile'
+import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
+import { Fill, Stroke, Style } from 'ol/style'
+import Profile from 'ol-ext/style/Profile'
 
 type GpsMarkerLayerProps = {
   gpxFile?: GpxFileUpload,
@@ -29,6 +37,28 @@ type GpsMarkerLayerProps = {
 const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
+  const setGpxDataLayerStyle = (gpxDataLayer: VectorLayer<VectorSource>): void => {
+    gpxDataLayer.setStyle(() => {
+      const multiLineStringStyle =
+        new Style({
+          stroke: new Stroke({
+            color: '#2a2afa',
+            width: 4
+          })
+        })
+      const profileStyle = new Profile({
+        scale: 0.8,
+        fill: new Fill({ color: [154, 154, 230, 0.4] }),
+        stroke: new Stroke({
+          color: [42, 42, 250, 1],
+          width: 1
+        })
+      })
+
+      return [profileStyle, multiLineStringStyle]
+    })
+  }
+
   const addGpxDataLayer = (): VectorLayer<VectorSource> => {
     const gpxDataLayer = createVectorLayer(MapLayers.GPX)
     const gpxVectorSource = new VectorSource({
@@ -36,23 +66,13 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
       format: new GPX()
     })
     gpxDataLayer.setSource(gpxVectorSource)
-    gpxDataLayer.setStyle(() => new Profile({
-      scale: 0.8,
-      fill: new Fill({ color: [154, 154, 230, 0.8] }),
-      stroke: new Stroke({
-        color: '#2a2afa',
-        width: 4
-      })
-    }))
-
+    setGpxDataLayerStyle(gpxDataLayer)
     map!.addLayer(gpxDataLayer)
     return gpxDataLayer
   }
 
   const setExtent = (gpxDataLayer: VectorLayer<VectorSource>) => {
-    gpxDataLayer.getSource()!.on('addfeature', () => {
       map!.getView().fit(gpxDataLayer.getSource()?.getExtent()!, { size: map!.getSize(), padding: [100, 100, 100, 100] })
-    })
   }
 
   const extractStartAndDestination = (gpxDataLayer: VectorLayer<VectorSource>): {start: TourPoint, destination: TourPoint} => {
@@ -87,12 +107,17 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     })
   }
 
-  const initSetMarkersHandler = (markerLayer: VectorLayer<VectorSource>, gpxDataLayer: VectorLayer<VectorSource>): void => {
-    gpxDataLayer.getSource()!.on('featuresloadend', () => {
-      const { start, destination } = extractStartAndDestination(gpxDataLayer)
-      addFeaturesToVectorSource<TourPoint>([start, destination], markerLayer.getSource()!, MapConfigurationService.iconSelector)
-      updatePointInTour(markerLayer)
-    })
+  const setProfilControl = (profileControl: Profil, gpxDataLayer: VectorLayer<VectorSource>): void => {
+    setProfil(profileControl, gpxDataLayer)
+    const profilePoint = setProfilPointOnLayer(gpxDataLayer)
+    addProfilControlInteraction(profileControl, profilePoint)
+    addHoverInteraction(map!, gpxDataLayer, profileControl, profilePoint)// todo: can we add this on profile control open only?
+  }
+
+  const addStartAndDestinationPoints = (markerLayer: VectorLayer<VectorSource>, gpxDataLayer: VectorLayer<VectorSource>) => {
+    const { start, destination } = extractStartAndDestination(gpxDataLayer)
+    addFeaturesToVectorSource<TourPoint>([start, destination], markerLayer.getSource()!, MapConfigurationService.iconSelector)
+    updatePointInTour(markerLayer)
   }
 
   useEffect(() => {
@@ -102,14 +127,18 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
 
     const gpxDataLayer = addGpxDataLayer()
     const markerLayer = addMarkerLayer()
+    const profileControl = addProfileControl(map)
 
-    setExtent(gpxDataLayer)
-
-    initSetMarkersHandler(markerLayer, gpxDataLayer)
+    gpxDataLayer.getSource()!.on('featuresloadend', () => {
+      setExtent(gpxDataLayer)
+      addStartAndDestinationPoints(markerLayer, gpxDataLayer)
+      setProfilControl(profileControl, gpxDataLayer)
+    })
 
     return () => {
       map.removeLayer(markerLayer)
       map.removeLayer(gpxDataLayer)
+      map.removeControl(profileControl)
       if (handleSetMarker) {
         handleSetMarker([], 0)
         handleSetMarker([], 1)
