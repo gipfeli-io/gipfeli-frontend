@@ -18,14 +18,13 @@ type HoverInteraction = {
 
 export const addProfileControl = (map: Map): Profil => {
   const profile = new Profil({
-    target: document.querySelector('.map-profile') as string | HTMLElement | undefined, // fuck is this ugly. is there a better way?
     className: 'ol-profil',
     title: 'Profile',
     style: new Style({
       fill: new Fill({ color: '#ccc' })
     }),
-    width: 600,
-    height: 300
+    width: 400,
+    height: 200
   })
   map.addControl(profile)
   return profile
@@ -73,7 +72,7 @@ export const setProfil = (profileControl: Profil, gpxDataLayer: VectorLayer<Vect
 export const setProfilPointOnLayer = (gpxDataLayer: VectorLayer<VectorSource>): Feature<Geometry> => {
   const initPoint = new TourPoint({
     type: 'Point',
-    coordinates: [7.1031948, 46.8095952]
+    coordinates: [0, 0]
   })
 
   const jsonFeature = new GeoJSON().readFeature(initPoint.getGeometry(), {
@@ -108,4 +107,11 @@ export const addHoverInteraction = (map: Map, dataLayer: VectorLayer<VectorSourc
     drawPoint(point)
   })
   return hover
+}
+
+export const addProfilControlInteraction = (profil: Profil, profilePoint: Feature<Geometry>) => {
+  // @ts-ignore
+  profil.on(['over', 'out'], (event:any) => { // todo: find out what type of event it is and how to handle interaction array
+    drawPoint(profilePoint, event)
+  })
 }

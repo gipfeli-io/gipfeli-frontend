@@ -15,8 +15,8 @@ import Point from 'ol/geom/Point'
 import { Feature } from 'ol'
 import { CoordinateSystems } from '../../../../enums/coordinate-systems'
 import {
-  addHoverInteraction,
-  addProfileControl, drawPoint,
+  addHoverInteraction, addProfilControlInteraction,
+  addProfileControl,
   setProfil,
   setProfilPointOnLayer
 } from '../../../../utils/map/profil-control-helper'
@@ -107,20 +107,17 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     })
   }
 
-  const initSetMarkersHandler = (profileControl: Profil, markerLayer: VectorLayer<VectorSource>, gpxDataLayer: VectorLayer<VectorSource>): void => {
-    gpxDataLayer.getSource()!.on('featuresloadend', () => {
-      setExtent(gpxDataLayer)
-      const { start, destination } = extractStartAndDestination(gpxDataLayer)
-      addFeaturesToVectorSource<TourPoint>([start, destination], markerLayer.getSource()!, MapConfigurationService.iconSelector)
-      updatePointInTour(markerLayer)
-      setProfil(profileControl, gpxDataLayer)
-      const profilePoint = setProfilPointOnLayer(gpxDataLayer)
-      // @ts-ignore
-      profileControl.on(['over', 'out'], (event:any) => { // todo: find out what type of event it is
-        drawPoint(profilePoint, event)
-      })
-      addHoverInteraction(map!, gpxDataLayer, profileControl, profilePoint)
-    })
+  const setProfilControl = (profileControl: Profil, gpxDataLayer: VectorLayer<VectorSource>): void => {
+    setProfil(profileControl, gpxDataLayer)
+    const profilePoint = setProfilPointOnLayer(gpxDataLayer)
+    addProfilControlInteraction(profileControl, profilePoint)
+    addHoverInteraction(map!, gpxDataLayer, profileControl, profilePoint)// todo: can we add this on profile control open only?
+  }
+
+  const addStartAndDestinationPoints = (markerLayer: VectorLayer<VectorSource>, gpxDataLayer: VectorLayer<VectorSource>) => {
+    const { start, destination } = extractStartAndDestination(gpxDataLayer)
+    addFeaturesToVectorSource<TourPoint>([start, destination], markerLayer.getSource()!, MapConfigurationService.iconSelector)
+    updatePointInTour(markerLayer)
   }
 
   useEffect(() => {
@@ -132,7 +129,11 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     const markerLayer = addMarkerLayer()
     const profileControl = addProfileControl(map)
 
-    initSetMarkersHandler(profileControl, markerLayer, gpxDataLayer)
+    gpxDataLayer.getSource()!.on('featuresloadend', () => {
+      setExtent(gpxDataLayer)
+      addStartAndDestinationPoints(markerLayer, gpxDataLayer)
+      setProfilControl(profileControl, gpxDataLayer)
+    })
 
     return () => {
       map.removeLayer(markerLayer)
