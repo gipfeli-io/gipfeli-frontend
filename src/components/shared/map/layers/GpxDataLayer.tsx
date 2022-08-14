@@ -16,15 +16,14 @@ import { Feature } from 'ol'
 import { CoordinateSystems } from '../../../../enums/coordinate-systems'
 import {
   addHoverInteraction,
-  addProfileControl, addSelectionInteraction, drawPoint,
+  addProfileControl, drawPoint,
   setProfil,
   setProfilPointOnLayer
 } from '../../../../utils/map/profil-control-helper'
 import Profil from 'ol-ext/control/Profile'
 import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
-import { Stroke, Style } from 'ol/style'
-import { FeatureLike } from 'ol/Feature'
+import { Fill, Stroke, Style } from 'ol/style'
 import Profile from 'ol-ext/style/Profile'
 
 type GpsMarkerLayerProps = {
@@ -39,21 +38,21 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
   const { map } = useContext(MapContext)
 
   const setGpxDataLayerStyle = (gpxDataLayer: VectorLayer<VectorSource>): void => {
-    gpxDataLayer.setStyle((feature: FeatureLike) => {
+    gpxDataLayer.setStyle(() => {
       const multiLineStringStyle =
         new Style({
-          stroke: feature.get('select')
-            ? new Stroke({
-              color: 'red',
-              width: 4
-            })
-            : new Stroke({
-              color: '#0f0',
-              width: 3
-            })
+          stroke: new Stroke({
+            color: '#2a2afa',
+            width: 4
+          })
         })
       const profileStyle = new Profile({
-        scale: 0.8
+        scale: 0.8,
+        fill: new Fill({ color: [154, 154, 230, 0.4] }),
+        stroke: new Stroke({
+          color: [42, 42, 250, 1],
+          width: 1
+        })
       })
 
       return [profileStyle, multiLineStringStyle]
@@ -121,7 +120,6 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
         drawPoint(profilePoint, event)
       })
       addHoverInteraction(map!, gpxDataLayer, profileControl, profilePoint)
-      addSelectionInteraction(profileControl, gpxDataLayer)
     })
   }
 

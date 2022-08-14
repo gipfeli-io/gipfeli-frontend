@@ -5,7 +5,7 @@ import VectorSource from 'ol/source/Vector'
 import { CoordinateSystems } from '../../enums/coordinate-systems'
 import { Feature, Map, MapBrowserEvent } from 'ol'
 import Hover, { HoverEvent } from 'ol-ext/interaction/Hover'
-import { Geometry, LineString, Point } from 'ol/geom'
+import { Geometry, Point } from 'ol/geom'
 import { Coordinate } from 'ol/coordinate'
 import { GeoJSON } from 'ol/format'
 import { TourPoint } from '../../types/tour'
@@ -109,51 +109,4 @@ export const addHoverInteraction = (map: Map, dataLayer: VectorLayer<VectorSourc
     drawPoint(point)
   })
   return hover
-}
-
-export const addSelectionInteraction = (profil: Profil, dataLayer: VectorLayer<VectorSource>) => {
-  let start = 0
-  let selection: Feature<LineString> | null
-
-  // @ts-ignore
-  profil.on('click', () => {
-    if (selection) {
-      dataLayer.getSource()?.removeFeature(selection)
-      selection = null
-    }
-  })
-
-  // @ts-ignore
-  profil.on('dragstart', (event:any) => {
-    start = event.index
-  })
-
-  // @ts-ignore
-  profil.on(['dragend', 'dragging'], (event: any) => {
-    const profileSelection = profil.getSelection(start, event.index)
-    if (selection) {
-      selection.getGeometry()!.setCoordinates(profileSelection)
-    } else {
-      selection = new Feature<LineString>(new LineString(profileSelection))
-      selection.set('select', true)
-      dataLayer.getSource()?.addFeature(selection)
-    }
-  })
-
-  // @ts-ignore
-  profil.on('zoom', (event: any) => {
-    setTimeout(() => {
-      if (selection) {
-        dataLayer.getSource()?.removeFeature(selection)
-      }
-
-      if (event.geometry) {
-        selection = new Feature<LineString>(event.geometry)
-        selection.set('select', true)
-        dataLayer.getSource()?.addFeature(selection)
-      } else {
-        selection = null
-      }
-    })
-  })
 }
