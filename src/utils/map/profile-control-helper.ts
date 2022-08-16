@@ -58,7 +58,7 @@ export const drawPoint = (point?: Feature<Geometry>, hoverInteraction?: HoverInt
   }
 }
 
-export const setProfil = (profileControl: Profil, gpxDataLayer: VectorLayer<VectorSource>): void => {
+export const setProfile = (profileControl: Profil, gpxDataLayer: VectorLayer<VectorSource>): void => {
   const source = gpxDataLayer.getSource()!
   const feature = source.getFeatures()[0]
   profileControl.setGeometry(feature, {
@@ -69,7 +69,7 @@ export const setProfil = (profileControl: Profil, gpxDataLayer: VectorLayer<Vect
   })
 }
 
-export const setProfilPointOnLayer = (gpxDataLayer: VectorLayer<VectorSource>): Feature<Geometry> => {
+export const setProfilePointOnLayer = (gpxDataLayer: VectorLayer<VectorSource>): Feature<Geometry> => {
   const initPoint = new TourPoint({
     type: 'Point',
     coordinates: [0, 0]
@@ -85,7 +85,7 @@ export const setProfilPointOnLayer = (gpxDataLayer: VectorLayer<VectorSource>): 
   return jsonFeature
 }
 
-export const addHoverInteraction = (map: Map, dataLayer: VectorLayer<VectorSource>, profil: Profil, point: Feature<Geometry>): Hover => {
+export const addHoverInteraction = (map: Map, dataLayer: VectorLayer<VectorSource>, profile: Profil, point: Feature<Geometry>): Hover => {
   const hover = new Hover({
     cursor: 'pointer',
     hitTolerance: 10,
@@ -99,19 +99,19 @@ export const addHoverInteraction = (map: Map, dataLayer: VectorLayer<VectorSourc
     const feature = dataLayer.getSource()?.getFeatures()[0]
     const pointOnLine = feature?.getGeometry()?.getClosestPoint(event.coordinate)
     drawPoint(point, { type: 'over', coord: pointOnLine })
-    profil.showAt(event.coordinate)
+    profile.showAt(event.coordinate)
   })
 
   hover.on('leave', () => {
-    profil.showAt([])
+    profile.showAt([])
     drawPoint(point)
   })
   return hover
 }
 
-export const addProfilControlInteraction = (profil: Profil, profilePoint: Feature<Geometry>) => {
+export const addProfileControlInteraction = (profile: Profil, profilePoint: Feature<Geometry>) => {
   // @ts-ignore
-  profil.on(['over', 'out'], (event:any) => { // todo: find out what type of event it is and how to handle interaction array
+  profile.on(['over', 'out'], (event:any) => { // todo: find out what type of event it is and how to handle interaction array
     drawPoint(profilePoint, event)
   })
 }
