@@ -7,6 +7,8 @@ import { FeatureLike } from 'ol/Feature'
 import { Icon, Stroke, Style } from 'ol/style'
 import { MarkerSize } from '../../enums/marker-size'
 import { TourPoint } from '../../types/tour'
+import { ViewOptions } from 'ol/View'
+import { CoordinateSystems } from '../../enums/coordinate-systems'
 
 enum StyleCache {
   WAYPOINT_START,
@@ -30,6 +32,19 @@ export default class MapConfigurationService {
    * @private
    */
   private static styleCache: Map<StyleCache, Style> = new Map()
+
+  /**
+   * Basic configuration for the map view, defining initial extent, zoom levels, etc.
+   */
+  public static getMapViewOptions (): ViewOptions {
+    return {
+      projection: CoordinateSystems.MAP,
+      center: [916355.758968, 5909242.750142],
+      zoom: 8,
+      minZoom: 5,
+      maxZoom: 18
+    }
+  }
 
   public static iconSelector (index: number, tourPoints: TourPoint[]) : Style {
     return index === tourPoints.length - 1 ? MapConfigurationService.getEndIcon() : MapConfigurationService.getStartIcon()

@@ -2,13 +2,13 @@ import React, { PropsWithChildren, useEffect, useId, useState } from 'react'
 import { Map, View } from 'ol'
 import 'ol/ol.css'
 import TileLayer from 'ol/layer/Tile'
-import { TileWMS } from 'ol/source'
+import { OSM } from 'ol/source'
 import styles from './MapWrapper.module.scss'
 import MapContext from './MapContext'
-import { CoordinateSystems } from '../../../enums/coordinate-systems'
 import Typography from '@mui/material/Typography'
 import CameraIcon from '@mui/icons-material/PhotoCamera'
 import AccountTreeIcon from '@mui/icons-material/AccountTree'
+import MapConfigurationService from '../../../services/map/map-configuration-service'
 
 const MapWrapper = ({ children }: PropsWithChildren<any>) => {
   const mapContainerId = useId()
@@ -19,24 +19,10 @@ const MapWrapper = ({ children }: PropsWithChildren<any>) => {
       target: mapContainerId,
       layers: [
         new TileLayer({
-          source: new TileWMS({ // todo: add these values to a config file or get them from a config service
-            crossOrigin: 'anonymous',
-            params: {
-              LAYERS: 'ch.swisstopo.pixelkarte-farbe',
-              FORMAT: 'image/jpeg'
-            },
-            url: 'https://wms.geo.admin.ch/',
-            projection: CoordinateSystems.MAP
-          })
+          source: new OSM()
         })
       ],
-      view: new View({
-        projection: CoordinateSystems.MAP,
-        center: [916355.758968, 5909242.750142],
-        zoom: 8,
-        minZoom: 8
-      }),
-      controls: []
+      view: new View(MapConfigurationService.getMapViewOptions())
     })
 
     setMap(initialMap)
