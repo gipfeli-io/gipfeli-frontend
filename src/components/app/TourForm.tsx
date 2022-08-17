@@ -15,6 +15,8 @@ import useFormErrors from '../../hooks/use-form-errors'
 import GpxFileUpload from '../shared/gpx-files/upload/GpxFileUpload'
 import GpxDataLayer from '../shared/map/layers/GpxDataLayer'
 import useGpxFileUpload from '../../hooks/use-gpx-file-upload'
+import 'easymde/dist/easymde.min.css'
+import { attachRichTextInstance } from '../../utils/rich-text-helpers'
 
 type TourFormProps = {
   tour: BaseTour
@@ -34,6 +36,19 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
   useEffect(() => {
     setOverrideFormErrors(formErrors)
   }, [formErrors])
+
+  useEffect(() => {
+    const target = document.getElementById('description')!
+    const instance = attachRichTextInstance(target)
+    instance.codemirror.on('change', () => {
+      setCurrentTour({ ...currentTour, description: instance.value() })
+    })
+
+    return () => {
+      instance.toTextArea()
+      instance.cleanup()
+    }
+  }, [])
 
   const cancel = () => navigate(-1)
 
@@ -83,24 +98,24 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
       </Grid>
       <Grid item xs={12}>
         {(hasErrors('startLocation') || hasErrors('endLocation')) &&
-          <Alert severity={'error'} sx={{ mb: 2 }}>
-            <AlertTitle>Map errors!</AlertTitle>
-            {
-              formErrors.map((error, index) => <li key={index}>{error.errors.join('; ')}</li>)
-            }
-          </Alert>
+            <Alert severity={'error'} sx={{ mb: 2 }}>
+                <AlertTitle>Map errors!</AlertTitle>
+              {
+                formErrors.map((error, index) => <li key={index}>{error.errors.join('; ')}</li>)
+              }
+            </Alert>
         }
         {!isOffline() &&
             <div id={'map'}>
                 <MapWrapper>
                     <FullScreenControl/>
                   {!file &&
-                    <WayPointMarkerLayer handleSetMarker={handleSetMarker}
+                      <WayPointMarkerLayer handleSetMarker={handleSetMarker}
                                            features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
                                            type={type}/>
                   }
-                  <GpxDataLayer gpxFile={file} handleSetMarker={handleSetMarker}/>
-                  <GpsImageMarkerLayer features={files}/>
+                    <GpxDataLayer gpxFile={file} handleSetMarker={handleSetMarker}/>
+                    <GpsImageMarkerLayer features={files}/>
                 </MapWrapper>
             </div>
         }
@@ -111,19 +126,7 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
         }
       </Grid>
       <Grid item xs={12}>
-        <TextField
-          name="description"
-          required
-          fullWidth
-          multiline
-          rows={5}
-          label="Tour Description"
-          value={currentTour.description}
-          onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-            setCurrentTour({ ...currentTour, description: event.target.value })}
-          error={hasErrors('description')}
-          helperText={getFieldErrors('description')}
-        />
+        <textarea id="description" value={currentTour.description} readOnly></textarea>
       </Grid>
 
       <Grid item xs={12}>

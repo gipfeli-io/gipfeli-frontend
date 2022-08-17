@@ -26,6 +26,7 @@ import useErrorHandling from '../../../hooks/use-error-handling'
 import getCloudStorageUrlForIdentifier from '../../../utils/storage-helper'
 import DescriptionIcon from '@mui/icons-material/Description'
 import GpxDataLayer from '../../shared/map/layers/GpxDataLayer'
+import MarkdownElement from '../../shared/MarkdownElement'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -162,9 +163,7 @@ const TourDetail = () => {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="body1" gutterBottom component="div" whiteSpace={'pre-wrap'}>
-            {tour.description}
-          </Typography>
+          <MarkdownElement value={tour.description} />
         </Grid>
       </Grid>
       {!isOffline() && tour.images && tour.images.length > 0 &&
