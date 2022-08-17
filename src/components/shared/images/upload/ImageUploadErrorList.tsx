@@ -24,9 +24,9 @@ const ImageUploadErrorList = ({ uploadErrors }: ImageUploadErrorListProps) => {
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        {uploadErrors.map((error) => {
+        {uploadErrors.map((error, index) => {
           return (
-            <Typography key={error.file} variant="caption" component="div" color={'error'}>
+            <Typography key={index} variant="caption" component="div" color={'error'}>
               <ErrorIcon fontSize="inherit"/> {error.file} failed: {error.reason}
             </Typography>
           )
