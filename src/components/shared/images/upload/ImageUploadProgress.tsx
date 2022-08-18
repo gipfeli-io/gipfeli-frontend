@@ -22,8 +22,8 @@ const ImageUploadProgress = () => {
       }
       <Stack>
         {
-          currentUploads.map((upload) => {
-            return !upload.error ? <MediaUploadIndicator key={upload.name} upload={upload}/> : ''
+          currentUploads.map((upload, index) => {
+            return !upload.error ? <MediaUploadIndicator key={index} upload={upload}/> : ''
           })
         }
       </Stack>

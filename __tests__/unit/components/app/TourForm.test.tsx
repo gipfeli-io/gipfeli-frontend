@@ -31,13 +31,17 @@ const mockUseLocationValue = {
 jest.mock('../../../../src/hooks/use-connection-status', () => jest.fn().mockImplementation(() => mockConnectionStatusContext))
 jest.mock('../../../../src/hooks/use-image-upload', () => jest.fn().mockImplementation(() => mockImageUploadContext))
 jest.mock('../../../../src/hooks/use-gpx-file-upload', () => jest.fn().mockImplementation(() => mockGpxFileUploadContext))
-
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router') as any,
   useNavigate: () => jest.fn(),
   useLocation: () => jest.fn().mockImplementation(() => mockUseLocationValue),
   useHref: () => jest.fn()
 }))
+
+// mock our editor component because EasyMde is complex to properly mock.
+jest.mock('../../../../src/components/shared/rich-text/Editor', () => () => {
+  return ''
+})
 
 const point = {
   type: 'Point',
