@@ -95,10 +95,10 @@ const EditTour = () => {
 
   const updateTour: handleSave<BaseTour> = async (baseTour: BaseTour) => {
     const tourToSave: UpdateOrCreateTour = {
-      name: baseTour.name,
+      name: baseTour.name.trim(),
       startLocation: baseTour.startLocation,
       endLocation: baseTour.endLocation,
-      description: baseTour.description,
+      description: baseTour.description.trim(),
       images,
       gpxFile
     }
