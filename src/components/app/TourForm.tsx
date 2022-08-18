@@ -109,7 +109,7 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
                                                  features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
                                                  type={type}/>
                         }
-                          <GpxDataLayer gpxFile={file} handleSetMarker={handleSetMarker}/>
+                          <GpxDataLayer gpxFile={file!} handleSetMarker={handleSetMarker}/>
                           <GpsImageMarkerLayer features={files}/>
                       </MapWrapper>
                   </div>

@@ -134,7 +134,7 @@ const TourDetail = () => {
                 {!tour.gpxFile &&
                     <WayPointMarkerLayer features={getWayPointMarkerFeatures()}/>
                 }
-                <GpxDataLayer gpxFile={tour.gpxFile}/>
+                <GpxDataLayer gpxFile={tour.gpxFile!}/>
                 <GpsImageMarkerLayer features={geoReferencedImages}/>
               </MapWrapper>
           </>

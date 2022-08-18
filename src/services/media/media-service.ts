@@ -19,9 +19,8 @@ export default class MediaService extends APIService {
   }
 
   public async uploadGpxFile (gpxFile: File): Promise<SingleApiResponse<GpxFileUpload>> {
-    // todo: set correct content type. is there a mapper?
     return this.fetchSingleDataFromApi(
-      this.getRequestUrl(this.prefix, 'upload-gpx'),
+      this.getRequestUrl(this.prefix, 'upload-gpx-file'),
       this.getRequestBody('POST', gpxFile, 'gpxFile'),
       GpxFileUpload
     )

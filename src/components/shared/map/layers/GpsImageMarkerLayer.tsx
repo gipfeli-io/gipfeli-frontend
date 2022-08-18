@@ -86,7 +86,7 @@ const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
       })
       map.addInteraction(select)
 
-      select.getFeatures().on('add', function (e: BaseEvent | Event): void {
+      select.getFeatures().on('add', (e: BaseEvent | Event): void => {
         // Somehow, the typings of OL are wrong. We get a CollectionEvent here, which is neither BaseEvent nor Event...
         const castedEvent = e as CollectionEvent
         const selectedFeatures = castedEvent.element.get('features')
@@ -98,7 +98,7 @@ const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
         }
       })
 
-      select.getFeatures().on('remove', function (_e: BaseEvent | Event) {
+      select.getFeatures().on('remove', (_e: BaseEvent | Event) => {
         popup.hide()
       })
 
