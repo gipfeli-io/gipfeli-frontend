@@ -15,8 +15,8 @@ import useFormErrors from '../../hooks/use-form-errors'
 import GpxFileUpload from '../shared/gpx-files/upload/GpxFileUpload'
 import GpxDataLayer from '../shared/map/layers/GpxDataLayer'
 import useGpxFileUpload from '../../hooks/use-gpx-file-upload'
-import 'easymde/dist/easymde.min.css'
-import { attachRichTextInstance } from '../../utils/rich-text-helpers'
+import Editor from '../shared/rich-text/Editor'
+import Typography from '@mui/material/Typography'
 
 type TourFormProps = {
   tour: BaseTour
@@ -36,19 +36,6 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
   useEffect(() => {
     setOverrideFormErrors(formErrors)
   }, [formErrors])
-
-  useEffect(() => {
-    const target = document.getElementById('description')!
-    const instance = attachRichTextInstance(target)
-    instance.codemirror.on('change', () => {
-      setCurrentTour({ ...currentTour, description: instance.value() })
-    })
-
-    return () => {
-      instance.toTextArea()
-      instance.cleanup()
-    }
-  }, [])
 
   const cancel = () => navigate(-1)
 
@@ -126,7 +113,16 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
         }
       </Grid>
       <Grid item xs={12}>
-        <textarea id="description" value={currentTour.description} readOnly></textarea>
+        <Typography variant="h5" component="div" gutterBottom>
+          Tour description
+        </Typography>
+        <Editor
+          name={'description'}
+          initialContent={currentTour.description}
+          error={hasErrors('description')}
+          helperText={getFieldErrors('description')}
+          onChange={(value) => setCurrentTour({ ...currentTour, description: value })}
+        />
       </Grid>
 
       <Grid item xs={12}>

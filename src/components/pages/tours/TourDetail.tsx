@@ -26,7 +26,7 @@ import useErrorHandling from '../../../hooks/use-error-handling'
 import getCloudStorageUrlForIdentifier from '../../../utils/storage-helper'
 import DescriptionIcon from '@mui/icons-material/Description'
 import GpxDataLayer from '../../shared/map/layers/GpxDataLayer'
-import MarkdownElement from '../../shared/MarkdownElement'
+import MarkdownElement from '../../shared/rich-text/MarkdownElement'
 
 const TourDetail = () => {
   const navigate = useNavigate()

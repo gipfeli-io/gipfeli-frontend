@@ -7,7 +7,7 @@ type MarkdownElementProps = {
   value: string;
 }
 
-const ALLOWED_HTML_TAGS = ['p', 'h1', 'i', 'hr', 'ul', 'li', 'ol', 'a']
+const ALLOWED_HTML_TAGS = ['p', 'h1', 'strong', 'hr', 'ul', 'li', 'ol', 'a', 'em']
 
 const MarkdownElement = ({ value }: MarkdownElementProps) => {
   /**
