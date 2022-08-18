@@ -1,8 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import EasyMDE from 'easymde'
 import 'easymde/dist/easymde.min.css'
 import styles from './Editor.module.scss'
 import Typography from '@mui/material/Typography'
+import MarkdownElement from './MarkdownElement'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import Accordion from '@mui/material/Accordion'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import AccordionDetails from '@mui/material/AccordionDetails'
 
 type EditorProps = {
   name: string;
@@ -12,6 +17,12 @@ type EditorProps = {
   onChange: (text: string) => void
 }
 const Editor = ({ initialContent, onChange, name, error, helperText }: EditorProps) => {
+  const [value, setValue] = useState<string>(initialContent)
+
+  useEffect(() => {
+    onChange(value)
+  }, [value])
+
   useEffect(() => {
     const instance = new EasyMDE({
       element: document.getElementById(name)!,
@@ -20,15 +31,14 @@ const Editor = ({ initialContent, onChange, name, error, helperText }: EditorPro
         'italic',
         'ordered-list',
         'unordered-list',
-        'heading',
+        'heading-1',
         '|',
         'link',
         'horizontal-rule']
     })
-    const changeHandler = onChange
 
     instance.codemirror.on('change', () => {
-      changeHandler(instance.value())
+      setValue(instance.value())
     })
 
     return () => {
@@ -41,8 +51,16 @@ const Editor = ({ initialContent, onChange, name, error, helperText }: EditorPro
   return (
     <>
       <div className={error ? styles.editorError : ''}>
-        <textarea id={name} value={initialContent} readOnly></textarea>
+        <textarea id={name} value={value} readOnly></textarea>
       </div>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+          <Typography>Preview</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <MarkdownElement value={value}/>
+        </AccordionDetails>
+      </Accordion>
       {error &&
           <Typography color={'error'} variant="caption" component="div">
             {helperText}
