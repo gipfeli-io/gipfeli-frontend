@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
+import 'font-awesome/css/font-awesome.min.css'
 
 type EditorProps = {
   name: string;
@@ -24,7 +25,13 @@ const Editor = ({ initialContent, onChange, name, error, helperText }: EditorPro
   }, [value])
 
   useEffect(() => {
+    /**
+     * Note: Since the app has to work offline as well, we added the font-awesome dependency which is v4.7.x.
+     * This allows us to inject the CSS and prevent the editor from trying to download font-awesome on each request,
+     * which does not work when offline.
+     */
     const instance = new EasyMDE({
+      autoDownloadFontAwesome: false,
       element: document.getElementById(name)!,
       initialValue: initialContent,
       spellChecker: false,
