@@ -15,6 +15,9 @@ import useFormErrors from '../../hooks/use-form-errors'
 import GpxFileUpload from '../shared/gpx-files/upload/GpxFileUpload'
 import GpxDataLayer from '../shared/map/layers/GpxDataLayer'
 import useGpxFileUpload from '../../hooks/use-gpx-file-upload'
+import Editor from '../shared/rich-text/Editor'
+import Typography from '@mui/material/Typography'
+import HelpTooltip from '../shared/HelpTooltip'
 
 type TourFormProps = {
   tour: BaseTour
@@ -22,6 +25,9 @@ type TourFormProps = {
   type: string,
   formErrors: ValidationError[]
 }
+
+const MAP_HELPER_TEXT = 'Set a start and endpoint by clicking on the map. After setting them, they can be edited by dragging. Alternatively, you may upload a GPX file which replaces existing points and adds the track data to the map.'
+const IMAGE_HELPER_TEXT = 'Add as many images as you like. If they have coordinates embedded, they will be display on the map itself.'
 
 export default function TourForm ({ tour, saveHandler, type, formErrors }: TourFormProps) {
   const navigate = useNavigate()
@@ -81,56 +87,61 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
           helperText={getFieldErrors('name')}
         />
       </Grid>
+      {!isOffline() &&
+          <>
+              <Grid item xs={12}>
+                  <Typography variant="h5" component="div" gutterBottom>
+                      Map data <HelpTooltip tooltip={MAP_HELPER_TEXT}/>
+                  </Typography>
+                {(hasErrors('startLocation') || hasErrors('endLocation')) &&
+                    <Alert severity={'error'} sx={{ mb: 2 }}>
+                        <AlertTitle>Map errors!</AlertTitle>
+                      {
+                        formErrors.map((error, index) => <li key={index}>{error.errors.join('; ')}</li>)
+                      }
+                    </Alert>
+                }
+                  <div id={'map'}>
+                      <MapWrapper>
+                          <FullScreenControl/>
+                        {!file &&
+                            <WayPointMarkerLayer handleSetMarker={handleSetMarker}
+                                                 features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
+                                                 type={type}/>
+                        }
+                          <GpxDataLayer gpxFile={file} handleSetMarker={handleSetMarker}/>
+                          <GpsImageMarkerLayer features={files}/>
+                      </MapWrapper>
+                  </div>
+              </Grid>
+              <Grid item xs={12}>
+                  <Typography variant="h6" component="div" gutterBottom>
+                      GPX File (optional)
+                  </Typography>
+                  <div id={'gpx-file-upload'}><GpxFileUpload/></div>
+              </Grid>
+          </>
+      }
       <Grid item xs={12}>
-        {(hasErrors('startLocation') || hasErrors('endLocation')) &&
-          <Alert severity={'error'} sx={{ mb: 2 }}>
-            <AlertTitle>Map errors!</AlertTitle>
-            {
-              formErrors.map((error, index) => <li key={index}>{error.errors.join('; ')}</li>)
-            }
-          </Alert>
-        }
-        {!isOffline() &&
-            <div id={'map'}>
-                <MapWrapper>
-                    <FullScreenControl/>
-                  {!file &&
-                    <WayPointMarkerLayer handleSetMarker={handleSetMarker}
-                                           features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
-                                           type={type}/>
-                  }
-                  <GpxDataLayer gpxFile={file} handleSetMarker={handleSetMarker}/>
-                  <GpsImageMarkerLayer features={files}/>
-                </MapWrapper>
-            </div>
-        }
-      </Grid>
-      <Grid item xs={12}>
-        {!isOffline() &&
-            <div id={'gpx-file-upload'}><GpxFileUpload/></div>
-        }
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          name="description"
-          required
-          fullWidth
-          multiline
-          rows={5}
-          label="Tour Description"
-          value={currentTour.description}
-          onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-            setCurrentTour({ ...currentTour, description: event.target.value })}
+        <Typography variant="h5" component="div" gutterBottom>
+          Tour description
+        </Typography>
+        <Editor
+          name={'description'}
+          initialContent={currentTour.description}
           error={hasErrors('description')}
           helperText={getFieldErrors('description')}
+          onChange={(value) => setCurrentTour({ ...currentTour, description: value })}
         />
       </Grid>
-
-      <Grid item xs={12}>
-        {!isOffline() &&
-            <div id={'image-gallery'}><ImageUpload/></div>
-        }
-      </Grid>
+      {!isOffline() &&
+          <Grid item xs={12}>
+              <Typography variant="h5" component="div" gutterBottom>
+                  Images <HelpTooltip tooltip={IMAGE_HELPER_TEXT} />
+              </Typography>
+              <div id={'image-gallery'}><ImageUpload/></div>
+          </Grid>
+      }
     </Grid>
     <Grid container spacing={2} mt={2} direction={'row'} alignItems={'center'} justifyContent={'center'}>
       <Grid item xs={12} sm={3}>
