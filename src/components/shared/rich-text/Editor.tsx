@@ -26,6 +26,9 @@ const Editor = ({ initialContent, onChange, name, error, helperText }: EditorPro
   useEffect(() => {
     const instance = new EasyMDE({
       element: document.getElementById(name)!,
+      initialValue: initialContent,
+      spellChecker: false,
+      nativeSpellcheck: false,
       toolbar: [
         'bold',
         'italic',
@@ -51,7 +54,7 @@ const Editor = ({ initialContent, onChange, name, error, helperText }: EditorPro
   return (
     <>
       <div className={error ? styles.editorError : ''}>
-        <textarea id={name} value={value} readOnly></textarea>
+        <textarea id={name} readOnly></textarea>
       </div>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
