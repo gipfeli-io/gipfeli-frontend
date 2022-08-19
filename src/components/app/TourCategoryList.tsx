@@ -35,11 +35,15 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type }: Categor
     categoryList.forEach((category: UpdateTourCategory) => {
       if (tourCategories.find((cat) => cat.id === category.id)) {
         category.isSelected = true
+      } else {
+        category.isSelected = false
       }
     })
-
     categoryList.sort((a, b) => a.name.localeCompare(b.name))
 
+    if (type === 'detail') {
+      categoryList = categoryList.filter((category) => category.isSelected)
+    }
     setCategories(categoryList)
   }
 
