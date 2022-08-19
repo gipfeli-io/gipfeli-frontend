@@ -7,11 +7,13 @@ export class TourCategory {
   @Expose()
     name: string
 
-  @Exclude()
-    isSelected: boolean = false
-
   constructor (id: string, name: string) {
     this.id = id
     this.name = name
   }
+}
+
+export class UpdateTourCategory extends TourCategory {
+  @Exclude()
+    isSelected: boolean = false
 }

@@ -51,10 +51,9 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
     saveHandler(currentTour)
   }
   const handleSetCategories = useCallback((categories: TourCategory[]) => {
-    console.log('set cats', categories.filter((category: TourCategory) => category.isSelected))
     setCurrentTour(prevTour => ({
       ...prevTour,
-      categories: categories.filter((category: TourCategory) => category.isSelected)
+      categories
     }))
   }, [])
 
@@ -97,6 +96,9 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
         />
       </Grid>
       <Grid item xs={12}>
+        <Typography variant="h5" component="div" gutterBottom sx={{ mb: 2 }}>
+          Tour Categories
+        </Typography>
         <CategoryList tourCategories={tour.categories} type={type} handleSetCategories={handleSetCategories}/>
       </Grid>
       {!isOffline() &&

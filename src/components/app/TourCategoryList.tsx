@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { TourCategory } from '../../types/tour-category'
+import { TourCategory, UpdateTourCategory } from '../../types/tour-category'
 import { Chip } from '@mui/material'
 import LookupService from '../../services/lookup/lookup-service'
 import useErrorHandling from '../../hooks/use-error-handling'
@@ -17,20 +17,22 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type }: Categor
   const lookupService = new LookupService(auth.token)
   const { triggerError } = useErrorHandling()
   const throwError = useApiError()
-  const [categories, setCategories] = useState<TourCategory[]>([])
+  const [categories, setCategories] = useState<UpdateTourCategory[]>([])
 
-  const handleClick = (category: TourCategory) => {
+  const handleClick = (category: UpdateTourCategory) => {
     if (type === 'detail') {
       return
     }
     category.isSelected = !category.isSelected
     if (handleSetCategories) {
-      handleSetCategories(categories)
+      const newCategories = categories.filter((category) => category.isSelected)
+        .map((category) => new TourCategory(category.id, category.name))
+      handleSetCategories(newCategories)
     }
   }
 
-  const mapCategoriesOnTourToList = (categoryList: TourCategory[]) => {
-    categoryList.forEach((category: TourCategory) => {
+  const mapCategoriesOnTourToList = (categoryList: UpdateTourCategory[]) => {
+    categoryList.forEach((category: UpdateTourCategory) => {
       if (tourCategories.find((cat) => cat.id === category.id)) {
         category.isSelected = true
       }
@@ -47,7 +49,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type }: Categor
       try {
         result = await lookupService.findAllTourCategories()
         if (result.success) {
-          mapCategoriesOnTourToList(result.content!)
+          mapCategoriesOnTourToList(result.content! as UpdateTourCategory[])
         } else {
           throwError(result)
         }
