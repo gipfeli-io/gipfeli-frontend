@@ -97,7 +97,7 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
         />
       </Grid>
       <Grid item xs={12}>
-        <CategoryList categories={tour.categories} type={type} handleSetCategories={handleSetCategories}/>
+        <CategoryList tourCategories={tour.categories} type={type} handleSetCategories={handleSetCategories}/>
       </Grid>
       {!isOffline() &&
           <>

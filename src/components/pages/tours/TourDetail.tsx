@@ -130,7 +130,7 @@ const TourDetail = () => {
       </Grid>
       <Grid container mb={2} direction={'row'} spacing={5}>
         <Grid item xs={12}>
-          <CategoryList categories={tour.categories} type='detail'/>
+          <CategoryList tourCategories={tour.categories} type='detail'/>
         </Grid>
       </Grid>
       {!isOffline() &&
