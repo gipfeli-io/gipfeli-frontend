@@ -18,6 +18,8 @@ import useGpxFileUpload from '../../hooks/use-gpx-file-upload'
 import Editor from '../shared/rich-text/Editor'
 import Typography from '@mui/material/Typography'
 import HelpTooltip from '../shared/HelpTooltip'
+import CategoryList from './TourCategoryList'
+import { TourCategory } from '../../types/tour-category'
 
 type TourFormProps = {
   tour: BaseTour
@@ -48,6 +50,13 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
     // todo: perform validation
     saveHandler(currentTour)
   }
+  const handleSetCategories = useCallback((categories: TourCategory[]) => {
+    console.log('set cats', categories.filter((category: TourCategory) => category.isSelected))
+    setCurrentTour(prevTour => ({
+      ...prevTour,
+      categories: categories.filter((category: TourCategory) => category.isSelected)
+    }))
+  }, [])
 
   const handleSetMarker = useCallback((coordinates: number[], id: number) => {
     if (id === 0) {
@@ -86,6 +95,9 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
           error={hasErrors('name')}
           helperText={getFieldErrors('name')}
         />
+      </Grid>
+      <Grid item xs={12}>
+        <CategoryList categories={tour.categories} type={type} handleSetCategories={handleSetCategories}/>
       </Grid>
       {!isOffline() &&
           <>

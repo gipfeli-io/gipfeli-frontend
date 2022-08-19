@@ -3,6 +3,7 @@ import { Exclude, Expose, Type } from 'class-transformer'
 import { GpxFileUpload, ImageUpload } from './media'
 import { TourStatusType } from '../enums/tour-status-type'
 import { GeometryObject } from './map'
+import { TourCategory } from './tour-category'
 
 export class BaseTour {
   @Expose()
@@ -28,6 +29,9 @@ export class BaseTour {
   @Expose()
     userId: string
 
+  @Expose()
+    categories: TourCategory[]
+
   /**
    * This is a frontend property only and is not saved/fetched to/from the database
    * It is helps us finding out which entries were mutated while offline and
@@ -37,7 +41,7 @@ export class BaseTour {
     status: TourStatusType = TourStatusType.SYNCED
 
   constructor (name: string, startLocation: Point, endLocation: Point,
-    description: string, userId: string, images: ImageUpload[] = [],
+    description: string, userId: string, categories: TourCategory[], images: ImageUpload[] = [],
     gpxFile?: GpxFileUpload) {
     this.name = name
     this.startLocation = startLocation
@@ -46,6 +50,7 @@ export class BaseTour {
     this.userId = userId
     this.images = images
     this.gpxFile = gpxFile
+    this.categories = categories
   }
 }
 
@@ -60,8 +65,8 @@ export class Tour extends BaseTour {
     updatedAt: Date
 
   constructor (id: string, name: string, startLocation: Point, endLocation: Point,
-    description: string, userId: string, createdAt: Date, updatedAt: Date) {
-    super(name, startLocation, endLocation, description, userId)
+    description: string, userId: string, createdAt: Date, updatedAt: Date, categories: TourCategory[]) {
+    super(name, startLocation, endLocation, description, userId, categories)
     this.id = id
     this.createdAt = createdAt
     this.updatedAt = updatedAt
@@ -69,7 +74,7 @@ export class Tour extends BaseTour {
 }
 
 // todo: switch to baseTour
-export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images' | 'gpxFile'>
+export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images' | 'gpxFile' | 'categories'>
 
 /**
  * A generic tourpoint which extends from GeometryObject and can be added to the map.
