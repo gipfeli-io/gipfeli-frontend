@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography'
-import { Divider, Grid, Link as MuiLink } from '@mui/material'
+import { Grid, Link as MuiLink } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import React, { useEffect, useState } from 'react'
@@ -27,6 +27,7 @@ import getCloudStorageUrlForIdentifier from '../../../utils/storage-helper'
 import DescriptionIcon from '@mui/icons-material/Description'
 import GpxDataLayer from '../../shared/map/layers/GpxDataLayer'
 import MarkdownElement from '../../shared/rich-text/MarkdownElement'
+import CategoryList from '../../app/TourCategoryList'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -127,7 +128,14 @@ const TourDetail = () => {
           </Typography>
         </Grid>
       </Grid>
-      <Divider/>
+      <Grid container mb={2} direction={'row'} spacing={5}>
+        <Grid item xs={12}>
+          <Typography variant="h5" gutterBottom component="div" sx={{ mb: 2 }}>
+            Categories
+          </Typography>
+          <CategoryList tourCategories={tour.categories} type='detail'/>
+        </Grid>
+      </Grid>
       {!isOffline() &&
           <>
               <MapWrapper>

@@ -44,8 +44,8 @@ const EditTour = () => {
   const { setFormErrorContainer, formErrors } = useFormErrors()
 
   const setResult = (fetchedTour: Tour) => {
-    const { description, endLocation, startLocation, name, userId, status, images: imageList, gpxFile } = fetchedTour
-    setTour({ description, endLocation, startLocation, name, userId, status, images: [], gpxFile: undefined })
+    const { description, endLocation, startLocation, name, userId, status, categories, images: imageList, gpxFile } = fetchedTour
+    setTour({ description, endLocation, startLocation, name, userId, status, categories, images: [], gpxFile: undefined })
     if (!isOffline()) {
       setImages(imageList)
     }
@@ -99,6 +99,7 @@ const EditTour = () => {
       startLocation: baseTour.startLocation,
       endLocation: baseTour.endLocation,
       description: baseTour.description.trim(),
+      categories: baseTour.categories,
       images,
       gpxFile
     }

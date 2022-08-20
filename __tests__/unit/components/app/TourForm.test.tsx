@@ -7,6 +7,8 @@ import { Point } from 'geojson'
 import { Tour } from '../../../../src/types/tour'
 import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
+import { TourCategory } from '../../../../src/types/tour-category'
+import { act } from 'react-test-renderer'
 
 const mockConnectionStatusContext: any = {
   isOffline: () => false
@@ -21,6 +23,19 @@ const mockGpxFileUploadContext: any = {
   currentUpload: undefined
 }
 
+const mockAuthContext: any = {
+  token: 'fake_token'
+}
+
+const mockErrorHandlingContext: any = {
+  triggerError: jest.fn()
+}
+
+const mockNotificationContext: any = {
+  triggerErrorNotification: jest.fn(),
+  triggerOfflineNotification: jest.fn()
+}
+
 const mockUseLocationValue = {
   pathname: '/localhost:3000',
   search: '',
@@ -28,9 +43,24 @@ const mockUseLocationValue = {
   state: null
 }
 
+const mockCategories: TourCategory[] = [
+  {
+    id: 'cat-1',
+    name: 'CAT 1'
+  },
+  {
+    id: 'cat-2',
+    name: 'CAT 2'
+  }
+]
+
 jest.mock('../../../../src/hooks/use-connection-status', () => jest.fn().mockImplementation(() => mockConnectionStatusContext))
 jest.mock('../../../../src/hooks/use-image-upload', () => jest.fn().mockImplementation(() => mockImageUploadContext))
 jest.mock('../../../../src/hooks/use-gpx-file-upload', () => jest.fn().mockImplementation(() => mockGpxFileUploadContext))
+jest.mock('../../../../src/hooks/use-auth', () => jest.fn().mockImplementation(() => mockAuthContext))
+jest.mock('../../../../src/hooks/use-error-handling', () => jest.fn().mockImplementation(() => mockErrorHandlingContext))
+jest.mock('../../../../src/hooks/use-notifications', () => jest.fn().mockImplementation(() => mockNotificationContext))
+
 jest.mock('react-router', () => ({
   ...jest.requireActual('react-router') as any,
   useNavigate: () => jest.fn(),
@@ -50,20 +80,24 @@ const point = {
 
 const getTour = () => {
   return new Tour('34efc307-3ee9-4dc8-8b1f-7a5893348455', 'Test Tour', point, point,
-    'Some Description', 'cda5263c-ad01-4d39-b9ec-04ffdb7e6a77', new Date(), new Date())
+    'Some Description', 'cda5263c-ad01-4d39-b9ec-04ffdb7e6a77', new Date(), new Date(), mockCategories)
 }
 
 describe('TourForm', () => {
   it('shows map and image section if online', async () => {
-    const { container } = render(
-      <MemoryRouter initialEntries={['/currentUri']}>
-        <ConnectionStatusProvider>
-          <TourForm tour={getTour()} formErrors={[]} type='Edit' saveHandler={jest.fn}/>
-        </ConnectionStatusProvider>
-      </MemoryRouter>)
+    let renderResult: HTMLElement
+    act(() => {
+      const { container } = render(
+        <MemoryRouter initialEntries={['/currentUri']}>
+          <ConnectionStatusProvider>
+            <TourForm tour={getTour()} formErrors={[]} type='Edit' saveHandler={jest.fn}/>
+          </ConnectionStatusProvider>
+        </MemoryRouter>)
+      renderResult = container
+    })
 
-    const mapSection = container.querySelector('#map')
-    const imageSection = container.querySelector('#image-gallery')
+    const mapSection = renderResult!.querySelector('#map')
+    const imageSection = renderResult!.querySelector('#image-gallery')
 
     expect(mapSection).toBeInTheDocument()
     expect(imageSection).toBeInTheDocument()
@@ -71,15 +105,19 @@ describe('TourForm', () => {
 
   it('hides map and image section if offline', async () => {
     mockConnectionStatusContext.isOffline = () => true
-    const { container } = render(
-      <MemoryRouter initialEntries={['/currentUri']}>
-        <ConnectionStatusProvider>
-          <TourForm tour={getTour()} formErrors={[]} type='Edit' saveHandler={jest.fn}/>
-        </ConnectionStatusProvider>
-      </MemoryRouter>)
+    let renderResult: HTMLElement
+    act(() => {
+      const { container } = render(
+        <MemoryRouter initialEntries={['/currentUri']}>
+          <ConnectionStatusProvider>
+            <TourForm tour={getTour()} formErrors={[]} type='Edit' saveHandler={jest.fn}/>
+          </ConnectionStatusProvider>
+        </MemoryRouter>)
+      renderResult = container
+    })
 
-    const mapSection = container.querySelector('#map')
-    const imageSection = container.querySelector('#image-gallery')
+    const mapSection = renderResult!.querySelector('#map')
+    const imageSection = renderResult!.querySelector('#image-gallery')
 
     expect(mapSection).not.toBeInTheDocument()
     expect(imageSection).not.toBeInTheDocument()

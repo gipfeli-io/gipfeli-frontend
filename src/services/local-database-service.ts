@@ -105,6 +105,7 @@ export default class LocalDatabaseService {
     localTour.endLocation = updatedTour.endLocation
     localTour.description = updatedTour.description
     localTour.images = updatedTour.images
+    localTour.categories = updatedTour.categories
     localTour.updatedAt = dayjs().toDate()
     localTour.status = statusType
     return localTour
@@ -112,7 +113,7 @@ export default class LocalDatabaseService {
 
   private createLocalTour (tour: UpdateOrCreateTour): Tour {
     const id = crypto.randomUUID().toString()
-    const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, this.userId!, dayjs().toDate(), dayjs().toDate())
+    const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, this.userId!, dayjs().toDate(), dayjs().toDate(), tour.categories)
     localTour.status = TourStatusType.CREATED
     return localTour
   }

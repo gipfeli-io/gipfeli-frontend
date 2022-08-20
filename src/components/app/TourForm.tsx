@@ -18,6 +18,8 @@ import useGpxFileUpload from '../../hooks/use-gpx-file-upload'
 import Editor from '../shared/rich-text/Editor'
 import Typography from '@mui/material/Typography'
 import HelpTooltip from '../shared/HelpTooltip'
+import CategoryList from './TourCategoryList'
+import { TourCategory } from '../../types/tour-category'
 
 type TourFormProps = {
   tour: BaseTour
@@ -48,6 +50,12 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
     // todo: perform validation
     saveHandler(currentTour)
   }
+  const handleSetCategories = useCallback((categories: TourCategory[]) => {
+    setCurrentTour(prevTour => ({
+      ...prevTour,
+      categories
+    }))
+  }, [])
 
   const handleSetMarker = useCallback((coordinates: number[], id: number) => {
     if (id === 0) {
@@ -85,6 +93,17 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
             setCurrentTour({ ...currentTour, name: event.target.value })}
           error={hasErrors('name')}
           helperText={getFieldErrors('name')}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="h5" component="div" gutterBottom sx={{ mb: 2 }}>
+          Tour Categories
+        </Typography>
+        <CategoryList
+          tourCategories={tour.categories}
+          type={type}
+          handleSetCategories={handleSetCategories}
+          hasError={hasErrors('categories')}
         />
       </Grid>
       {!isOffline() &&

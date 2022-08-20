@@ -52,7 +52,8 @@ const TourCreate = () => {
     coordinates: []
   },
   '',
-  '')
+  '',
+  [])
 
   const triggerSuccess = (id: string) => {
     triggerSuccessNotification('Created new tour!')
@@ -66,6 +67,7 @@ const TourCreate = () => {
         startLocation: baseTour.startLocation,
         endLocation: baseTour.endLocation,
         description: baseTour.description.trim(),
+        categories: baseTour.categories,
         images,
         gpxFile
       }
