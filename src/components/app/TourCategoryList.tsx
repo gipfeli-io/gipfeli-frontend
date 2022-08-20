@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { TourCategory, UpdateTourCategory } from '../../types/tour-category'
-import { Chip } from '@mui/material'
+import { Alert, AlertTitle, Chip } from '@mui/material'
 import LookupService from '../../services/lookup/lookup-service'
 import useErrorHandling from '../../hooks/use-error-handling'
 import useApiError from '../../hooks/use-api-error'
@@ -9,10 +9,11 @@ import useAuth from '../../hooks/use-auth'
 type CategoryListProps = {
   tourCategories: TourCategory[],
   handleSetCategories?: (categories: TourCategory[]) => void,
-  type: string // todo: create enum => also use for tour
+  type: string, // todo: create enum => also use for tour
+  hasError?: boolean
 }
 
-const TourCategoryList = ({ tourCategories, handleSetCategories, type }: CategoryListProps) => {
+const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError }: CategoryListProps) => {
   const auth = useAuth()
   const lookupService = new LookupService(auth.token)
   const { triggerError } = useErrorHandling()
@@ -20,9 +21,6 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type }: Categor
   const [categories, setCategories] = useState<UpdateTourCategory[]>([])
 
   const handleClick = (category: UpdateTourCategory) => {
-    if (type === 'detail') {
-      return
-    }
     category.isSelected = !category.isSelected
     if (handleSetCategories) {
       const newCategories = categories.filter((category) => category.isSelected)
@@ -31,20 +29,17 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type }: Categor
     }
   }
 
-  const mapCategoriesOnTourToList = (categoryList: UpdateTourCategory[]) => {
+  const mapCategoriesOnTourToList = (categoryList: UpdateTourCategory[]): UpdateTourCategory[] => {
     categoryList.forEach((category: UpdateTourCategory) => {
-      if (tourCategories.find((cat) => cat.id === category.id)) {
-        category.isSelected = true
-      } else {
-        category.isSelected = false
-      }
+      category.isSelected = !!tourCategories.find((cat) => cat.id === category.id)
     })
-    categoryList.sort((a, b) => a.name.localeCompare(b.name))
 
+    // only show selected categories when in detail view
     if (type === 'detail') {
       categoryList = categoryList.filter((category) => category.isSelected)
     }
-    setCategories(categoryList)
+
+    return categoryList.sort((a, b) => a.name.localeCompare(b.name))
   }
 
   useEffect(() => {
@@ -53,7 +48,8 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type }: Categor
       try {
         result = await lookupService.findAllTourCategories()
         if (result.success) {
-          mapCategoriesOnTourToList(result.content! as UpdateTourCategory[])
+          const categories = mapCategoriesOnTourToList(result.content! as UpdateTourCategory[])
+          setCategories(categories)
         } else {
           throwError(result)
         }
@@ -68,12 +64,34 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type }: Categor
     return (<></>)
   }
 
-  return (
+  const getDetailView = () => (
     <>
-      {categories.map((item, index) => (
+      {
+        categories.map((item, index) => (
+          <Chip sx={{ mr: 1 }} key={index} label={item.name} color='primary'/>
+        ))
+      }
+    </>
+  )
+
+  const getEditView = () => (
+    <>
+      {hasError &&
+        <Alert severity={'error'} sx={{ mb: 2 }}>
+          <AlertTitle> Please select at least one category!</AlertTitle>
+        </Alert>
+      }
+      { categories.map((item, index) => (
         <Chip sx={{ mr: 1 }} key={index} label={item.name} color={item.isSelected ? 'primary' : 'default'} onClick={() => handleClick(item)}/>
       ))
       }
+    </>
+  )
+
+  return (
+    <>
+      {type === 'detail' && getDetailView()}
+      {type !== 'detail' && getEditView()}
     </>
   )
 }

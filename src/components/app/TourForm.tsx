@@ -99,7 +99,12 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
         <Typography variant="h5" component="div" gutterBottom sx={{ mb: 2 }}>
           Tour Categories
         </Typography>
-        <CategoryList tourCategories={tour.categories} type={type} handleSetCategories={handleSetCategories}/>
+        <CategoryList
+          tourCategories={tour.categories}
+          type={type}
+          handleSetCategories={handleSetCategories}
+          hasError={hasErrors('categories')}
+        />
       </Grid>
       {!isOffline() &&
           <>
