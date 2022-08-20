@@ -128,16 +128,16 @@ const TourDetail = () => {
           </Typography>
         </Grid>
       </Grid>
-      <Grid container mb={2} direction={'row'} spacing={5}>
-        <Grid item xs={12}>
-          <Typography variant="h5" gutterBottom component="div" sx={{ mb: 2 }}>
-            Categories
-          </Typography>
-          <CategoryList tourCategories={tour.categories} type='detail'/>
-        </Grid>
-      </Grid>
       {!isOffline() &&
           <>
+              <Grid container mb={2} direction={'row'} spacing={5}>
+                  <Grid item xs={12}>
+                      <Typography variant="h5" gutterBottom component="div" sx={{ mb: 2 }}>
+                          Categories
+                      </Typography>
+                      <CategoryList tourCategories={tour.categories} type='detail'/>
+                  </Grid>
+              </Grid>
               <MapWrapper>
                 {!tour.gpxFile &&
                     <WayPointMarkerLayer features={getWayPointMarkerFeatures()}/>
