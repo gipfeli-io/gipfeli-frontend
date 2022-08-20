@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { TourCategory, UpdateTourCategory } from '../../types/tour-category'
-import { Alert, AlertTitle, Chip } from '@mui/material'
+import { Alert, AlertTitle, Chip, Grid } from '@mui/material'
 import LookupService from '../../services/lookup/lookup-service'
 import useErrorHandling from '../../hooks/use-error-handling'
 import useApiError from '../../hooks/use-api-error'
@@ -68,7 +68,9 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
     <>
       {
         categories.map((item, index) => (
-          <Chip sx={{ mr: 1 }} key={index} label={item.name} color='primary'/>
+          <Grid item xs={6} key={index}>
+            <Chip label={item.name} color='primary'/>
+          </Grid>
         ))
       }
     </>
@@ -82,7 +84,9 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
         </Alert>
       }
       { categories.map((item, index) => (
-        <Chip sx={{ mr: 1 }} key={index} label={item.name} color={item.isSelected ? 'primary' : 'default'} onClick={() => handleClick(item)}/>
+        <Grid item xs={6} md={2} key={index}>
+          <Chip sx={{ width: 1 }} label={item.name} color={item.isSelected ? 'primary' : 'default'} onClick={() => handleClick(item)}/>
+        </Grid>
       ))
       }
     </>
@@ -90,8 +94,10 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
 
   return (
     <>
-      {type === 'detail' && getDetailView()}
-      {type !== 'detail' && getEditView()}
+      <Grid container spacing={2} direction={'row'} alignItems={'center'} justifyContent={'space-evenly'}>
+        {type === 'detail' && getDetailView()}
+        {type !== 'detail' && getEditView()}
+      </Grid>
     </>
   )
 }
