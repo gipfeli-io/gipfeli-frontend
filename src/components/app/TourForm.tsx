@@ -95,19 +95,19 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
           helperText={getFieldErrors('name')}
         />
       </Grid>
-      <Grid item xs={12}>
-        <Typography variant="h5" component="div" gutterBottom sx={{ mb: 2 }}>
-          Tour Categories
-        </Typography>
-        <CategoryList
-          tourCategories={tour.categories}
-          type={type}
-          handleSetCategories={handleSetCategories}
-          hasError={hasErrors('categories')}
-        />
-      </Grid>
       {!isOffline() &&
           <>
+              <Grid item xs={12}>
+                  <Typography variant="h5" component="div" gutterBottom sx={{ mb: 2 }}>
+                      Tour Categories
+                  </Typography>
+                  <CategoryList
+                      tourCategories={tour.categories}
+                      type={type}
+                      handleSetCategories={handleSetCategories}
+                      hasError={hasErrors('categories')}
+                  />
+              </Grid>
               <Grid item xs={12}>
                   <Typography variant="h5" component="div" gutterBottom>
                       Map data <HelpTooltip tooltip={MAP_HELPER_TEXT}/>
