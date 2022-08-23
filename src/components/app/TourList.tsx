@@ -7,6 +7,7 @@ import useConnectionStatus from '../../hooks/use-connection-status'
 import { Chip } from '@mui/material'
 import { formatDate } from '../../utils/date-conversion-helper'
 import List from '../shared/list/List'
+import TourCategoryIconList from '../shared/tour-categories/tour-category-icon-list'
 
 type TourListProps = {
   rows: Tour[],
@@ -36,8 +37,17 @@ const TourList = ({ loading, rows }: TourListProps) => {
       </>
   }
 
+  // add new component that returns the correct icon for the given category
+  const getCategories = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
+    const { categories } = params.row
+    return (
+      <TourCategoryIconList categories={categories}/>
+    )
+  }
+
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', flex: 2, minWidth: 200, renderCell: getName },
+    { field: 'categories', headerName: 'Categories', flex: 2, renderCell: getCategories, sortable: false, filterable: false },
     {
       field: 'createdAt',
       headerName: 'Created at',

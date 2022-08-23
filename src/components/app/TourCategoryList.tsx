@@ -5,6 +5,7 @@ import LookupService from '../../services/lookup/lookup-service'
 import useErrorHandling from '../../hooks/use-error-handling'
 import useApiError from '../../hooks/use-api-error'
 import useAuth from '../../hooks/use-auth'
+import { tourCategoryIconMap } from '../shared/tour-categories/tour-category-icon-list'
 
 type CategoryListProps = {
   tourCategories: TourCategory[],
@@ -85,7 +86,9 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
       }
       { categories.map((item, index) => (
         <Grid item xs={6} md={2} key={index}>
-          <Chip sx={{ width: 1 }} label={item.name} color={item.isSelected ? 'primary' : 'default'} onClick={() => handleClick(item)}/>
+          <Chip
+            icon={tourCategoryIconMap.get(item.id)}
+            sx={{ width: 1 }} label={item.name} color={item.isSelected ? 'primary' : 'default'} onClick={() => handleClick(item)}/>
         </Grid>
       ))
       }
@@ -94,7 +97,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
 
   return (
     <>
-      <Grid container spacing={2} direction={'row'} alignItems={'center'} justifyContent={'space-evenly'}>
+      <Grid container spacing={1} direction={'row'} alignItems={'center'} justifyContent={'space-evenly'}>
         {type === 'detail' && getDetailView()}
         {type !== 'detail' && getEditView()}
       </Grid>

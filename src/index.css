@@ -15,3 +15,22 @@ body {
 .not-found-illustration {
   width: 100%;
 }
+
+.category-icon{
+  width:24px;
+  height:24px;
+}
+
+.category-icon_list{
+ color: #1976d2;
+ fill: #1976d2;
+}
+
+.category-icon.MuiChip-icon{
+  fill: #616161;
+}
+
+.MuiChip-colorPrimary .category-icon{
+  fill: #fff;
+}
+
