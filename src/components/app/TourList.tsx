@@ -1,5 +1,9 @@
 import { Tour } from '../../types/tour'
-import { GridColDef, GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid'
+import {
+  GridColDef,
+  GridValueFormatterParams,
+  GridValueGetterParams
+} from '@mui/x-data-grid'
 import React from 'react'
 import { OfflineBolt } from '@mui/icons-material'
 import { TourStatusType } from '../../enums/tour-status-type'
@@ -37,7 +41,6 @@ const TourList = ({ loading, rows }: TourListProps) => {
       </>
   }
 
-  // add new component that returns the correct icon for the given category
   const getCategories = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
     const { categories } = params.row
     return (

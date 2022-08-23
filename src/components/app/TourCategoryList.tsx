@@ -69,8 +69,8 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
     <>
       {
         categories.map((item, index) => (
-          <Grid item xs={6} key={index}>
-            <Chip label={item.name} color='primary'/>
+          <Grid item xs={6} md={2} key={index}>
+            <Chip label={item.name} color='primary' sx={{ width: 1 }}/>
           </Grid>
         ))
       }
@@ -97,7 +97,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
 
   return (
     <>
-      <Grid container spacing={1} direction={'row'} alignItems={'center'} justifyContent={'space-evenly'}>
+      <Grid container spacing={1} direction={'row'} alignItems={'center'}>
         {type === 'detail' && getDetailView()}
         {type !== 'detail' && getEditView()}
       </Grid>
