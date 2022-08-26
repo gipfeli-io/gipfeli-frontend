@@ -9,6 +9,13 @@ export default class AuthService extends APIService {
     return this.sendLoginRequest(email, password)
   }
 
+  public async logout (sessionId: string): Promise<SingleApiResponse<void>> {
+    return this.fetchSingleDataFromApi(
+      this.getRequestUrl(this.prefix, 'logout'),
+      this.getRequestBody('POST', { sessionId })
+    )
+  }
+
   public async refreshTokens (refreshToken: string): Promise<SingleApiResponse<AuthObject>> {
     return this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, 'refresh'),
