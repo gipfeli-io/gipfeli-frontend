@@ -55,7 +55,7 @@ const List = <T extends IdentifiableObject>({
     } else {
       setInternalColumns(columns)
     }
-  }, [])
+  }, [columns])
 
   return (
     <>

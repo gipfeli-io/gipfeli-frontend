@@ -18,7 +18,7 @@ import useGpxFileUpload from '../../hooks/use-gpx-file-upload'
 import Editor from '../shared/rich-text/Editor'
 import Typography from '@mui/material/Typography'
 import HelpTooltip from '../shared/HelpTooltip'
-import CategoryList from './TourCategoryList'
+import TourCategoryList from './TourCategoryList'
 import { TourCategory } from '../../types/tour-category'
 
 type TourFormProps = {
@@ -101,7 +101,7 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
                   <Typography variant="h5" component="div" gutterBottom sx={{ mb: 2 }}>
                       Tour Categories
                   </Typography>
-                  <CategoryList
+                  <TourCategoryList
                       tourCategories={tour.categories}
                       type={type}
                       handleSetCategories={handleSetCategories}
