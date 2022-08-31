@@ -6,7 +6,18 @@ export default class AuthService extends APIService {
   private prefix: string = 'auth'
 
   public async login (email: string, password: string): Promise<SingleApiResponse<AuthObject>> {
-    return this.sendLoginRequest(email, password)
+    return this.fetchSingleDataFromApi(
+      this.getRequestUrl(this.prefix, 'login'),
+      this.getRequestBody('POST', { email, password }),
+      AuthObject
+    )
+  }
+
+  public async logout (sessionId: string): Promise<SingleApiResponse<void>> {
+    return this.fetchSingleDataFromApi(
+      this.getRequestUrl(this.prefix, 'logout'),
+      this.getRequestBody('POST', { sessionId })
+    )
   }
 
   public async refreshTokens (refreshToken: string): Promise<SingleApiResponse<AuthObject>> {
@@ -35,14 +46,6 @@ export default class AuthService extends APIService {
     return this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, 'password-reset-request'),
       this.getRequestBody('POST', { email })
-    )
-  }
-
-  private async sendLoginRequest (email: string, password: string): Promise<SingleApiResponse<AuthObject>> {
-    return this.fetchSingleDataFromApi(
-      this.getRequestUrl(this.prefix, 'login'),
-      this.getRequestBody('POST', { email, password }),
-      AuthObject
     )
   }
 

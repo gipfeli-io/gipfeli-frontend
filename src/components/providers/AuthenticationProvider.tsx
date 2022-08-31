@@ -11,7 +11,7 @@ import useNotifications from '../../hooks/use-notifications'
 import { AuthenticationContextType } from '../../types/contexts'
 import useInterval from '../../hooks/use-interval'
 import tokenNeedsRefresh from '../../utils/token-needs-refresh'
-import { AccessToken, AuthObject } from '../../types/auth'
+import { AccessToken, AuthObject, RefreshToken } from '../../types/auth'
 import { useNavigate } from 'react-router'
 import { UserRole } from '../../enums/user-role'
 import useConnectionStatus from '../../hooks/use-connection-status'
@@ -76,9 +76,15 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     }
   }
 
-  const signOut = (callback: () => void): void => {
-    // Todo: do we need a signout request at all?
+  const signOut = async (callback: () => void): Promise<void> => {
+    if (refreshToken) {
+      const sessionId = jwtDecode<RefreshToken>(refreshToken).sessionId
+      await authService.logout(
+        sessionId
+      )
+    }
     unsetTokensInLocalStorageAndState()
+
     callback()
   }
 
