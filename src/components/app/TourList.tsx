@@ -79,8 +79,9 @@ const TourList = ({ loading, rows }: TourListProps) => {
         triggerError(error as Error)
       }
     }
-
-    fetchCategories()
+    if (!isOffline()) {
+      fetchCategories()
+    }
   }, [])
 
   useEffect(() => {
