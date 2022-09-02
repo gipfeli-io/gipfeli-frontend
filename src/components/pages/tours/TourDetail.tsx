@@ -28,6 +28,7 @@ import DescriptionIcon from '@mui/icons-material/Description'
 import GpxDataLayer from '../../shared/map/layers/GpxDataLayer'
 import MarkdownElement from '../../shared/rich-text/MarkdownElement'
 import CategoryList from '../../app/TourCategoryList'
+import { FormType } from '../../../enums/form-type'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -135,7 +136,7 @@ const TourDetail = () => {
                       <Typography variant="h5" gutterBottom component="div" sx={{ mb: 2 }}>
                           Categories
                       </Typography>
-                      <CategoryList tourCategories={tour.categories} type='detail'/>
+                      <CategoryList tourCategories={tour.categories} type={FormType.DETAIL}/>
                   </Grid>
               </Grid>
               <MapWrapper>

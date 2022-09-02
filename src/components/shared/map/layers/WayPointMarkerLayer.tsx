@@ -16,10 +16,11 @@ import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vec
 import createVectorLayer from '../../../../utils/map/create-vector-layer'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
 import { CoordinateSystems } from '../../../../enums/coordinate-systems'
+import { FormType } from '../../../../enums/form-type'
 
 type WayPointMarkerLayerProps = {
   features: TourPoint[],
-  type?: string,
+  type?: FormType,
   handleSetMarker?: (coordinates: number[], id: number) => void
 }
 

@@ -20,11 +20,12 @@ import Typography from '@mui/material/Typography'
 import HelpTooltip from '../shared/HelpTooltip'
 import TourCategoryList from './TourCategoryList'
 import { TourCategory } from '../../types/tour-category'
+import { FormType } from '../../enums/form-type'
 
 type TourFormProps = {
   tour: BaseTour
   saveHandler: handleSave<BaseTour>
-  type: string,
+  type: FormType,
   formErrors: ValidationError[]
 }
 
