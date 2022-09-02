@@ -112,19 +112,19 @@ const TourDetail = () => {
 
   return (
     <>
-      <Typography variant="h2" gutterBottom component="div">
+      <Typography variant="h2" gutterBottom component="div" mt={2}>
         {tour.name}
         <MuiLink component={Link} to="edit"><EditIcon/></MuiLink>
         <MuiLink href="#" onClick={() => setOpen(true)}><DeleteIcon/></MuiLink>
       </Typography>
-      <Grid container mb={2} direction={'row'} spacing={5}>
+      <Grid container mb={2} direction={'row'} columnSpacing={{ xs: 2, md: 5 }}>
         <Grid item>
-          <Typography variant="subtitle1" gutterBottom component="div">
+          <Typography variant="subtitle2" gutterBottom component="div">
             Created at: {formatDate(tour.createdAt)}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="subtitle1" gutterBottom component="div">
+          <Typography variant="subtitle2" gutterBottom component="div">
             Last updated at: {formatDate(tour.updatedAt)}
           </Typography>
         </Grid>

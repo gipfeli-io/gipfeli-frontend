@@ -1,6 +1,5 @@
-import { GridColDef, GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid'
+import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import tourCategoriesFilterOperators from './grid-filters/tour-categories-filter-operators'
-import { formatDate } from '../../date-conversion-helper'
 import { Tour } from '../../../types/tour'
 
 export const getGridColumnDefinition = (isOfflineFn: () => boolean,
@@ -19,32 +18,13 @@ export const getGridColumnDefinition = (isOfflineFn: () => boolean,
       field: 'categories',
       headerName: 'Categories',
       flex: 2,
+      minWidth: 180,
       renderCell: getCategoriesFn,
       valueGetter: getCategoryValuesFn,
       type: 'singleSelect',
       sortable: false,
       filterable: !isOfflineFn(),
       filterOperators: tourCategoriesFilterOperators()
-    },
-    {
-      field: 'createdAt',
-      headerName: 'Created at',
-      type: 'dateTime',
-      minWidth: 100,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        return formatDate(params.value)
-      },
-      flex: 1
-    },
-    {
-      field: 'updatedAt',
-      headerName: 'Updated at',
-      type: 'dateTime',
-      minWidth: 100,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        return formatDate(params.value)
-      },
-      flex: 1
     }
   ]
 }
