@@ -9,6 +9,7 @@ import { render } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { TourCategory } from '../../../../src/types/tour-category'
 import { act } from 'react-test-renderer'
+import { FormType } from '../../../../src/enums/form-type'
 
 const mockConnectionStatusContext: any = {
   isOffline: () => false
@@ -90,7 +91,7 @@ describe('TourForm', () => {
       const { container } = render(
         <MemoryRouter initialEntries={['/currentUri']}>
           <ConnectionStatusProvider>
-            <TourForm tour={getTour()} formErrors={[]} type='Edit' saveHandler={jest.fn}/>
+            <TourForm tour={getTour()} formErrors={[]} type={FormType.EDIT} saveHandler={jest.fn}/>
           </ConnectionStatusProvider>
         </MemoryRouter>)
       renderResult = container
@@ -110,7 +111,7 @@ describe('TourForm', () => {
       const { container } = render(
         <MemoryRouter initialEntries={['/currentUri']}>
           <ConnectionStatusProvider>
-            <TourForm tour={getTour()} formErrors={[]} type='Edit' saveHandler={jest.fn}/>
+            <TourForm tour={getTour()} formErrors={[]} type={FormType.EDIT} saveHandler={jest.fn}/>
           </ConnectionStatusProvider>
         </MemoryRouter>)
       renderResult = container
