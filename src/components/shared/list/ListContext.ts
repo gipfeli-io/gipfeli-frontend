@@ -6,7 +6,9 @@ import { ListContextProperties } from '../../../types/contexts'
  * nested child components.
  */
 const ListContext = React.createContext<ListContextProperties>({
-  deleteEvent: _id => {}
+  deleteEvent: _id => {
+    // Base implementation that does nothing. An actual usage can override this method.
+  }
 })
 
 export default ListContext

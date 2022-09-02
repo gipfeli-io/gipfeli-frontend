@@ -24,8 +24,8 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
   const handleClick = (category: UpdateTourCategory) => {
     category.isSelected = !category.isSelected
     if (handleSetCategories) {
-      const newCategories = categories.filter((category) => category.isSelected)
-        .map((category) => new TourCategory(category.id, category.name))
+      const newCategories = categories.filter((newCategory) => newCategory.isSelected)
+        .map((newCategory) => new TourCategory(newCategory.id, newCategory.name))
       handleSetCategories(newCategories)
     }
   }
@@ -49,8 +49,8 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
       try {
         result = await lookupService.findAllTourCategories()
         if (result.success) {
-          const categories = mapCategoriesOnTourToList(result.content! as UpdateTourCategory[])
-          setCategories(categories)
+          const mappedCategories = mapCategoriesOnTourToList(result.content! as UpdateTourCategory[])
+          setCategories(mappedCategories)
         } else {
           throwError(result)
         }
