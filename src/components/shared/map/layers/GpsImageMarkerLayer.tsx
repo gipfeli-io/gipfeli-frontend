@@ -110,7 +110,6 @@ const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
 
     return () => {
       // Clean up, because in devmode, the select listener is attached twice, opening 2 popups.
-      // todo: maybe we should clean up everything?
       map.removeInteraction(selectListener)
     }
   }, [map, features])

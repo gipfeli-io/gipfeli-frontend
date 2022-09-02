@@ -25,7 +25,7 @@ type TourListProps = {
 const TourList = ({ loading, rows }: TourListProps) => {
   const { isOffline } = useConnectionStatus()
   const [columns, setColumns] = useState<GridColDef[]>([])
-  const [categories, setCategories] = useState<TourCategory[]>([])
+  const [tourCategories, setTourCategories] = useState<TourCategory[]>([])
   const { token } = useAuth()
   const categoryService = new LookupService(token)
   const throwError = useApiError()
@@ -71,7 +71,7 @@ const TourList = ({ loading, rows }: TourListProps) => {
       try {
         const data = await categoryService.findAllTourCategories()
         if (data.success) {
-          setCategories(data.content!)
+          setTourCategories(data.content!)
         } else {
           throwError(data)
         }
@@ -85,23 +85,23 @@ const TourList = ({ loading, rows }: TourListProps) => {
 
   useEffect(() => {
     const getCategoryFilterValueOptions = (): {value: string, label: string}[] => {
-      if (categories.length === 0) {
+      if (tourCategories.length === 0) {
         return []
       }
-      return categories.map((category: TourCategory) => ({ value: category.name, label: category.name }))
+      return tourCategories.map((category: TourCategory) => ({ value: category.name, label: category.name }))
     }
 
     if (columns.length === 0) {
       setColumns(columnDefinition)
     } else {
-      if (categories.length > 0) {
+      if (tourCategories.length > 0) {
         columns.find((col: GridColDef) => col.field === 'categories')!.valueOptions = getCategoryFilterValueOptions
         setColumns(() => ([
           ...columns
         ]))
       }
     }
-  }, [categories])
+  }, [tourCategories])
 
   return <List
     loading={loading}
