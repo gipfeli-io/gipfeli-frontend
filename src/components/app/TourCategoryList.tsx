@@ -71,7 +71,8 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
       {
         categories.map((item, index) => (
           <Grid item xs={6} md={2} key={index}>
-            <Chip label={item.name} color='primary' sx={{ width: 1 }}/>
+            <Chip icon={tourCategoryIconMap.get(item.id)}
+                  sx={{ width: 1 }} label={item.name} color='primary'/>
           </Grid>
         ))
       }
@@ -81,9 +82,11 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
   const getEditView = () => (
     <>
       {hasError &&
-        <Alert severity={'error'} sx={{ mb: 2 }}>
-          <AlertTitle> Please select at least one category!</AlertTitle>
-        </Alert>
+        <Grid item xs={12}>
+          <Alert severity={'error'} sx={{ mb: 2 }}>
+            <AlertTitle> Please select at least one category!</AlertTitle>
+          </Alert>
+        </Grid>
       }
       { categories.map((item, index) => (
         <Grid item xs={6} md={2} key={index}>
