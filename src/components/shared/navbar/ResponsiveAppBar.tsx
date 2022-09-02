@@ -50,6 +50,8 @@ const ResponsiveAppBar = () => {
     }
   }, [email, isAdmin])
 
+  const homeRoute = email ? '/tours' : '/'
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -60,7 +62,7 @@ const ResponsiveAppBar = () => {
                 size="large"
                 edge="start"
                 component={Link}
-                to="/"
+                to={homeRoute}
               >
                 <LandscapeIcon/>
               </IconButton>

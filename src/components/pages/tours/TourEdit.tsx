@@ -23,6 +23,7 @@ import useErrorHandling from '../../../hooks/use-error-handling'
 import useFormErrors from '../../../hooks/use-form-errors'
 import useHandleGpxFileUpload from '../../../hooks/use-handle-gpx-file-upload'
 import GpxFileUploadContext from '../../../contexts/gpx-file-upload-context'
+import { FormType } from '../../../enums/form-type'
 
 const EditTour = () => {
   const navigate = useNavigate()
@@ -153,8 +154,8 @@ const EditTour = () => {
   if (!tour) {
     return (<Loader/>)
   } else {
-    const getFormType = (): string => {
-      return tour.status === TourStatusType.CREATED ? 'Create' : 'Edit'
+    const getFormType = (): FormType => {
+      return tour.status === TourStatusType.CREATED ? FormType.CREATE : FormType.EDIT
     }
 
     return (

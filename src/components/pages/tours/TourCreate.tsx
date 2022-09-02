@@ -20,6 +20,7 @@ import useFormErrors from '../../../hooks/use-form-errors'
 import useErrorHandling from '../../../hooks/use-error-handling'
 import useHandleGpxFileUpload from '../../../hooks/use-handle-gpx-file-upload'
 import GpxFileUploadContext from '../../../contexts/gpx-file-upload-context'
+import { FormType } from '../../../enums/form-type'
 
 const TourCreate = () => {
   const auth = useAuth()
@@ -123,7 +124,7 @@ const TourCreate = () => {
       </Typography>
       <ImageUploadContext.Provider value={imageContextProps}>
         <GpxFileUploadContext.Provider value={gpxFileContextProps}>
-          <TourForm tour={tour} saveHandler={saveTour} formErrors={formErrors} type={'Create'}/>
+          <TourForm tour={tour} saveHandler={saveTour} formErrors={formErrors} type={FormType.CREATE}/>
         </GpxFileUploadContext.Provider>
       </ImageUploadContext.Provider>
     </>

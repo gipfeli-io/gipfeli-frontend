@@ -16,7 +16,7 @@ const Login = () => {
     await auth.signIn(
       data.get('email')!.toString(),
       data.get('password')!.toString(),
-      () => navigate('/')
+      () => navigate('/tours')
     )
   }
   return (

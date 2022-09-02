@@ -28,6 +28,7 @@ import DescriptionIcon from '@mui/icons-material/Description'
 import GpxDataLayer from '../../shared/map/layers/GpxDataLayer'
 import MarkdownElement from '../../shared/rich-text/MarkdownElement'
 import CategoryList from '../../app/TourCategoryList'
+import { FormType } from '../../../enums/form-type'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -111,19 +112,19 @@ const TourDetail = () => {
 
   return (
     <>
-      <Typography variant="h2" gutterBottom component="div">
+      <Typography variant="h2" gutterBottom component="div" mt={2}>
         {tour.name}
         <MuiLink component={Link} to="edit"><EditIcon/></MuiLink>
         <MuiLink href="#" onClick={() => setOpen(true)}><DeleteIcon/></MuiLink>
       </Typography>
-      <Grid container mb={2} direction={'row'} spacing={5}>
+      <Grid container mb={2} direction={'row'} columnSpacing={{ xs: 2, md: 5 }}>
         <Grid item>
-          <Typography variant="subtitle1" gutterBottom component="div">
+          <Typography variant="subtitle2" gutterBottom component="div">
             Created at: {formatDate(tour.createdAt)}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="subtitle1" gutterBottom component="div">
+          <Typography variant="subtitle2" gutterBottom component="div">
             Last updated at: {formatDate(tour.updatedAt)}
           </Typography>
         </Grid>
@@ -135,7 +136,7 @@ const TourDetail = () => {
                       <Typography variant="h5" gutterBottom component="div" sx={{ mb: 2 }}>
                           Categories
                       </Typography>
-                      <CategoryList tourCategories={tour.categories} type='detail'/>
+                      <CategoryList tourCategories={tour.categories} type={FormType.DETAIL}/>
                   </Grid>
               </Grid>
               <MapWrapper>

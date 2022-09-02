@@ -6,6 +6,8 @@ import ToursSyncService from '../services/tours/tours-sync-service'
 import useConnectionStatus from './use-connection-status'
 import { useCallback } from 'react'
 import useErrorHandling from './use-error-handling'
+import { redirectAfterConnectionStatusChange } from '../utils/offline-helper'
+import { useLocation, useNavigate } from 'react-router'
 
 const useGoOnline = () => {
   const auth = useAuth()
@@ -13,6 +15,8 @@ const useGoOnline = () => {
   const tourSyncService: ToursSyncService = new ToursSyncService(auth.token)
   const { updateConnectionStatus, updateOnlineInfoBannerVisibility } = useConnectionStatus()
   const { triggerError } = useErrorHandling()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   return useCallback(() => {
     function getMessageString (validationErrors: string | ValidationError[]): string {
@@ -27,9 +31,11 @@ const useGoOnline = () => {
 
     async function syncData () {
       try {
+        let hasErrors = false
         const results = await tourSyncService.synchronizeTourData()
         results.forEach((result: SingleApiResponse<unknown>) => {
           if (result.error) {
+            hasErrors = true
             const { message } = result.error
             if (message !== undefined) {
               triggerSyncFailedNotification(getMessageString(message))
@@ -38,6 +44,10 @@ const useGoOnline = () => {
         })
         updateOnlineInfoBannerVisibility(false)
         updateConnectionStatus(ConnectionStatus.ONLINE)
+
+        if (!hasErrors) {
+          redirectAfterConnectionStatusChange(location.pathname, navigate)
+        }
       } catch (error: unknown) {
         triggerError(error as Error)
       }

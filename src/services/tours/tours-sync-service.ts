@@ -73,7 +73,9 @@ export default class ToursSyncService {
       description: tour.description,
       endLocation: remoteTour.endLocation,
       startLocation: remoteTour.startLocation,
-      images: remoteTour.images ? remoteTour.images : []
+      images: remoteTour.images ? remoteTour.images : [],
+      gpxFile: remoteTour.gpxFile ? remoteTour.gpxFile : null,
+      categories: remoteTour.categories ? remoteTour.categories : []
     } as UpdateOrCreateTour
   }
 }

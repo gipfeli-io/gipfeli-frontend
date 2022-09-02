@@ -6,11 +6,12 @@ import useErrorHandling from '../../hooks/use-error-handling'
 import useApiError from '../../hooks/use-api-error'
 import useAuth from '../../hooks/use-auth'
 import { tourCategoryIconMap } from '../shared/tour-categories/tour-category-icon-list'
+import { FormType } from '../../enums/form-type'
 
 type CategoryListProps = {
   tourCategories: TourCategory[],
   handleSetCategories?: (categories: TourCategory[]) => void,
-  type: string, // todo: create enum => also use for tour
+  type: FormType,
   hasError?: boolean
 }
 
@@ -36,7 +37,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
     })
 
     // only show selected categories when in detail view
-    if (type === 'detail') {
+    if (type === FormType.DETAIL) {
       categoryList = categoryList.filter((category) => category.isSelected)
     }
 
@@ -70,7 +71,8 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
       {
         categories.map((item, index) => (
           <Grid item xs={6} md={2} key={index}>
-            <Chip label={item.name} color='primary' sx={{ width: 1 }}/>
+            <Chip icon={tourCategoryIconMap.get(item.id)}
+                  sx={{ width: 1 }} label={item.name} color='primary'/>
           </Grid>
         ))
       }
@@ -80,9 +82,11 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
   const getEditView = () => (
     <>
       {hasError &&
-        <Alert severity={'error'} sx={{ mb: 2 }}>
-          <AlertTitle> Please select at least one category!</AlertTitle>
-        </Alert>
+        <Grid item xs={12}>
+          <Alert severity={'error'} sx={{ mb: 2 }}>
+            <AlertTitle> Please select at least one category!</AlertTitle>
+          </Alert>
+        </Grid>
       }
       { categories.map((item, index) => (
         <Grid item xs={6} md={2} key={index}>
@@ -98,8 +102,8 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
   return (
     <>
       <Grid container spacing={1} direction={'row'} alignItems={'center'}>
-        {type === 'detail' && getDetailView()}
-        {type !== 'detail' && getEditView()}
+        {type === FormType.DETAIL && getDetailView()}
+        {type !== FormType.DETAIL && getEditView()}
       </Grid>
     </>
   )

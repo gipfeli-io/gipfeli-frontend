@@ -30,7 +30,6 @@ const TourList = ({ loading, rows }: TourListProps) => {
   const categoryService = new LookupService(token)
   const throwError = useApiError()
   const { triggerError } = useErrorHandling()
-
   const getName = (params: GridValueGetterParams<Tour, Tour>): JSX.Element => {
     const { name, status } = params.row
     const offlineCreatedChip = <Chip size="small" sx={{ ml: 1 }} label="Complete to sync" color="primary"/>
@@ -79,8 +78,9 @@ const TourList = ({ loading, rows }: TourListProps) => {
         triggerError(error as Error)
       }
     }
-
-    fetchCategories()
+    if (!isOffline()) {
+      fetchCategories()
+    }
   }, [])
 
   useEffect(() => {
