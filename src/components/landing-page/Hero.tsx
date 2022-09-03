@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import useAuth from '../../hooks/use-auth'
 
 const Hero = () => {
-  const { email } = useAuth()
+  const { isLoggedIn } = useAuth()
 
   return (
     <Box
@@ -21,14 +21,14 @@ const Hero = () => {
           gutterBottom
         >
           {
-            email
+            isLoggedIn
               ? <>Welcome back!</>
               : <>You have arrived.</>
           }
         </Typography>
         <Typography variant="h5" align="center" color="text.secondary" paragraph>
           {
-            email
+            isLoggedIn
               ? <>We are glad to have you on board.</>
               : <>Fellow hiker, you have arrived. <strong>gipfeli.io</strong> is the last hike documentation website you
                 will ever need. So stop searching and join us!</>
@@ -41,7 +41,7 @@ const Hero = () => {
           justifyContent="center"
         >
           {
-            email
+            isLoggedIn
               ? <Button component={Link} to="tours" variant="contained">To your tours</Button>
               : <Button component={Link} to="signup" variant="contained">Sign up</Button>
           }

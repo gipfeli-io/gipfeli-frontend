@@ -15,10 +15,10 @@ type RequireAuthProps = {
  * @constructor
  */
 const RequireAuth = ({ children, requireAdmin = false }: RequireAuthProps): JSX.Element => {
-  const { email, isAdmin } = useAuth()
+  const { isLoggedIn, isAdmin } = useAuth()
   const location = useLocation()
 
-  if (!email) {
+  if (!isLoggedIn) {
     return <Navigate to="/login" state={{ from: location }} replace/>
   }
 

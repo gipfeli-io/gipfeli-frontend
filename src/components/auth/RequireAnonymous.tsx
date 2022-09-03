@@ -12,10 +12,10 @@ type RequireAnonymousProps = {
  * @constructor
  */
 const RequireAnonymous = ({ children }: RequireAnonymousProps): JSX.Element => {
-  const { email } = useAuth()
+  const { isLoggedIn } = useAuth()
   const location = useLocation()
 
-  if (email) {
+  if (isLoggedIn) {
     return <Navigate to="/" state={{ from: location }} replace/>
   }
 

@@ -58,6 +58,10 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     return userRole === UserRole.ADMINISTRATOR
   }, [userRole])
 
+  const isLoggedIn = useMemo(() => {
+    return !!email
+  }, [email])
+
   const signIn = async (emailAddress: string, password: string, callback: () => void): Promise<void> => {
     const data = await authService.login(
       emailAddress,
@@ -169,7 +173,7 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
    */
   useInterval(checkAndRefreshToken, 2000)
 
-  const value: AuthenticationContextType = { email, isAdmin, token: accessToken, signIn, signOut }
+  const value: AuthenticationContextType = { email, isAdmin, isLoggedIn, token: accessToken, signIn, signOut }
 
   if (loading) {
     return <Loader/>
