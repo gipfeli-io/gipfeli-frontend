@@ -8,7 +8,13 @@ type RequireAuthProps = {
   requireAdmin?: boolean;
 }
 
-const RequireAuth = ({ children, requireAdmin = false }: RequireAuthProps) : JSX.Element => {
+/**
+ * Shortcut for creating pages that can only be accessed by logged-in users (e.g. tours). Redirects to login otherwise.
+ * @param children
+ * @param requireAdmin If true, also checks for admin rights and raises an UnauthorizedAdminAccess exception otherwise.
+ * @constructor
+ */
+const RequireAuth = ({ children, requireAdmin = false }: RequireAuthProps): JSX.Element => {
   const { email, isAdmin } = useAuth()
   const location = useLocation()
 
