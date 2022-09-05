@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { TourCategory, UpdateTourCategory } from '../../types/tour-category'
-import { Alert, AlertTitle, Chip, Grid } from '@mui/material'
+import { Alert, AlertTitle, Grid } from '@mui/material'
 import LookupService from '../../services/lookup/lookup-service'
 import useErrorHandling from '../../hooks/use-error-handling'
 import useApiError from '../../hooks/use-api-error'
 import useAuth from '../../hooks/use-auth'
-import { tourCategoryIconMap } from '../shared/tour-categories/tour-category-icon-list'
+import { TourCategoryIconChip } from '../shared/tour-categories/tour-category-icons'
 import { FormType } from '../../enums/form-type'
 
 type CategoryListProps = {
@@ -26,7 +26,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
     category.isSelected = !category.isSelected
     if (handleSetCategories) {
       const newCategories = categories.filter((newCategory) => newCategory.isSelected)
-        .map((newCategory) => new TourCategory(newCategory.id, newCategory.name))
+        .map((newCategory) => new TourCategory(newCategory.id, newCategory.name, newCategory.iconName))
       handleSetCategories(newCategories)
     }
   }
@@ -71,8 +71,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
       {
         categories.map((item, index) => (
           <Grid item xs={6} md={2} key={index}>
-            <Chip icon={tourCategoryIconMap.get(item.id)}
-                  sx={{ width: 1 }} label={item.name} color='primary'/>
+            <TourCategoryIconChip category={item}/>
           </Grid>
         ))
       }
@@ -90,9 +89,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
       }
       { categories.map((item, index) => (
         <Grid item xs={6} md={2} key={index}>
-          <Chip
-            icon={tourCategoryIconMap.get(item.id)}
-            sx={{ width: 1 }} label={item.name} color={item.isSelected ? 'primary' : 'default'} onClick={() => handleClick(item)}/>
+          <TourCategoryIconChip category={item} clickHandler={handleClick}/>
         </Grid>
       ))
       }
