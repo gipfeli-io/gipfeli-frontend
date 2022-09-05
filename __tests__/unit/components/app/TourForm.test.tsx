@@ -47,11 +47,13 @@ const mockUseLocationValue = {
 const mockCategories: TourCategory[] = [
   {
     id: 'cat-1',
-    name: 'CAT 1'
+    name: 'CAT 1',
+    iconName: 'cat-1.svg'
   },
   {
     id: 'cat-2',
-    name: 'CAT 2'
+    name: 'CAT 2',
+    iconName: 'cat-2.svg'
   }
 ]
 
