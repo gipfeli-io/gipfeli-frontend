@@ -1,18 +1,1 @@
-<svg
-  width="24"
-  height="24"
-  viewBox="0 0 24 24"
-  fill="none"
-  xmlns="http://www.w3.org/2000/svg"
->
-  <!--
-Author: https://github.com/astrit/css.gg/blob/master/LICENSE
-Licence: MIT Licence
-Provided by https://www.svgrepo.com
--->
-  <path d="M8 10L3 18H13L8 10Z" fill="currentColor" />
-  <path
-    d="M10.5286 10.7543L13.5 6L21 18H15.0572L10.5286 10.7543Z"
-    fill="currentColor"
-  />
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M14 6l-3.75 5 2.85 3.8-1.6 1.2C9.81 13.75 7 10 7 10l-6 8h22L14 6z"/></svg>

@@ -71,7 +71,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
       {
         categories.map((item, index) => (
           <Grid item xs={6} md={2} key={index}>
-            <TourCategoryIconChip category={item} />
+            <TourCategoryIconChip category={item}/>
           </Grid>
         ))
       }
@@ -89,7 +89,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
       }
       { categories.map((item, index) => (
         <Grid item xs={6} md={2} key={index}>
-          <TourCategoryIconChip category={item} handleClick={handleClick}/>
+          <TourCategoryIconChip category={item} clickHandler={handleClick}/>
         </Grid>
       ))
       }

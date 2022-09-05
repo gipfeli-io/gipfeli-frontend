@@ -1,7 +1,8 @@
 import React from 'react'
 import { TourCategory, UpdateTourCategory } from '../../../types/tour-category'
 import { FormType } from '../../../enums/form-type'
-import { Avatar, Chip } from '@mui/material'
+import { Chip } from '@mui/material'
+import { ReactSVG } from 'react-svg'
 
 type TourCategoryIconListProps = {
   categories: TourCategory[],
@@ -10,19 +11,18 @@ type TourCategoryIconListProps = {
 
 type TourCategoryIconChipProps = {
   category: UpdateTourCategory,
-  handleClick?: (category: UpdateTourCategory) => void
+  clickHandler?: (category: UpdateTourCategory) => void
 }
 
-const iconFolder = '/assets/icons/'
+const iconFolder = `${process.env.PUBLIC_URL}/assets/icons`
 
-export const TourCategoryIconChip = ({ category, handleClick }: TourCategoryIconChipProps): JSX.Element => {
-  if (handleClick) {
+export const TourCategoryIconChip = ({ category, clickHandler }: TourCategoryIconChipProps): JSX.Element => {
+  if (clickHandler) {
     return <Chip
-                 avatar={<Avatar alt={category.name} src={`${iconFolder}${category.iconName}`}/>}
-                 sx={{
-                 }} label={category.name} color='primary' onClick={() => handleClick(category)}/>
+                 icon={<ReactSVG src={`${iconFolder}/${category.iconName}`} className="category-list_icon" wrapper="span"/>}
+                 sx={{ width: 1 }} label={category.name} color={category.isSelected ? 'primary' : 'default'} onClick={() => clickHandler(category)}/>
   } else {
-    return <Chip avatar={<Avatar alt={category.name} src={`${iconFolder}${category.iconName}`}/>}
+    return <Chip icon={<ReactSVG src={`${iconFolder}/${category.iconName}`} className="category-list_icon" wrapper="span"/>}
                    sx={{ width: 1 }} label={category.name} color='primary'/>
   }
 }
@@ -32,7 +32,7 @@ export const TourCategoryIconList = ({ categories }: TourCategoryIconListProps):
     <>
       {categories.map((category, index) => (
         <span key={index}>
-          {category.name}
+          <ReactSVG src={`${iconFolder}/${category.iconName}`} className="category-list_icon"/>
         </span>
       ))}
     </>
