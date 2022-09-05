@@ -4,7 +4,7 @@ import useApiError from './use-api-error'
 import { CurrentUpload, GpxFileUpload, UploadError } from '../types/media'
 import useErrorHandling from './use-error-handling'
 
-const useHandleGpxFileUpload = (mediaService: MediaService, record: GpxFileUpload, setRecord: Dispatch<SetStateAction<GpxFileUpload>>) => {
+const useHandleGpxFileUpload = (mediaService: MediaService, record: GpxFileUpload|undefined, setRecord: Dispatch<SetStateAction<GpxFileUpload|undefined>>) => {
   const throwError = useApiError()
   const { triggerError } = useErrorHandling()
   const [currentGpxUpload, setCurrentGpxUpload] = useState<CurrentUpload>(null!)
@@ -32,9 +32,10 @@ const useHandleGpxFileUpload = (mediaService: MediaService, record: GpxFileUploa
     async (uploadedGpxFile: File) => {
       setCurrentGpxUpload(prevState => ({
         ...prevState,
-        name: uploadedGpxFile.name
+        name: uploadedGpxFile.name,
+        error: undefined
       }))
-      setRecord(null!)
+      setRecord(undefined)
 
       try {
         const data = await mediaService.uploadGpxFile(uploadedGpxFile)

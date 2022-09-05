@@ -15,6 +15,7 @@ export interface ListContextProperties {
 
 export interface AuthenticationContextType {
   email: string | undefined
+  isLoggedIn: boolean
   isAdmin: boolean
   token: string | undefined
   signIn: (email: string, password: string, callback: () => void) => Promise<void>

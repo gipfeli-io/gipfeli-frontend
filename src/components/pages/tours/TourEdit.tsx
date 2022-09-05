@@ -37,7 +37,7 @@ const EditTour = () => {
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
-  const [gpxFile, setGpxFile] = useState<GpxFileUpload>(null!)
+  const [gpxFile, setGpxFile] = useState<GpxFileUpload|undefined>(undefined)
   const { handleGpxFileUpload, currentGpxUpload } = useHandleGpxFileUpload(mediaService, gpxFile, setGpxFile)
   const { isOffline } = useConnectionStatus()
   const { triggerError } = useErrorHandling()
@@ -134,7 +134,7 @@ const EditTour = () => {
   }, [images])
 
   const removeGpxFile = useCallback(() => {
-    setGpxFile(null!)
+    setGpxFile(undefined)
   }, [gpxFile])
 
   const imageContextProps: ImageUploadContextType = {

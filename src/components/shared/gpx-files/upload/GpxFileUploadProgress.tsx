@@ -12,7 +12,7 @@ export type GpxUploadErrorListItem = {
 
 const GpxFileUploadProgress = () => {
   const { currentUpload } = useGpxFileUpload()
-  const [uploadError, setUploadError] = useState<GpxUploadErrorListItem>(null!)
+  const [uploadError, setUploadError] = useState<GpxUploadErrorListItem|null>(null)
 
   useEffect(() => {
     if (currentUpload && currentUpload.error?.reason) {
@@ -20,6 +20,8 @@ const GpxFileUploadProgress = () => {
         file: currentUpload.name,
         reason: currentUpload.error.reason
       })
+    } else {
+      setUploadError(null)
     }
   }, [currentUpload])
 

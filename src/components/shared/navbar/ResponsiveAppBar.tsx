@@ -38,9 +38,9 @@ const adminPage: NavItem[] = [
 ]
 
 const ResponsiveAppBar = () => {
-  const { email, isAdmin } = useAuth()
+  const { isLoggedIn, isAdmin } = useAuth()
   const pages = useMemo<NavItem[]>(() => {
-    if (!email) {
+    if (!isLoggedIn) {
       return []
     }
     if (isAdmin) {
@@ -48,9 +48,9 @@ const ResponsiveAppBar = () => {
     } else {
       return appPages
     }
-  }, [email, isAdmin])
+  }, [isLoggedIn, isAdmin])
 
-  const homeRoute = email ? '/tours' : '/'
+  const homeRoute = isLoggedIn ? '/tours' : '/'
 
   return (
     <AppBar position="static">
