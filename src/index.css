@@ -16,21 +16,17 @@ body {
   width: 100%;
 }
 
-.category-icon{
+.category-list_icon{
+  color: #616161;
   width:24px;
   height:24px;
 }
 
-.category-icon_list{
- color: #616161;
- fill: #616161;
+.category-list_icon.MuiChip-icon{
+  color: #616161;
 }
 
-.category-icon.MuiChip-icon{
-  fill: #616161;
-}
-
-.MuiChip-colorPrimary .category-icon{
-  fill: #fff;
+.MuiChip-colorPrimary .category-list_icon{
+  color: #fff;
 }
 

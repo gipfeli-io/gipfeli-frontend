@@ -15,6 +15,7 @@ import { TourStatusType } from '../../../enums/tour-status-type'
 import ListContext from '../../shared/list/ListContext'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
 import useErrorHandling from '../../../hooks/use-error-handling'
+import TourCategoryIcon from '../../shared/tour-categories/tour-category-icon'
 
 const ToursOverview = () => {
   const { token } = useAuth()
@@ -94,6 +95,7 @@ const ToursOverview = () => {
       <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
         My Tours
       </Typography>
+      <TourCategoryIcon/>
       <Grid container mb={2} direction={'row'} justifyContent="flex-end">
         <Grid item>
           <Button component={Link} to="create" variant="contained">
