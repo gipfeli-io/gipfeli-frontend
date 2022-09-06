@@ -28,10 +28,14 @@ const useApiError = () => {
   const { triggerErrorNotification, triggerOfflineNotification } = useNotifications()
   const navigate = useNavigate()
 
+  const isOfflineMessage = (statusMessage: string): boolean => {
+    return statusMessage === 'Failed to fetch' || statusMessage === 'Load failed'
+  }
   /**
    * We extract the error type and generate the corresponding object. If we have more details, the message parameter on
    * the ErrorContent object is set and we show this - otherwise, we just show the generic error type.
    * @param statusCode
+   * @param statusMessage
    * @param error
    * @param message
    */
@@ -54,7 +58,7 @@ const useApiError = () => {
       case 413:
         return new PayLoadTooLarge(displayMessage)
       case 500:
-        return statusMessage === 'Failed to fetch' ? new OfflineError(displayMessage) : new ServerError(displayMessage)
+        return isOfflineMessage(statusMessage) ? new OfflineError(displayMessage) : new ServerError(displayMessage)
       default:
         return new GenericApiError(displayMessage)
     }
