@@ -6,6 +6,7 @@ import { IndexableType } from 'dexie'
 import jwtDecode from 'jwt-decode'
 import { AccessToken } from '../types/auth'
 import { SingleApiResponse } from '../types/api'
+import { v4 as uuidv4 } from 'uuid'
 
 export default class LocalDatabaseService {
   private readonly userId: string | undefined
@@ -112,7 +113,7 @@ export default class LocalDatabaseService {
   }
 
   private createLocalTour (tour: UpdateOrCreateTour): Tour {
-    const id = crypto.randomUUID().toString()
+    const id = uuidv4()
     const localTour = new Tour(id, tour.name, tour.startLocation, tour.endLocation, tour.description, this.userId!, dayjs().toDate(), dayjs().toDate(), tour.categories)
     localTour.status = TourStatusType.CREATED
     return localTour
