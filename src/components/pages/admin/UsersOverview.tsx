@@ -7,7 +7,7 @@ import { User } from '../../../types/user'
 import UserList from '../../app/UserList'
 import { Alert } from '@mui/material'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
-import DeleteEntryContextProvider from '../../providers/DeleteEntryContextProvider'
+import DeleteEntryProvider from '../../providers/DeleteEntryProvider'
 
 const UsersOverview = () => {
   const { token } = useAuth()
@@ -48,10 +48,10 @@ const UsersOverview = () => {
   return (
     <>
       <Alert severity="info" sx={{ mt: 2, mb: 2 }}>Currently, only normal users can be deleted.</Alert>
-      <DeleteEntryContextProvider>
+      <DeleteEntryProvider>
         <UserList rows={userList} loading={loading}/>
         <DeleteConfirmation handleDelete={handleDelete}/>
-      </DeleteEntryContextProvider>
+      </DeleteEntryProvider>
     </>
   )
 }

@@ -13,7 +13,7 @@ import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
 import useErrorHandling from '../../../hooks/use-error-handling'
-import DeleteEntryContextProvider from '../../providers/DeleteEntryContextProvider'
+import DeleteEntryProvider from '../../providers/DeleteEntryProvider'
 
 const ToursOverview = () => {
   const { token } = useAuth()
@@ -85,10 +85,10 @@ const ToursOverview = () => {
           </Button>
         </Grid>
       </Grid>
-      <DeleteEntryContextProvider>
+      <DeleteEntryProvider>
         <TourList rows={tourList} loading={loading}/>
         <DeleteConfirmation handleDelete={handleDelete}/>
-      </DeleteEntryContextProvider>
+      </DeleteEntryProvider>
     </>
   )
 }

@@ -4,11 +4,11 @@ import 'ol/ol.css'
 import TileLayer from 'ol/layer/Tile'
 import { OSM } from 'ol/source'
 import styles from './MapWrapper.module.scss'
-import MapContext from './MapContext'
 import Typography from '@mui/material/Typography'
 import CameraIcon from '@mui/icons-material/PhotoCamera'
 import AccountTreeIcon from '@mui/icons-material/AccountTree'
 import MapConfigurationService from '../../../services/map/map-configuration-service'
+import MapProvider from '../../providers/MapProvider'
 
 const MapWrapper = ({ children }: PropsWithChildren<any>) => {
   const mapContainerId = useId()
@@ -30,9 +30,13 @@ const MapWrapper = ({ children }: PropsWithChildren<any>) => {
   }, [mapContainerId])
 
   return (
-    <MapContext.Provider value={{ map }}>
+    <>
       <div id={mapContainerId} className={styles.mapContainer}>
-        {children}
+        {map &&
+            <MapProvider map={map}>
+              {children}
+            </MapProvider>
+        }
       </div>
       <Typography variant="caption" component="div">
         Click on a <CameraIcon fontSize="inherit" sx={{ verticalAlign: 'middle' }}/> pin to show its image, and
@@ -40,7 +44,7 @@ const MapWrapper = ({ children }: PropsWithChildren<any>) => {
         a cluster of images, which spread open when clicked. If an image is part of a cluster, its tooltip will point
         at the actual location of the image.
       </Typography>
-    </MapContext.Provider>
+    </>
   )
 }
 

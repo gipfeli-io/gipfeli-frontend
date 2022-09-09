@@ -2,11 +2,11 @@ import React, { PropsWithChildren, useState } from 'react'
 import { DeleteEntryContextType } from '../../types/contexts'
 import DeleteEntryContext from '../../contexts/delete-entry-context'
 
-type DeleteEntryContextProviderProps = {
+type DeleteEntryProviderProps = {
   id?: string
 }
 
-const DeleteEntryContextProvider = ({ children, id }: PropsWithChildren<DeleteEntryContextProviderProps>) => {
+const DeleteEntryProvider = ({ children, id }: PropsWithChildren<DeleteEntryProviderProps>) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
 
@@ -24,4 +24,4 @@ const DeleteEntryContextProvider = ({ children, id }: PropsWithChildren<DeleteEn
   )
 }
 
-export default DeleteEntryContextProvider
+export default DeleteEntryProvider

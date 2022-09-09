@@ -4,12 +4,17 @@ import { handleSave } from './handle-save'
 import { CurrentUpload, GpxFileUpload, ImageUpload } from './media'
 import { ConnectionStatus } from '../enums/connection-status'
 import { ErrorInfo } from 'react'
+import { Map } from 'ol'
 
 export interface DeleteEntryContextType {
   showDeleteModal: boolean
   toggleModal: () => void
   deleteId: string | undefined
   setDeleteId: (id: string | undefined) => void
+}
+
+export interface MapContextType {
+  map: Map
 }
 
 export interface AuthenticationContextType {
