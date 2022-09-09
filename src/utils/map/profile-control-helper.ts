@@ -48,9 +48,9 @@ export const drawPoint = (point?: Feature<Geometry>, hoverInteraction?: HoverInt
     return
   }
 
-  if (hoverInteraction?.type === 'over') {
+  if (hoverInteraction?.type === 'over' && hoverInteraction.coord) {
     // Show point at coord
-    point.setGeometry(new Point(hoverInteraction.coord!))
+    point.setGeometry(new Point(hoverInteraction.coord))
     point.setStyle(style)
   } else {
     // hide point
