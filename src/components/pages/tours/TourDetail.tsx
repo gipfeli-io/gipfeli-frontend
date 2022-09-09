@@ -25,8 +25,9 @@ import GpxDataLayer from '../../shared/map/layers/GpxDataLayer'
 import MarkdownElement from '../../shared/rich-text/MarkdownElement'
 import CategoryList from '../../app/TourCategoryList'
 import { FormType } from '../../../enums/form-type'
-import DeleteEntryContextProvider from '../../providers/DeleteEntryContextProvider'
+import DeleteEntryProvider from '../../providers/DeleteEntryProvider'
 import EntryManagementActions from '../../shared/EntryManagementActions'
+import FullScreenControl from '../../shared/map/controls/FullScreenControl'
 
 const TourDetail = () => {
   const navigate = useNavigate()
@@ -107,7 +108,7 @@ const TourDetail = () => {
 
   return (
     <>
-      <DeleteEntryContextProvider id={id}>
+      <DeleteEntryProvider id={id}>
         <Typography variant="h2" gutterBottom component="div" mt={2}>
           {tour.name}
           <EntryManagementActions id={tour.id} canEdit canDelete prependIdForEdit={false}/>
@@ -135,6 +136,7 @@ const TourDetail = () => {
                     </Grid>
                 </Grid>
                 <MapWrapper>
+                  <FullScreenControl />
                   {!tour.gpxFile &&
                       <WayPointMarkerLayer features={getWayPointMarkerFeatures()}/>
                   }
@@ -188,7 +190,7 @@ const TourDetail = () => {
             </Grid>
         }
         <DeleteConfirmation handleDelete={handleDelete}/>
-      </DeleteEntryContextProvider>
+      </DeleteEntryProvider>
     </>
   )
 }

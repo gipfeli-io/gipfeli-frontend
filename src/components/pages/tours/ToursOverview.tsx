@@ -13,7 +13,7 @@ import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
 import useErrorHandling from '../../../hooks/use-error-handling'
-import DeleteEntryContextProvider from '../../providers/DeleteEntryContextProvider'
+import DeleteEntryProvider from '../../providers/DeleteEntryProvider'
 
 const ToursOverview = () => {
   const { token } = useAuth()
@@ -56,15 +56,15 @@ const ToursOverview = () => {
   }
 
   const handleDelete = async (deleteId: string) => {
-    const localTour = await localDatabaseService.getOne(deleteId!)
+    const localTour = await localDatabaseService.getOne(deleteId)
     if (isOffline()) {
-      await localDatabaseService.markTourAsDeleted(deleteId!)
+      await localDatabaseService.markTourAsDeleted(deleteId)
       triggerDeletionSuccessForId(deleteId)
     } else if (localTour && localTour.status === TourStatusType.DELETED) {
-      await localDatabaseService.deleteTour(deleteId!)
+      await localDatabaseService.deleteTour(deleteId)
       triggerDeletionSuccessForId(deleteId)
     } else {
-      const data = await service.delete(deleteId!)
+      const data = await service.delete(deleteId)
       if (data.success) {
         triggerDeletionSuccessForId(deleteId)
       } else {
@@ -85,10 +85,10 @@ const ToursOverview = () => {
           </Button>
         </Grid>
       </Grid>
-      <DeleteEntryContextProvider>
+      <DeleteEntryProvider>
         <TourList rows={tourList} loading={loading}/>
         <DeleteConfirmation handleDelete={handleDelete}/>
-      </DeleteEntryContextProvider>
+      </DeleteEntryProvider>
     </>
   )
 }
