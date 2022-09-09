@@ -1,5 +1,5 @@
 import React from 'react'
-import List from '../shared/list/List'
+import List from '../shared/List'
 import { User } from '../../types/user'
 import { GridColDef, GridRenderCellParams, ValueOptions } from '@mui/x-data-grid'
 import DoneIcon from '@mui/icons-material/Done'

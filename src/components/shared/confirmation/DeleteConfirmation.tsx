@@ -1,14 +1,32 @@
 import React from 'react'
-import Confirmation, { ConfirmationProps } from './Confirmation'
+import Confirmation from './Confirmation'
+import useDeleteEntry from '../../../hooks/use-delete-entry'
 
-type ListDeleteConfirmationProps = Pick<ConfirmationProps, 'open' | 'onAccept' | 'onClose'>
+type DeleteConfirmationProps = {
+  handleDelete: (id: string) => Promise<void>
+}
 
-const DeleteConfirmation = ({ open, onAccept, onClose }: ListDeleteConfirmationProps) => {
+const DeleteConfirmation = ({ handleDelete }: DeleteConfirmationProps) => {
+  const { showDeleteModal, toggleModal, deleteId, setDeleteId } = useDeleteEntry()
   const title = 'Do you really want to delete this entry?'
   const content = 'Once an entry is deleted, there is no way of retrieving it any more - it is gone for good.'
   const acceptTitle = 'Yes, delete'
 
-  return <Confirmation title={title} content={content} open={open} onClose={onClose} onAccept={onAccept}
+  const onAccept = async () => {
+    if (deleteId) {
+      await handleDelete(deleteId)
+      setDeleteId(undefined)
+    }
+
+    toggleModal()
+  }
+
+  const onClose = () => {
+    setDeleteId(undefined)
+    toggleModal()
+  }
+
+  return <Confirmation title={title} content={content} open={showDeleteModal} onClose={onClose} onAccept={onAccept}
                        acceptTitle={acceptTitle}/>
 }
 

@@ -48,7 +48,6 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
 
   const saveTour = async (event: any) => {
     event.preventDefault()
-    // todo: perform validation
     saveHandler(currentTour)
   }
   const handleSetCategories = useCallback((categories: TourCategory[]) => {
@@ -124,12 +123,13 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
                   <div id={'map'}>
                       <MapWrapper>
                           <FullScreenControl/>
-                        {!file &&
-                            <WayPointMarkerLayer handleSetMarker={handleSetMarker}
+                        {file
+                          ? <GpxDataLayer gpxFile={file} handleSetMarker={handleSetMarker}/>
+
+                          : <WayPointMarkerLayer handleSetMarker={handleSetMarker}
                                                  features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
                                                  type={type}/>
                         }
-                          <GpxDataLayer gpxFile={file!} handleSetMarker={handleSetMarker}/>
                           <GpsImageMarkerLayer features={files}/>
                       </MapWrapper>
                   </div>
@@ -157,7 +157,7 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
       {!isOffline() &&
           <Grid item xs={12}>
               <Typography variant="h5" component="div" gutterBottom>
-                  Images <HelpTooltip tooltip={IMAGE_HELPER_TEXT} />
+                  Images <HelpTooltip tooltip={IMAGE_HELPER_TEXT}/>
               </Typography>
               <div id={'image-gallery'}><ImageUpload/></div>
           </Grid>

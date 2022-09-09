@@ -45,16 +45,7 @@ const TourCreate = () => {
     }
   }, [])
 
-  const tour: BaseTour = new BaseTour('', { // Todo: make empty and add points in edit
-    type: 'Point',
-    coordinates: []
-  }, {
-    type: 'Point',
-    coordinates: []
-  },
-  '',
-  '',
-  [])
+  const tour: BaseTour = new BaseTour()
 
   const triggerSuccess = (id: string) => {
     triggerSuccessNotification('Created new tour!')

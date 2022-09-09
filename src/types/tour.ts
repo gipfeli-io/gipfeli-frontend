@@ -40,8 +40,14 @@ export class BaseTour {
   @Exclude()
     status: TourStatusType = TourStatusType.SYNCED
 
-  constructor (name: string, startLocation: Point, endLocation: Point,
-    description: string, userId: string, categories: TourCategory[], images: ImageUpload[] = [],
+  constructor (
+    name: string = '',
+    startLocation: Point = { type: 'Point', coordinates: [] },
+    endLocation: Point = { type: 'Point', coordinates: [] },
+    description: string = '',
+    userId: string = '',
+    categories: TourCategory[] = [],
+    images: ImageUpload[] = [],
     gpxFile?: GpxFileUpload) {
     this.name = name
     this.startLocation = startLocation
@@ -73,8 +79,7 @@ export class Tour extends BaseTour {
   }
 }
 
-// todo: switch to baseTour
-export type UpdateOrCreateTour = Pick<Tour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images' | 'gpxFile' | 'categories'>
+export type UpdateOrCreateTour = Pick<BaseTour, 'name' | 'description' | 'startLocation' | 'endLocation' | 'images' | 'gpxFile' | 'categories'>
 
 /**
  * A generic tourpoint which extends from GeometryObject and can be added to the map.

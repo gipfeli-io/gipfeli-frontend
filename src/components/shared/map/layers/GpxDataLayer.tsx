@@ -1,5 +1,4 @@
-import { useContext, useEffect } from 'react'
-import MapContext from '../MapContext'
+import { useEffect } from 'react'
 import VectorSource from 'ol/source/Vector'
 import 'ol/ol.css'
 import 'ol-ext/dist/ol-ext.css'
@@ -15,8 +14,9 @@ import Point from 'ol/geom/Point'
 import { Feature } from 'ol'
 import { CoordinateSystems } from '../../../../enums/coordinate-systems'
 import {
-  addHoverInteraction, addProfileControlInteraction,
+  addHoverInteraction,
   addProfileControl,
+  addProfileControlInteraction,
   setProfile,
   setProfilePointOnLayer
 } from '../../../../utils/map/profile-control-helper'
@@ -24,6 +24,7 @@ import Profil from 'ol-ext/control/Profile'
 import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import MapConfigurationService from '../../../../services/map/map-configuration-service'
 import { Stroke, Style } from 'ol/style'
+import useMap from '../../../../hooks/use-map'
 
 type GpsMarkerLayerProps = {
   gpxFile: GpxFileUpload,
@@ -34,7 +35,7 @@ type GpsMarkerLayerProps = {
  * Adds a layer which can display data from a gpx file.
  */
 const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
-  const { map } = useContext(MapContext)
+  const { map } = useMap()
 
   const setGpxDataLayerStyle = (gpxDataLayer: VectorLayer<VectorSource>): void => {
     gpxDataLayer.setStyle(() => new Style({
@@ -53,15 +54,15 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     })
     gpxDataLayer.setSource(gpxVectorSource)
     setGpxDataLayerStyle(gpxDataLayer)
-    map!.addLayer(gpxDataLayer)
+    map.addLayer(gpxDataLayer)
     return gpxDataLayer
   }
 
   const setExtent = (gpxDataLayer: VectorLayer<VectorSource>) => {
-      map!.getView().fit(gpxDataLayer.getSource()?.getExtent()!, { size: map!.getSize(), padding: [100, 100, 100, 100] })
+    map.getView().fit(gpxDataLayer.getSource()?.getExtent()!, { size: map.getSize(), padding: [100, 100, 100, 100] })
   }
 
-  const extractStartAndDestination = (gpxDataLayer: VectorLayer<VectorSource>): {start: TourPoint, destination: TourPoint} => {
+  const extractStartAndDestination = (gpxDataLayer: VectorLayer<VectorSource>): { start: TourPoint, destination: TourPoint } => {
     const gpxGeometry = gpxDataLayer.getSource()?.getFeatures()[0].getGeometry() as MultiLineString
     const gpxPoint: Point = new Feature(gpxGeometry.clone().transform(CoordinateSystems.MAP, CoordinateSystems.DATA)).getGeometry() as Point
     return {
@@ -78,7 +79,7 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
 
   const addMarkerLayer = (): VectorLayer<VectorSource> => {
     const vectorLayer = createVectorLayer(MapLayers.GPX_MARKER)
-    map!.addLayer(vectorLayer)
+    map.addLayer(vectorLayer)
     return vectorLayer
   }
 
@@ -97,7 +98,7 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
     setProfile(profileControl, gpxDataLayer)
     const profilePoint = setProfilePointOnLayer(gpxDataLayer)
     addProfileControlInteraction(profileControl, profilePoint)
-    addHoverInteraction(map!, gpxDataLayer, profileControl, profilePoint)
+    addHoverInteraction(map, gpxDataLayer, profileControl, profilePoint)
   }
 
   const addStartAndDestinationPoints = (markerLayer: VectorLayer<VectorSource>, gpxDataLayer: VectorLayer<VectorSource>) => {
@@ -107,7 +108,7 @@ const GpxDataLayer = ({ gpxFile, handleSetMarker }: GpsMarkerLayerProps) => {
   }
 
   useEffect(() => {
-    if (!map || !gpxFile) {
+    if (!gpxFile) {
       return
     }
 

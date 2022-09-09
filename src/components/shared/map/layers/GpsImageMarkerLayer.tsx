@@ -1,5 +1,4 @@
-import { useContext, useEffect } from 'react'
-import MapContext from '../MapContext'
+import { useEffect } from 'react'
 import VectorSource from 'ol/source/Vector'
 import VectorLayer from 'ol/layer/Vector'
 import { GeoJsonPropertySetter, StyleSelector } from '../../../../types/map'
@@ -17,6 +16,7 @@ import AnimatedCluster from 'ol-ext/layer/AnimatedCluster'
 import SelectCluster from 'ol-ext/interaction/SelectCluster'
 import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import { MapLayers } from '../../../../enums/map-layers'
+import useMap from '../../../../hooks/use-map'
 
 type GpsMarkerLayerProps = {
   features: ImageUpload[],
@@ -30,7 +30,7 @@ type PopupContent = {
  * Adds a layer which can display georeferenced images on the map.
  */
 const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
-  const { map } = useContext(MapContext)
+  const { map } = useMap()
 
   const iconSelector: StyleSelector<ImageUpload> = (_index, _objects) => {
     return MapConfigurationService.getBasicGpsImageIcon()
@@ -44,7 +44,7 @@ const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
   }
 
   useEffect(() => {
-    if (!map || !features) {
+    if (!features) {
       return
     }
 
