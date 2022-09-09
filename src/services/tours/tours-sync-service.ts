@@ -67,7 +67,7 @@ export default class ToursSyncService {
     return this.tourService.update(tour.id, mergedTour)
   }
 
-  private static mergeTour (tour: Tour, remoteTour: Tour): UpdateOrCreateTour {
+  protected static mergeTour (tour: Tour, remoteTour: Tour): UpdateOrCreateTour {
     return {
       name: tour.name,
       description: tour.description,

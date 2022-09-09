@@ -4,7 +4,6 @@ import { Point } from 'geojson'
 import { TourStatusType } from '../../../src/enums/tour-status-type'
 import { TourCategory } from '../../../src/types/tour-category'
 import ToursService from '../../../src/services/tours/tours-service'
-import restoreAllMocks = jest.restoreAllMocks
 
 const mockToken = 'mock-token'
 
@@ -62,13 +61,13 @@ const mockTours: Tour[] = [{
 
 const localDatabaseServiceMock = {
   findAllTours: () => mockTours,
-  addTourList: () => jest.fn(),
+  addTourList: jest.fn(),
   create: () => mockTours[1],
   putTour: () => mockTours[1],
   getOne: () => mockTours[0],
-  delete: () => jest.fn(),
-  deleteTour: () => jest.fn(),
-  update: () => jest.fn()
+  delete: jest.fn(),
+  deleteTour: jest.fn(),
+  update: jest.fn()
 }
 
 jest.mock('../../../src/services/local-database-service', () => jest.fn().mockImplementation(() => localDatabaseServiceMock))
@@ -187,9 +186,5 @@ describe('TourService', () => {
     expect(fetchMock.mock.calls[0][1]?.method).toEqual('DELETE')
     // @ts-ignore
     expect(fetchMock.mock.calls[0][1]?.headers?.Authorization).toContain(`Bearer ${mockToken}`)
-  })
-
-  afterEach(() => {
-    restoreAllMocks()
   })
 })
