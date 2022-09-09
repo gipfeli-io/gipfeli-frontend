@@ -10,8 +10,19 @@ import { useNavigate, useParams } from 'react-router'
 import AuthFormLinks from '../../shared/AuthFormLinks'
 import useFormErrors from '../../../hooks/use-form-errors'
 
+/**
+ * React router v6 returns params as string | undefined. To avoid unnecessary type assertions (because we know that the
+ * params are defined due to the way we handle our routing), we use a workaround.
+ *
+ * See https://stackoverflow.com/a/70000958 or https://stackoverflow.com/a/71146532
+ */
+type SetNewPasswordRouteParams = {
+  userId: string
+  token: string
+}
+
 const SetNewPassword = () => {
-  const { userId, token } = useParams()
+  const { userId, token } = useParams<keyof SetNewPasswordRouteParams>() as SetNewPasswordRouteParams
   const authService = new AuthService()
   const throwError = useApiError()
   const { triggerSuccessNotification } = useNotifications()
@@ -22,8 +33,8 @@ const SetNewPassword = () => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const result = await authService.performPasswordReset(
-      userId!,
-      token!,
+      userId,
+      token,
       data.get('password')!.toString(),
       data.get('passwordConfirmation')!.toString()
     )

@@ -56,15 +56,15 @@ const ToursOverview = () => {
   }
 
   const handleDelete = async (deleteId: string) => {
-    const localTour = await localDatabaseService.getOne(deleteId!)
+    const localTour = await localDatabaseService.getOne(deleteId)
     if (isOffline()) {
-      await localDatabaseService.markTourAsDeleted(deleteId!)
+      await localDatabaseService.markTourAsDeleted(deleteId)
       triggerDeletionSuccessForId(deleteId)
     } else if (localTour && localTour.status === TourStatusType.DELETED) {
-      await localDatabaseService.deleteTour(deleteId!)
+      await localDatabaseService.deleteTour(deleteId)
       triggerDeletionSuccessForId(deleteId)
     } else {
-      const data = await service.delete(deleteId!)
+      const data = await service.delete(deleteId)
       if (data.success) {
         triggerDeletionSuccessForId(deleteId)
       } else {
