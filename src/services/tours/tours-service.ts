@@ -123,7 +123,7 @@ export default class ToursService extends APIService {
         result.content = []
       }
       await this.localDatabaseService.addTourList(result.content)
-      result.content = await this.localDatabaseService.findAllTours() // todo: needs error handling as it sometimes can happen that the local db throws an error (eg Firefox private mode)
+      result.content = await this.localDatabaseService.findAllTours()
       return result
     }
   }

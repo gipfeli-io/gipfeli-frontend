@@ -20,7 +20,6 @@ interface ErrorBoundaryState {
  */
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   static contextType: React.Context<NotificationContextType> = NotificationContext
-  public context!: React.ContextType<typeof NotificationContext>
   public state: ErrorBoundaryState = {
     hasError: false
   }
@@ -31,12 +30,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   public componentDidCatch (error: Error, _errorInfo: ErrorInfo) {
-    // todo log to sentry
     console.log(error)
   }
 
   public triggerError = (error: Error, _errorInfo?: ErrorInfo) => {
-    // todo log to sentry
     console.log(error)
 
     this.setState({ hasError: true })
