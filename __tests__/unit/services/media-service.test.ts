@@ -51,13 +51,10 @@ describe('MediaService', () => {
 
     fetchMock.mockResponseOnce(JSON.stringify(mockImageUploadResponse))
 
-    await service.uploadImage(mockImage)
+    const result = await service.uploadImage(mockImage)
 
     expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetchMock.mock.calls[0][1]?.method).toEqual('POST')
-    // @ts-ignore
-    expect(fetchMock.mock.calls[0][1]?.headers?.Authorization).toContain(`Bearer ${mockToken}`)
-    expect(fetchMock.mock.calls[0][1]?.body).toEqual(mockFormData)
+    expect(result.content).toEqual(mockImageUploadResponse)
   })
 
   it('calls gpx file upload correctly', async () => {
@@ -67,13 +64,10 @@ describe('MediaService', () => {
 
     fetchMock.mockResponseOnce(JSON.stringify(mockGpxFileUploadResponse))
 
-    await service.uploadGpxFile(mockGpxFile)
+    const result = await service.uploadGpxFile(mockGpxFile)
 
     expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetchMock.mock.calls[0][1]?.method).toEqual('POST')
-    // @ts-ignore
-    expect(fetchMock.mock.calls[0][1]?.headers?.Authorization).toContain(`Bearer ${mockToken}`)
-    expect(fetchMock.mock.calls[0][1]?.body).toEqual(mockFormData)
+    expect(result.content).toEqual(mockGpxFileUploadResponse)
   })
 
   it('creates correct POST request body', () => {
