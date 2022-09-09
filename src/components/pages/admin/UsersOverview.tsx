@@ -2,21 +2,18 @@ import React, { useEffect, useState } from 'react'
 import useAuth from '../../../hooks/use-auth'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
-import { ListContextProperties } from '../../../types/contexts'
 import UsersService from '../../../services/users/users-service'
 import { User } from '../../../types/user'
 import UserList from '../../app/UserList'
-import ListContext from '../../shared/list/ListContext'
 import { Alert } from '@mui/material'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
+import DeleteEntryContextProvider from '../../providers/DeleteEntryContextProvider'
 
 const UsersOverview = () => {
   const { token } = useAuth()
   const { triggerSuccessNotification } = useNotifications()
   const service = new UsersService(token)
   const [userList, setUserList] = useState<User[]>([])
-  const [open, setOpen] = useState(false)
-  const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const throwError = useApiError()
 
@@ -34,41 +31,27 @@ const UsersOverview = () => {
     fetchUsers()
   }, [token])
 
-  const handleDeleteModalClose = () => {
-    setDeleteId(null)
-    setOpen(false)
-  }
-
-  const triggerDeletionSuccess = () => {
+  const triggerDeletionSuccessForId = (deleteId: string) => {
     triggerSuccessNotification('Successfully deleted user!')
     setUserList(prevState => prevState.filter(tour => tour.id !== deleteId))
   }
 
-  const handleDelete = async () => {
-    const data = await service.delete(deleteId!)
+  const handleDelete = async (deleteId: string) => {
+    const data = await service.delete(deleteId)
     if (data.success) {
-      triggerDeletionSuccess()
+      triggerDeletionSuccessForId(deleteId)
     } else {
       throwError(data)
-    }
-
-    handleDeleteModalClose()
-  }
-
-  const deleteHandler: ListContextProperties = {
-    deleteEvent: id => {
-      setOpen(true)
-      setDeleteId(id)
     }
   }
 
   return (
     <>
       <Alert severity="info" sx={{ mt: 2, mb: 2 }}>Currently, only normal users can be deleted.</Alert>
-      <ListContext.Provider value={deleteHandler}>
+      <DeleteEntryContextProvider>
         <UserList rows={userList} loading={loading}/>
-      </ListContext.Provider>
-      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onAccept={handleDelete}/>
+        <DeleteConfirmation handleDelete={handleDelete}/>
+      </DeleteEntryContextProvider>
     </>
   )
 }

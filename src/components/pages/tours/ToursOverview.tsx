@@ -8,21 +8,18 @@ import useAuth from '../../../hooks/use-auth'
 import { Link } from 'react-router-dom'
 import useNotifications from '../../../hooks/use-notifications'
 import useApiError from '../../../hooks/use-api-error'
-import { TourListContextProperties } from '../../../types/contexts'
 import useConnectionStatus from '../../../hooks/use-connection-status'
 import LocalDatabaseService from '../../../services/local-database-service'
 import { TourStatusType } from '../../../enums/tour-status-type'
-import ListContext from '../../shared/list/ListContext'
 import DeleteConfirmation from '../../shared/confirmation/DeleteConfirmation'
 import useErrorHandling from '../../../hooks/use-error-handling'
+import DeleteEntryContextProvider from '../../providers/DeleteEntryContextProvider'
 
 const ToursOverview = () => {
   const { token } = useAuth()
   const { triggerSuccessNotification } = useNotifications()
   const service = new ToursService(token)
   const [tourList, setTourList] = useState<Tour[]>([])
-  const [open, setOpen] = useState(false)
-  const [deleteId, setDeleteId] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const throwError = useApiError()
   const { isOffline } = useConnectionStatus()
@@ -53,39 +50,26 @@ const ToursOverview = () => {
     fetchTours()
   }, [token])
 
-  const handleDeleteModalClose = () => {
-    setDeleteId(null)
-    setOpen(false)
-  }
-
-  const triggerDeletionSuccess = () => {
+  const triggerDeletionSuccessForId = (deleteId: string) => {
     triggerSuccessNotification('Successfully deleted tour!')
     setTourList(prevState => prevState.filter(tour => tour.id !== deleteId))
   }
-  const handleDelete = async () => {
+
+  const handleDelete = async (deleteId: string) => {
     const localTour = await localDatabaseService.getOne(deleteId!)
     if (isOffline()) {
       await localDatabaseService.markTourAsDeleted(deleteId!)
-      triggerDeletionSuccess()
+      triggerDeletionSuccessForId(deleteId)
     } else if (localTour && localTour.status === TourStatusType.DELETED) {
       await localDatabaseService.deleteTour(deleteId!)
-      triggerDeletionSuccess()
+      triggerDeletionSuccessForId(deleteId)
     } else {
       const data = await service.delete(deleteId!)
       if (data.success) {
-        triggerDeletionSuccess()
+        triggerDeletionSuccessForId(deleteId)
       } else {
         throwError(data)
       }
-    }
-
-    handleDeleteModalClose()
-  }
-
-  const deleteHandler: TourListContextProperties = {
-    deleteEvent: id => {
-      setOpen(true)
-      setDeleteId(id)
     }
   }
 
@@ -101,10 +85,10 @@ const ToursOverview = () => {
           </Button>
         </Grid>
       </Grid>
-      <ListContext.Provider value={deleteHandler}>
+      <DeleteEntryContextProvider>
         <TourList rows={tourList} loading={loading}/>
-      </ListContext.Provider>
-      <DeleteConfirmation open={open} onClose={handleDeleteModalClose} onAccept={handleDelete}/>
+        <DeleteConfirmation handleDelete={handleDelete}/>
+      </DeleteEntryContextProvider>
     </>
   )
 }

@@ -48,7 +48,6 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
 
   const saveTour = async (event: any) => {
     event.preventDefault()
-    // todo: perform validation
     saveHandler(currentTour)
   }
   const handleSetCategories = useCallback((categories: TourCategory[]) => {

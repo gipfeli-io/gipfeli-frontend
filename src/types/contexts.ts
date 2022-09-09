@@ -5,12 +5,11 @@ import { CurrentUpload, GpxFileUpload, ImageUpload } from './media'
 import { ConnectionStatus } from '../enums/connection-status'
 import { ErrorInfo } from 'react'
 
-export interface TourListContextProperties {
-  deleteEvent: (id: string) => void
-}
-
-export interface ListContextProperties {
-  deleteEvent: (id: string) => void
+export interface DeleteEntryContextType {
+  showDeleteModal: boolean
+  toggleModal: () => void
+  deleteId: string | undefined
+  setDeleteId: (id: string | undefined) => void
 }
 
 export interface AuthenticationContextType {

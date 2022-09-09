@@ -1,6 +1,6 @@
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import React, { useEffect, useState } from 'react'
-import ListActions, { ListActionsProps } from './ListActions'
+import EntryManagementActions, { ListActionsProps } from './EntryManagementActions'
 
 type IdentifiableObject = {
   id: string;
@@ -29,8 +29,8 @@ const List = <T extends IdentifiableObject>({
   const [internalColumns, setInternalColumns] = useState<GridColDef[]>([])
 
   const getActions = (params: GridValueGetterParams<T, T>): JSX.Element => {
-    return <ListActions id={params.row.id} canView={canView} canEdit={canEdit}
-                        canDelete={customDeleteOverride(params.row)}/>
+    return <EntryManagementActions id={params.row.id} canView={canView} canEdit={canEdit}
+                                   canDelete={customDeleteOverride(params.row)}/>
   }
 
   useEffect(() => {
