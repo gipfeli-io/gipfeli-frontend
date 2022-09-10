@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CONTAINER_BASE_URL: gcr.io
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}:${{ github.sha }}
       REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     permissions:
       contents: read
@@ -31,10 +30,12 @@ jobs:
             echo "REACT_APP_STORAGE_BUCKET_BASE_URL="${{ secrets.STORAGE_BUCKET_URL_PRODUCTION }} >> $GITHUB_ENV
             echo "REACT_APP_SENTRY_ENVIRONMENT=production" >> $GITHUB_ENV
             echo "REACT_APP_PUBLIC_BACKEND_API=https://api.gipfeli.io" >> $GITHUB_ENV
+            echo "IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}-production:${{ github.sha }}" >> $GITHUB_ENV
           else
             echo "REACT_APP_STORAGE_BUCKET_BASE_URL="${{ secrets.STORAGE_BUCKET_URL_STAGING }} >> $GITHUB_ENV
             echo "REACT_APP_SENTRY_ENVIRONMENT=staging" >> $GITHUB_ENV
             echo "REACT_APP_PUBLIC_BACKEND_API=https://staging-api.gipfeli.io" >> $GITHUB_ENV
+            echo "IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}-staging:${{ github.sha }}" >> $GITHUB_ENV
           fi
 
 
@@ -72,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CONTAINER_BASE_URL: gcr.io
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}:${{ github.sha }}
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}-staging:${{ github.sha }}
     permissions:
       contents: read
       id-token: write
@@ -88,4 +89,29 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT}}
 
       - name: Deploy docker image to cloud run
-        run: gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }} --image $IMAGE_NAME --quiet --platform managed --region ${{secrets.GCP_REGION}} --project ${{ secrets.GCP_PROJECT_ID }}
+        run: gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }}-staging --image $IMAGE_NAME --quiet --platform managed --region ${{secrets.GCP_REGION}} --project ${{ secrets.GCP_PROJECT_ID }}
+
+  deploy-prod:
+    name: Build and Deploy project to production
+    needs: test-and-build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      CONTAINER_BASE_URL: gcr.io
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}-production:${{ github.sha }}
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: auth
+        name: Authenticate to Gcloud Account
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT}}
+
+      - name: Deploy docker image to cloud run
+        run: gcloud run deploy ${{ secrets.GCP_SERVICE_NAME }}-production --image $IMAGE_NAME --quiet --platform managed --region ${{secrets.GCP_REGION}} --project ${{ secrets.GCP_PROJECT_ID }}
