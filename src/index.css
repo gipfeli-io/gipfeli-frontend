@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.feature-icon{
+  width: 200px;
+  height: 200px;
+}
+
+.not-found-illustration {
+  width: 100%;
+}
+
+.category-list_icon{
+  fill: #616161;
+  width:24px;
+  height:24px;
+}
+
+.category-list_icon.MuiChip-icon .injected-svg{
+  fill: #616161;
+}
+
+.MuiChip-iconColorPrimary.category-list_icon .injected-svg{
+  fill: #fff;
+}
+

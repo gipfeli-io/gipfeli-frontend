@@ -1,0 +1,16 @@
+/* Image on popup */
+.ol-popup img {
+  max-width: 10em;
+  max-height: 10em;
+}
+
+/* Override border color */
+.ol-popup.default > div {
+  border: 1px solid #03cafc;
+}
+
+/* Override border color */
+.ol-popup .ol-popup-content {
+  padding: 0.25px;
+}
+
