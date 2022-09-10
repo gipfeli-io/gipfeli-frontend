@@ -17,6 +17,7 @@ import SelectCluster from 'ol-ext/interaction/SelectCluster'
 import addFeaturesToVectorSource from '../../../../utils/map/add-features-to-vector-source'
 import { MapLayers } from '../../../../enums/map-layers'
 import useMap from '../../../../hooks/use-map'
+import { Layer } from 'ol/layer'
 
 type GpsMarkerLayerProps = {
   features: ImageUpload[],
@@ -49,6 +50,19 @@ const GpsImageMarkerLayer = ({ features }: GpsMarkerLayerProps) => {
     }
 
     const setupClusterLayer = (): VectorLayer<VectorSource> => {
+      /**
+       * Because the clusterlayer comes from ol-ext, the handling is somewhat different. Instead of dynamically adding
+       * features as with the WayPointMarkerLayer, we have to remove and re-add the layer for each feature change. Using
+       * the same workflow with the clusterlayer (checking for existing layer and, if it exists, clear and re-add all
+       * features) leads to an empty featuresource and all icons are dropped upon zoom.
+       *
+       * This will need some more investigation, because it is not very performant the way it is done now.
+       */
+      const existingLayer = map.getAllLayers().find((layer: Layer) => layer.getProperties().name === MapLayers.IMAGE_MARKER) as VectorLayer<VectorSource>
+      if (existingLayer) {
+        map.removeLayer(existingLayer)
+      }
+
       const featureSource: VectorSource = new VectorSource()
       const clusterSource = new Cluster({
         distance: 40,
