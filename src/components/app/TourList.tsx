@@ -14,8 +14,8 @@ import LookupService from '../../services/lookup/lookup-service'
 import useAuth from '../../hooks/use-auth'
 import useApiError from '../../hooks/use-api-error'
 import useErrorHandling from '../../hooks/use-error-handling'
-import { TourCategoryIconList } from '../shared/tour-categories/tour-category-icons'
 import { getGridColumnDefinition } from '../../utils/grid/tour/grid-column-definition'
+import TourCategoryIconList from '../shared/tour-categories/TourCategoryIconList'
 
 type TourListProps = {
   rows: Tour[],
