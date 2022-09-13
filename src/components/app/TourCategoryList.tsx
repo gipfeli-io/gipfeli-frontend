@@ -99,8 +99,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
   return (
     <>
       <Grid container spacing={1} direction={'row'} alignItems={'center'}>
-        {type === FormType.DETAIL && getDetailView()}
-        {type !== FormType.DETAIL && getEditView()}
+        {type === FormType.DETAIL ? getDetailView() : getEditView()}
       </Grid>
     </>
   )
