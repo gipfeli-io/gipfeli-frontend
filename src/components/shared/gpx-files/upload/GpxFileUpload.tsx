@@ -21,13 +21,13 @@ const GpxFileUpload = () => {
         <input {...getInputProps()} />
         <p>{
           isDragActive
-            ? 'Drop a gpx files here ...'
+            ? 'Drop a gpx file here ...'
             : 'Drag and drop the file here, or click to select one'
         }
         </p>
       </div>
       <Typography variant="caption" component="div">
-        Only gpx files (.gpx) with a maximum size of 2MB are supported.
+        Only gpx files (.gpx) with a maximum size of 10MB are supported.
       </Typography>
       <GpxFileUploadProgress />
       <GpxFileUploadEntry/>

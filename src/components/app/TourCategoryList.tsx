@@ -5,8 +5,8 @@ import LookupService from '../../services/lookup/lookup-service'
 import useErrorHandling from '../../hooks/use-error-handling'
 import useApiError from '../../hooks/use-api-error'
 import useAuth from '../../hooks/use-auth'
-import { TourCategoryIconChip } from '../shared/tour-categories/tour-category-icons'
 import { FormType } from '../../enums/form-type'
+import TourCategoryIconChip from '../shared/tour-categories/TourCategoryIconChip'
 
 type CategoryListProps = {
   tourCategories: TourCategory[],
