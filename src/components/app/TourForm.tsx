@@ -125,7 +125,6 @@ export default function TourForm ({ tour, saveHandler, type, formErrors }: TourF
                           <FullScreenControl/>
                         {file
                           ? <GpxDataLayer gpxFile={file} handleSetMarker={handleSetMarker}/>
-
                           : <WayPointMarkerLayer handleSetMarker={handleSetMarker}
                                                  features={[new TourPoint(currentTour.startLocation), new TourPoint(currentTour.endLocation)]}
                                                  type={type}/>

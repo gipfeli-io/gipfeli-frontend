@@ -49,7 +49,7 @@ export default class AuthService extends APIService {
     )
   }
 
-  async performPasswordReset (userId: string, token: string, password: string, passwordConfirmation: string) {
+  async performPasswordReset (userId: string, token: string, password: string, passwordConfirmation: string): Promise<SingleApiResponse<void>> {
     return this.fetchSingleDataFromApi(
       this.getRequestUrl(this.prefix, 'password-reset-set'),
       this.getRequestBody('POST', { userId, token, password, passwordConfirmation })

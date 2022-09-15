@@ -64,12 +64,10 @@ describe('NavBarUserActions', () => {
       )
 
       const logoutButton = container.querySelector('#logout-button')
-      const joinButton = container.querySelector('#join-button')
       const themeSwitcher = container.querySelector('#theme-switcher')
 
       expect(logoutButton).toBeInTheDocument()
       expect(themeSwitcher).toBeInTheDocument()
-      expect(joinButton).not.toBeInTheDocument()
       fireEvent.mouseOver(logoutButton!)
       const greeting = await findByText('Logout test@gipfeli.io', { exact: false })
       expect(greeting).toBeInTheDocument()
@@ -94,12 +92,10 @@ describe('NavBarUserActions', () => {
         <MemoryRouter initialEntries={['/currentUri']}><NavBarUserActions/></MemoryRouter>
       )
 
-      const joinButton = container.querySelector('#join-button')
       const loginButton = container.querySelector('#login-button')
       const logoutButton = container.querySelector('#logout-button')
       const themeSwitcher = container.querySelector('#theme-switcher')
 
-      expect(joinButton).toBeInTheDocument()
       expect(loginButton).toBeInTheDocument()
       expect(themeSwitcher).toBeInTheDocument()
       expect(logoutButton).not.toBeInTheDocument()

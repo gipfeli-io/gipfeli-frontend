@@ -31,12 +31,11 @@ const EntryManagementActions = ({
   canDelete = false,
   prependIdForEdit = true
 }: ListActionsProps) => {
-  const { toggleModal, setDeleteId, deleteId } = useDeleteEntry()
+  const { toggleModal, setDeleteId } = useDeleteEntry()
   const editLink = prependIdForEdit ? `${id}/edit` : 'edit'
 
   const onClick = () => {
     setDeleteId(id)
-    console.log(deleteId)
     toggleModal()
   }
 

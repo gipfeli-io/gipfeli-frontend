@@ -34,7 +34,6 @@
     "reflect-metadata": "^0.1.13",
     "typescript": "^4.7.2",
     "uuid": "^9.0.0",
-    "uuidv4": "^6.2.13",
     "web-vitals": "^2.1.4",
     "workbox-background-sync": "^6.5.3",
     "workbox-broadcast-update": "^6.5.3",

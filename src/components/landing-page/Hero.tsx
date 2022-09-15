@@ -42,8 +42,8 @@ const Hero = () => {
         >
           {
             isLoggedIn
-              ? <Button component={Link} to="tours" variant="contained">To your tours</Button>
-              : <Button component={Link} to="signup" variant="contained">Sign up</Button>
+              ? <Button component={Link} to="tours" variant="contained" size='large'>To your tours</Button>
+              : <Button component={Link} to="signup" variant="contained" size='large'>Sign up</Button>
           }
         </Stack>
       </Container>
