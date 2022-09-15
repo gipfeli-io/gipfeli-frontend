@@ -10,7 +10,7 @@ type DesktopNavItemsProps = {
 
 const DesktopNavItems = ({ pages }: DesktopNavItemsProps) => {
   return (
-    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, ml: 2 }}>
       {pages.map((page) => (
         <Button key={page.label} component={Link} to={page.to} variant="text" color="inherit">{page.label}</Button>
       ))}
