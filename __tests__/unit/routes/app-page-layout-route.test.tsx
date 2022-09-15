@@ -94,6 +94,5 @@ describe('AppPageLayout', () => {
     expect(screen.queryByText('TourDetail')).toBeInTheDocument()
     expect(screen.queryByText('AppPageLayout')).toBeInTheDocument()
   })
-
-  afterAll(() => jest.restoreAllMocks())
+  afterAll(() => jest.resetAllMocks())
 })

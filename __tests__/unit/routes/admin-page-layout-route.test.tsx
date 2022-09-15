@@ -111,5 +111,6 @@ describe('AdminPageLayout', () => {
     expect(screen.queryByText('UsersOverview')).toBeInTheDocument()
     expect(screen.queryByText('AdminPageLayout')).toBeInTheDocument()
   })
-  afterAll(() => jest.restoreAllMocks())
+
+  afterAll(() => jest.resetAllMocks())
 })

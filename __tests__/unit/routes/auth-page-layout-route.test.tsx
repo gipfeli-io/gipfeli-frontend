@@ -55,5 +55,4 @@ describe('AuthPageLayout', () => {
     expect(screen.queryByText('ActivateUser')).toBeInTheDocument()
     expect(screen.queryByText('AuthPageLayout')).toBeInTheDocument()
   })
-  afterAll(() => jest.restoreAllMocks())
 })

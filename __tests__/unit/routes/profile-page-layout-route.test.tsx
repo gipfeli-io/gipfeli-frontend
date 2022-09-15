@@ -53,5 +53,5 @@ describe('ProfilePageLayout', () => {
     expect(screen.queryByText('ProfilePageLayout')).toBeInTheDocument()
   })
 
-  afterAll(() => jest.restoreAllMocks())
+  afterAll(() => jest.resetAllMocks())
 })

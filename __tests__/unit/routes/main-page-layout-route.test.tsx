@@ -25,6 +25,4 @@ describe('MainLayout', () => {
 
     expect(screen.queryByText('Imprint')).toBeInTheDocument()
   })
-
-  afterAll(() => jest.restoreAllMocks())
 })
