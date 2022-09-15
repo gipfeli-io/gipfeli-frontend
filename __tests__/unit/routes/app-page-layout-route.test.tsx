@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom'
 import React from 'react'
-import './common/component-mock-implementations'
+import '../../../__mocks__/route-mocks/component-mock-implementations'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
-import routes from './common/routes'
-import { setLoggedInContext, setLoggedOutContext } from './common/mock-objects'
+import routes from '../../../__mocks__/route-mocks/routes'
+import { setLoggedInContext, setLoggedOutContext } from '../../../__mocks__/route-mocks/mock-objects'
 
 describe('AppPageLayout', () => {
   beforeEach(() => {

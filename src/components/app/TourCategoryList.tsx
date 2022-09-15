@@ -63,6 +63,7 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
   }, [])
 
   if (categories.length === 0) {
+    console.log('is 0')
     return (<></>)
   }
 

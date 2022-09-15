@@ -2,7 +2,7 @@ import {
   AuthenticationContextType,
   ConnectionStatusContextType,
   ErrorBoundaryContextType, NotificationContextType
-} from '../../../../src/types/contexts'
+} from '../../src/types/contexts'
 
 export const mockAuthContext = {
   token: undefined,

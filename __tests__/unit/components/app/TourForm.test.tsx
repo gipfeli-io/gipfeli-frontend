@@ -76,6 +76,8 @@ jest.mock('../../../../src/components/shared/rich-text/Editor', () => () => {
   return ''
 })
 
+jest.mock('../../../../src/components/app/TourCategoryList.tsx', () => jest.fn().mockImplementation(() => <div id="category-list">Tour Categories</div>))
+
 const point = {
   type: 'Point',
   coordinates: []
@@ -124,5 +126,41 @@ describe('TourForm', () => {
 
     expect(mapSection).not.toBeInTheDocument()
     expect(imageSection).not.toBeInTheDocument()
+  })
+
+  it('will show tour list if online', async () => {
+    mockConnectionStatusContext.isOffline = () => false
+    let renderResult: HTMLElement
+    act(() => {
+      const { container } = render(
+        <MemoryRouter initialEntries={['/currentUri']}>
+          <ConnectionStatusProvider>
+            <TourForm tour={getTour()} formErrors={[]} type={FormType.EDIT} saveHandler={jest.fn}/>
+          </ConnectionStatusProvider>
+        </MemoryRouter>)
+      renderResult = container
+    })
+
+    const categoryComponentContent = renderResult!.querySelector('#category-list')
+
+    expect(categoryComponentContent!.innerHTML).toEqual('Tour Categories')
+  })
+
+  it('will not show tour list if offline', async () => {
+    mockConnectionStatusContext.isOffline = () => true
+    let renderResult: HTMLElement
+    act(() => {
+      const { container } = render(
+        <MemoryRouter initialEntries={['/currentUri']}>
+          <ConnectionStatusProvider>
+            <TourForm tour={getTour()} formErrors={[]} type={FormType.EDIT} saveHandler={jest.fn}/>
+          </ConnectionStatusProvider>
+        </MemoryRouter>)
+      renderResult = container
+    })
+
+    const categoryComponentContent = renderResult!.querySelector('#category-list')
+
+    expect(categoryComponentContent).toBeNull()
   })
 })

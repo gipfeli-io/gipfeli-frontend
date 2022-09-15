@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom'
 import React from 'react'
-import './common/component-mock-implementations'
+import '../../../__mocks__/route-mocks/component-mock-implementations'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
-import routes from './common/routes'
+import routes from '../../../__mocks__/route-mocks/routes'
 
 describe('AuthPageLayout', () => {
   it('should render login form', () => {
