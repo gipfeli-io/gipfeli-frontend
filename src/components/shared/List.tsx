@@ -1,6 +1,23 @@
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, gridClasses, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import React, { useEffect, useState } from 'react'
 import EntryManagementActions, { ListActionsProps } from './EntryManagementActions'
+import { SxProps } from '@mui/material'
+
+/**
+ * This workaround is needed to remove the focus of DataGrid columns. Unfortunately, MUI does not allow to remove this
+ * with a prop, so we need to style the component directly.
+ *
+ * See https://github.com/mui/mui-x/issues/2429#issuecomment-1241756853
+ */
+const removeCellFocusWorkAround: SxProps = {
+  [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
+    outline: 'none'
+  },
+  [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
+    {
+      outline: 'none'
+    }
+}
 
 type IdentifiableObject = {
   id: string;
@@ -66,7 +83,9 @@ const List = <T extends IdentifiableObject>({
           disableColumnSelector
           disableSelectionOnClick
           rows={rows}
-          columns={internalColumns}/>
+          columns={internalColumns}
+          sx={removeCellFocusWorkAround}
+        />
       </div>
     </>
   )

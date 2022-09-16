@@ -27,7 +27,7 @@ export default class MediaService extends APIService {
     )
   }
 
-  protected getRequestBody (method: 'POST' | 'DELETE', file: File): RequestBody {
+  protected getRequestBody (method: 'POST', file: File): RequestBody {
     // Get the auth token header from the parent method, we'll override the content here for handling file uploads
     const fileUploadBody = super.getRequestBody(method)
 

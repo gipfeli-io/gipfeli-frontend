@@ -7,7 +7,7 @@ exports[`NavBarUserActions test with logged in user behaves consistently when lo
   <button
     aria-label="Logout test@gipfeli.io"
     aria-labelledby={null}
-    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeMedium css-zylse7-MuiButtonBase-root-MuiIconButton-root"
+    className="MuiButton-root MuiButton-outlined MuiButton-outlinedInherit MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInherit MuiButtonBase-root  css-sbfmij-MuiButtonBase-root-MuiButton-root"
     data-mui-internal-clone-element={true}
     disabled={false}
     id="logout-button"
@@ -28,17 +28,7 @@ exports[`NavBarUserActions test with logged in user behaves consistently when lo
     tabIndex={0}
     type="button"
   >
-    <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-      data-testid="LogoutIcon"
-      focusable="false"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="m17 7-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"
-      />
-    </svg>
+    Logout
     <span
       className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
     />
@@ -89,50 +79,12 @@ exports[`NavBarUserActions test with logged out user behaves consistently when n
 <div
   className="css-e53awj-MuiStack-root"
 >
-  <a
-    aria-label="Create a free account"
-    aria-labelledby={null}
-    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeMedium css-zylse7-MuiButtonBase-root-MuiIconButton-root"
-    data-mui-internal-clone-element={true}
-    href={[MockFunction]}
-    id="join-button"
-    onBlur={[Function]}
-    onClick={[Function]}
-    onContextMenu={[Function]}
-    onDragLeave={[Function]}
-    onFocus={[Function]}
-    onKeyDown={[Function]}
-    onKeyUp={[Function]}
-    onMouseDown={[Function]}
-    onMouseLeave={[Function]}
-    onMouseOver={[Function]}
-    onMouseUp={[Function]}
-    onTouchEnd={[Function]}
-    onTouchMove={[Function]}
-    onTouchStart={[Function]}
-    tabIndex={0}
-  >
-    <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-      data-testid="MeetingRoomIcon"
-      focusable="false"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M14 6v15H3v-2h2V3h9v1h5v15h2v2h-4V6h-3zm-4 5v2h2v-2h-2z"
-      />
-    </svg>
-    <span
-      className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-    />
-  </a>
-  <a
+  <button
     aria-label="Login"
     aria-labelledby={null}
-    className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorInherit MuiIconButton-sizeMedium css-zylse7-MuiButtonBase-root-MuiIconButton-root"
+    className="MuiButton-root MuiButton-outlined MuiButton-outlinedInherit MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorInherit MuiButtonBase-root  css-sbfmij-MuiButtonBase-root-MuiButton-root"
     data-mui-internal-clone-element={true}
-    href={[MockFunction]}
+    disabled={false}
     id="login-button"
     onBlur={[Function]}
     onClick={[Function]}
@@ -149,22 +101,13 @@ exports[`NavBarUserActions test with logged out user behaves consistently when n
     onTouchMove={[Function]}
     onTouchStart={[Function]}
     tabIndex={0}
+    type="button"
   >
-    <svg
-      aria-hidden={true}
-      className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-      data-testid="LoginIcon"
-      focusable="false"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M11 7 9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"
-      />
-    </svg>
+    Login
     <span
       className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
     />
-  </a>
+  </button>
   <button
     aria-label="Toggle theme"
     aria-labelledby={null}

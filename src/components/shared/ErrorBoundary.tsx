@@ -28,14 +28,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return { hasError: true, error }
   }
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  public componentDidCatch (error: Error, _errorInfo: ErrorInfo) {
-    console.log(error)
-  }
-
-  public triggerError = (error: Error, _errorInfo?: ErrorInfo) => {
-    console.log(error)
-
+  public triggerError = (_error: Error, _errorInfo?: ErrorInfo) => {
     this.setState({ hasError: true })
   }
 

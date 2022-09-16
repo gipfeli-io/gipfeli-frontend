@@ -1,12 +1,9 @@
-import { IconButton, Stack, Tooltip } from '@mui/material'
+import { Stack, Tooltip } from '@mui/material'
 import React from 'react'
-import { Link } from 'react-router-dom'
 import useAuth from '../../../hooks/use-auth'
 import { useNavigate } from 'react-router'
 import ThemeSwitcher from './ThemeSwitcher'
-import LogoutIcon from '@mui/icons-material/Logout'
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom'
-import LoginIcon from '@mui/icons-material/Login'
+import Button from '@mui/material/Button'
 
 const NavBarUserActions = () => {
   const { email, signOut } = useAuth()
@@ -15,15 +12,10 @@ const NavBarUserActions = () => {
   if (!email) {
     return (
       <Stack spacing={2} direction={'row'}>
-        <Tooltip title={'Create a free account'}>
-          <IconButton color="inherit" component={Link} to="signup" id={'join-button'}>
-            <MeetingRoomIcon/>
-          </IconButton>
-        </Tooltip>
         <Tooltip title={'Login'}>
-          <IconButton color="inherit" component={Link} to="login" id={'login-button'}>
-            <LoginIcon/>
-          </IconButton>
+          <Button color='inherit' variant='outlined' onClick={() => navigate('/login')} id={'login-button'}>
+            Login
+          </Button>
         </Tooltip>
         <ThemeSwitcher/>
       </Stack>
@@ -33,9 +25,9 @@ const NavBarUserActions = () => {
   return (
     <Stack spacing={2} direction={'row'}>
       <Tooltip title={`Logout ${email}`}>
-        <IconButton onClick={() => signOut(() => navigate('/login'))} color="inherit" id={'logout-button'}>
-          <LogoutIcon/>
-        </IconButton>
+        <Button color='inherit' variant='outlined' onClick={() => signOut(() => navigate('/login'))} id={'logout-button'}>
+          Logout
+        </Button>
       </Tooltip>
       <ThemeSwitcher/>
     </Stack>
