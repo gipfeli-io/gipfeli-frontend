@@ -1,7 +1,7 @@
 import { NavigateFunction } from 'react-router'
 
 export const isOfflineResultMessage = (statusCode: number, statusMessage: string): boolean => {
-  return statusCode === 500 && statusMessage === 'Failed to fetch'
+  return statusCode === 500 && (statusMessage === 'Failed to fetch' || statusMessage === 'Load failed')
 }
 
 export const redirectAfterConnectionStatusChange = (locationPathname:string, navigate: NavigateFunction): void => {

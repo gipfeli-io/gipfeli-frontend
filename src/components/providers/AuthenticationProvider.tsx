@@ -26,7 +26,7 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
   const authService: AuthService = new AuthService()
   const localStorageService: LocalStorageService = new LocalStorageService()
   const throwError = useApiError()
-  const { triggerErrorNotification } = useNotifications()
+  const { triggerErrorNotification, triggerOfflineNotification } = useNotifications()
   const navigate = useNavigate()
   const { isOffline } = useConnectionStatus()
 
@@ -108,7 +108,12 @@ const AuthenticationProvider = ({ children }: PropsWithChildren<any>) => {
     if (data.success) {
       setTokensInLocalStorageAndState(data.content!)
     } else {
-      forceLogOut()
+      // If we cannot reach the backend, we trigger offline mode - else, we force a logout.
+      if (isOfflineResultMessage(data.statusCode, data.statusMessage)) {
+        triggerOfflineNotification()
+      } else {
+        forceLogOut()
+      }
     }
   }
 
