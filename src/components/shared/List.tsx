@@ -2,6 +2,7 @@ import { DataGrid, gridClasses, GridColDef, GridValueGetterParams } from '@mui/x
 import React, { useEffect, useState } from 'react'
 import EntryManagementActions, { ListActionsProps } from './EntryManagementActions'
 import { SxProps } from '@mui/material'
+import Typography from '@mui/material/Typography'
 
 /**
  * This workaround is needed to remove the focus of DataGrid columns. Unfortunately, MUI does not allow to remove this
@@ -86,6 +87,13 @@ const List = <T extends IdentifiableObject>({
           columns={internalColumns}
           sx={removeCellFocusWorkAround}
         />
+        <Typography
+          variant="caption"
+          component="div"
+          sx={{ display: { xs: 'block', sm: 'none' } }}
+        >
+          The table can be scrolled horizontally for more data.
+        </Typography>
       </div>
     </>
   )
