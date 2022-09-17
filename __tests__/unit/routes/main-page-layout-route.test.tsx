@@ -25,4 +25,14 @@ describe('MainLayout', () => {
 
     expect(screen.queryByText('Imprint')).toBeInTheDocument()
   })
+
+  it('should render privacy policy component on /privacy-policy', () => {
+    render(
+      <MemoryRouter initialEntries={['/privacy-policy']}>
+        {routes}
+      </MemoryRouter>
+    )
+
+    expect(screen.queryByText('Privacy Policy')).toBeInTheDocument()
+  })
 })

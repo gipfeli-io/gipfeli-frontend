@@ -7,6 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a{
+  color: rgba(0,0,0,0.6);
+}
+
 .feature-icon{
   width: 200px;
   height: 200px;
