@@ -22,12 +22,14 @@ import SetNewPassword from '../../src/components/pages/user/SetNewPassword'
 import ActivateUser from '../../src/components/pages/user/ActivateUser'
 import NotFound from '../../src/components/pages/NotFound'
 import React from 'react'
+import PrivacyPolicy from '../../src/components/pages/PrivacyPolicy'
 
 const routes =
   <Routes>
     <Route path="/" element={<MainLayout/>}>
       <Route index element={<Home/>}/>
       <Route path="imprint" element={<Imprint/>}/>
+      <Route path="privacy-policy" element={<PrivacyPolicy/>}/>
       <Route path="tours" element={<AppPageLayout/>}>
         <Route index element={<ToursOverview/>}/>
         <Route path="create" element={<TourCreate/>}/>

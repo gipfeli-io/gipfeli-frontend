@@ -21,6 +21,7 @@ jest.mock('../../src/components/pages/layouts/AppPageLayout.tsx',
 
 jest.mock('../../src/components/pages/Home.tsx', () => jest.fn().mockImplementation(() => <div>Home</div>))
 jest.mock('../../src/components/pages/Imprint.tsx', () => jest.fn().mockImplementation(() => <div>Imprint</div>))
+jest.mock('../../src/components/pages/PrivacyPolicy.tsx', () => jest.fn().mockImplementation(() => <div>Privacy Policy</div>))
 jest.mock('../../src/components/pages/Login.tsx', () => jest.fn().mockImplementation(() => <div>Login</div>))
 jest.mock('../../src/components/pages/NotFound.tsx', () => jest.fn().mockImplementation(() => <div>NotFound</div>))
 jest.mock('../../src/components/pages/ServerError.tsx', () => jest.fn().mockImplementation(() => <div>ServerError</div>))
