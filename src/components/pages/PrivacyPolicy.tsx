@@ -1,6 +1,8 @@
-import { Container, Grid, Link as MuiLink } from '@mui/material'
+import { Container } from '@mui/material'
 import React from 'react'
 import Typography from '@mui/material/Typography'
+import Addresses from '../shared/Addresses'
+import ResponsiblePersons from '../shared/ResponsiblePersons'
 
 const PrivacyPolicy = () => {
   return (
@@ -11,31 +13,11 @@ const PrivacyPolicy = () => {
       <Typography variant="h4" gutterBottom component="h2" sx={{ mt: 2 }}>
         Responsible entities
       </Typography>
-      <Typography variant="body1" gutterBottom component="div" sx={{ mt: 2 }}>
-        <Grid container spacing={5}>
-          <Grid item>
-            <strong>Gipfeli.io</strong><br/>
-            Römerstrasse 209<br/>
-            8404 Winterthur<br/>
-            Switzerland<br/>
-            Mail: <MuiLink href={'mailto:info@gipfeli.io'}>info@gipfeli.io</MuiLink>
-          </Grid>
-          <Grid item>
-            <strong>Gipfeli.io</strong><br/>
-            Halbartenstrasse 3<br/>
-            5430 Wettingen<br/>
-            Switzerland<br/>
-            Mail: <MuiLink href={'mailto:info@gipfeli.io'}>info@gipfeli.io</MuiLink>
-          </Grid>
-        </Grid>
-      </Typography>
+      <Addresses/>
       <Typography variant="h4" gutterBottom component="h2" sx={{ mt: 2 }}>
         Data protection officers
       </Typography>
-      <Typography variant="body1" gutterBottom component="div" sx={{ mt: 2 }}>
-        Sabrina Wullschleger, Developer<br/>
-        Lukas Merz, Developer <br/>
-      </Typography>
+      <ResponsiblePersons/>
       <Typography variant="h4" gutterBottom component="h2" sx={{ mt: 2 }}>
         Processing of personal data
       </Typography>
