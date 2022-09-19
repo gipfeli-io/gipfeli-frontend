@@ -31,6 +31,7 @@ const useApiError = () => {
   const isOfflineMessage = (statusMessage: string): boolean => {
     return statusMessage === 'Failed to fetch' || statusMessage === 'Load failed'
   }
+
   /**
    * We extract the error type and generate the corresponding object. If we have more details, the message parameter on
    * the ErrorContent object is set and we show this - otherwise, we just show the generic error type.
