@@ -16,13 +16,14 @@ const MarkdownElement = ({ value }: MarkdownElementProps) => {
    */
   const componentOverrides: Record<string, (ele: any) => JSX.Element> = {
     p: (ele): JSX.Element => {
-      return <Typography variant="body1" gutterBottom component="div" whiteSpace={'pre-wrap'}>{ele.children}</Typography>
+      return <Typography variant="body1" gutterBottom component="div"
+                         whiteSpace={'pre-wrap'}>{ele.children}</Typography>
     },
     h1: (ele): JSX.Element => {
-      return <Typography variant="h6" gutterBottom component="div" >{ele.children}</Typography>
+      return <Typography variant="h6" gutterBottom component="div">{ele.children}</Typography>
     },
     hr: (): JSX.Element => {
-      return <Divider />
+      return <Divider/>
     },
     a: (ele): JSX.Element => {
       return <Link color={'inherit'} href={ele.href} target={'_blank'}>{ele.children}</Link>

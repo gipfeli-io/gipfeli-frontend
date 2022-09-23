@@ -29,7 +29,7 @@ const GpxFileUpload = () => {
       <Typography variant="caption" component="div">
         Only gpx files (.gpx) with a maximum size of 10MB are supported.
       </Typography>
-      <GpxFileUploadProgress />
+      <GpxFileUploadProgress/>
       <GpxFileUploadEntry/>
     </>
   )

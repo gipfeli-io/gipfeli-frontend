@@ -91,7 +91,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "eject": "react-scripts eject",
-    "start:prod": "react-scripts build && serve -s build -p 3001"
+    "start:prod": "react-scripts build && serve -s build -p 3001",
+    "lint": "eslint \"{src,__tests__,__mocks__}/**/*.{js,ts,tsx}\" --fix"
   },
   "eslintConfig": {
     "extends": [

@@ -12,7 +12,7 @@ export type StyleSelector<T extends GeometryObject> = (index: number, features: 
  * Function that is applied to a feature and returns an object with key-values pairs that can be set on the feature's
  * GeoJSONFeature representation.
  */
-export type GeoJsonPropertySetter<TProp extends GeometryObject, TReturn extends { [key: string]: string}> = (feature: TProp) => TReturn
+export type GeoJsonPropertySetter<TProp extends GeometryObject, TReturn extends { [key: string]: string }> = (feature: TProp) => TReturn
 
 /**
  * Abstract class which can be used to add a GeoJsonObject to the map. Each class that has a geometry (e.g. a Point or
@@ -20,5 +20,5 @@ export type GeoJsonPropertySetter<TProp extends GeometryObject, TReturn extends 
  * interface to access any objects geometry.
  */
 export abstract class GeometryObject {
-  public abstract getGeometry() : GeoJsonObject | null
+  public abstract getGeometry(): GeoJsonObject | null
 }

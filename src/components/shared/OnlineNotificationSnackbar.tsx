@@ -14,8 +14,10 @@ const OnlineNotificationSnackbar = () => {
     updateOnlineInfoBannerVisibility(false)
   }
 
-  const goOnline = async (_event: React.SyntheticEvent | Event, reason?:string): Promise<void> => {
-    if (reason === 'clickaway') { return }
+  const goOnline = async (_event: React.SyntheticEvent | Event, reason?: string): Promise<void> => {
+    if (reason === 'clickaway') {
+      return
+    }
     activateOnlineMode()
     handleClose(_event)
   }
@@ -24,7 +26,7 @@ const OnlineNotificationSnackbar = () => {
 
   const getOnlineBannerContent = (
     <SnackbarContent
-      message='Yeah you got connection! You can now deactivate the offline mode if you want. This will automatically sync all your offline data to the server. :)'
+      message="Yeah you got connection! You can now deactivate the offline mode if you want. This will automatically sync all your offline data to the server. :)"
       action={onlineBannerAction}
     />
   )
@@ -34,13 +36,13 @@ const OnlineNotificationSnackbar = () => {
   return (
     isOnlineInfoBannerVisible
       ? <Snackbar
-      open={isOnlineInfoBannerVisible}
-      autoHideDuration={6000}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      onClose={handleClose}
-    >
-      {snackbarContent}
-    </Snackbar>
+        open={isOnlineInfoBannerVisible}
+        autoHideDuration={6000}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        onClose={handleClose}
+      >
+        {snackbarContent}
+      </Snackbar>
       : null
   )
 }

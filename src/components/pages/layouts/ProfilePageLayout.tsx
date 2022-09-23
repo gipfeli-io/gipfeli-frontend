@@ -20,7 +20,7 @@ const ProfilePageLayout = () => {
   return (
     <RequireAuth>
       <TabbedNavigation title={'Profile'} navLinks={navLinks} navBasePath={navBasePath}>
-        <Outlet />
+        <Outlet/>
       </TabbedNavigation>
     </RequireAuth>
   )

@@ -23,7 +23,7 @@ type TabbedNavigationProps = {
 /**
  * Tab navigation is based on https://mui.com/material-ui/guides/routing/#tabs, but adapted to suit our needs.
  */
-const TabbedNavigation = ({ title, navLinks, navBasePath, children }:TabbedNavigationProps) => {
+const TabbedNavigation = ({ title, navLinks, navBasePath, children }: TabbedNavigationProps) => {
   const { pathname } = useLocation()
 
   /**
@@ -78,19 +78,19 @@ const TabbedNavigation = ({ title, navLinks, navBasePath, children }:TabbedNavig
   }
 
   return (
-      <>
-        <Container maxWidth={'lg'}>
-          <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
-            {title}
-          </Typography>
-          <Tabs value={getCurrentRoute()}>
-            {navLinks.map((navLink, index) =>
-              <Tab key={index} label={navLink.label} value={navLink.value} to={navLink.to} component={Link}/>
-            )}
-          </Tabs>
-          {children}
-        </Container>
-      </>
+    <>
+      <Container maxWidth={'lg'}>
+        <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
+          {title}
+        </Typography>
+        <Tabs value={getCurrentRoute()}>
+          {navLinks.map((navLink, index) =>
+            <Tab key={index} label={navLink.label} value={navLink.value} to={navLink.to} component={Link}/>
+          )}
+        </Tabs>
+        {children}
+      </Container>
+    </>
   )
 }
 

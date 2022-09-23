@@ -49,7 +49,7 @@ export const ConnectionStatusProvider = ({ children }: PropsWithChildren<any>) =
     setShowGoOnlineButton(isVisible)
   }
 
-  const checkIfApplicationIsOnline = async () : Promise<void> => {
+  const checkIfApplicationIsOnline = async (): Promise<void> => {
     const result = await heartBeatService.checkHeartbeat()
     if (result.statusCode === 200) {
       clearInterval(intervalId)

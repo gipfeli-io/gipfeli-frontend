@@ -7,7 +7,7 @@ const OfflineNotification = () => (
     <Grid item>
       <Box>
         <Avatar>
-          <SignalWifiOff />
+          <SignalWifiOff/>
         </Avatar>
       </Box>
     </Grid>

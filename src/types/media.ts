@@ -44,6 +44,7 @@ export class GpxFileUpload implements MediaObject {
 export interface UploadError {
   reason: string;
 }
+
 export interface CurrentUpload {
   name: string
   error?: UploadError

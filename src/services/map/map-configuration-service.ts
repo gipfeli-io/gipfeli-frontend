@@ -46,7 +46,7 @@ export default class MapConfigurationService {
     }
   }
 
-  public static iconSelector (index: number, tourPoints: TourPoint[]) : Style {
+  public static iconSelector (index: number, tourPoints: TourPoint[]): Style {
     return index === tourPoints.length - 1 ? MapConfigurationService.getEndIcon() : MapConfigurationService.getStartIcon()
   }
 
