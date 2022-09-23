@@ -111,7 +111,7 @@ export const addHoverInteraction = (map: Map, dataLayer: VectorLayer<VectorSourc
 
 export const addProfileControlInteraction = (profile: Profil, profilePoint: Feature<Geometry>) => {
   // @ts-ignore
-  profile.on(['over', 'out'], (event:HoverInteraction) => {
+  profile.on(['over', 'out'], (event: HoverInteraction) => {
     drawPoint(profilePoint, event)
   })
 }

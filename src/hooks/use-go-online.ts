@@ -22,7 +22,9 @@ const useGoOnline = () => {
     function getMessageString (validationErrors: string | ValidationError[]): string {
       let message: string = 'An error occurred while synchronizing data.\n'
       if (Array.isArray(validationErrors)) {
-        validationErrors.forEach((validationError: ValidationError) => { message = `${message}"${validationError.errors.join('\n')}"` })
+        validationErrors.forEach((validationError: ValidationError) => {
+          message = `${message}"${validationError.errors.join('\n')}"`
+        })
       } else {
         message = `${message}${validationErrors}`
       }

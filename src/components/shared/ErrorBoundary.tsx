@@ -49,7 +49,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   private renderErrorPage () {
     if (this.state.error instanceof UnauthorizedAdminAccess) {
-      return <AdminAccessPrevention />
+      return <AdminAccessPrevention/>
     }
 
     return <ServerError error={this.state.error}/>

@@ -1,8 +1,5 @@
 import { Tour } from '../../types/tour'
-import {
-  GridColDef,
-  GridValueGetterParams
-} from '@mui/x-data-grid'
+import { GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import React, { useEffect, useMemo, useState } from 'react'
 import { OfflineBolt } from '@mui/icons-material'
 import { TourStatusType } from '../../enums/tour-status-type'
@@ -78,13 +75,14 @@ const TourList = ({ loading, rows }: TourListProps) => {
         triggerError(error as Error)
       }
     }
+
     if (!isOffline()) {
       fetchCategories()
     }
   }, [])
 
   useEffect(() => {
-    const getCategoryFilterValueOptions = (): {value: string, label: string}[] => {
+    const getCategoryFilterValueOptions = (): { value: string, label: string }[] => {
       if (tourCategories.length === 0) {
         return []
       }

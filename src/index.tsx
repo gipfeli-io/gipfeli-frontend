@@ -47,45 +47,45 @@ root.render(
       <BrowserRouter>
         <ConnectionStatusProvider>
           <NotificationProvider>
-                <ErrorBoundary>
-                  <AuthenticationProvider>
-                      <RoutesWrapper>
-                        <Route path="/" element={<MainLayout/>}>
-                          <Route index element={<Home/>}/>
-                          <Route path="imprint" element={<Imprint/>}/>
-                          <Route path="privacy-policy" element={<PrivacyPolicy/>}/>
-                          <Route path="tours" element={<AppPageLayout/>}>
-                            <Route index element={<ToursOverview/>}/>
-                            <Route path="create" element={<TourCreate/>}/>
-                            <Route path=":id/edit" element={<TourEdit/>}/>
-                            <Route path=":id" element={<TourDetail/>}/>
-                          </Route>
-                          <Route path="/profile" element={<ProfilePageLayout/>}>
-                            <Route index element={<Profile/>}/>
-                            <Route path="reset" element={<Reset/>}/>
-                          </Route>
-                          <Route path="/admin" element={<AdminPageLayout/>}>
-                            <Route index element={<Statistics/>}/>
-                            <Route path="users" element={<UsersOverview/>}/>
-                          </Route>
-                        </Route>
-                        <Route path="/" element={<AuthPageLayout/>}>
-                          <Route path="login" element={<Login/>}/>
-                          <Route path="signup" element={<SignUp/>}/>
-                          <Route path="password-reset" element={<PasswordReset/>}/>
-                          <Route path="password-reset/:userId/:token" element={<SetNewPassword/>}/>
-                          <Route path="user/activate/:userId/:token" element={<ActivateUser/>}/>
-                        </Route>
-                        <Route path="404" element={<NotFound/>}/>
-                        <Route path="*" element={<Navigate to="/404" replace/>}/>
-                      </RoutesWrapper>
-                  </AuthenticationProvider>
-                </ErrorBoundary>
+            <ErrorBoundary>
+              <AuthenticationProvider>
+                <RoutesWrapper>
+                  <Route path="/" element={<MainLayout/>}>
+                    <Route index element={<Home/>}/>
+                    <Route path="imprint" element={<Imprint/>}/>
+                    <Route path="privacy-policy" element={<PrivacyPolicy/>}/>
+                    <Route path="tours" element={<AppPageLayout/>}>
+                      <Route index element={<ToursOverview/>}/>
+                      <Route path="create" element={<TourCreate/>}/>
+                      <Route path=":id/edit" element={<TourEdit/>}/>
+                      <Route path=":id" element={<TourDetail/>}/>
+                    </Route>
+                    <Route path="/profile" element={<ProfilePageLayout/>}>
+                      <Route index element={<Profile/>}/>
+                      <Route path="reset" element={<Reset/>}/>
+                    </Route>
+                    <Route path="/admin" element={<AdminPageLayout/>}>
+                      <Route index element={<Statistics/>}/>
+                      <Route path="users" element={<UsersOverview/>}/>
+                    </Route>
+                  </Route>
+                  <Route path="/" element={<AuthPageLayout/>}>
+                    <Route path="login" element={<Login/>}/>
+                    <Route path="signup" element={<SignUp/>}/>
+                    <Route path="password-reset" element={<PasswordReset/>}/>
+                    <Route path="password-reset/:userId/:token" element={<SetNewPassword/>}/>
+                    <Route path="user/activate/:userId/:token" element={<ActivateUser/>}/>
+                  </Route>
+                  <Route path="404" element={<NotFound/>}/>
+                  <Route path="*" element={<Navigate to="/404" replace/>}/>
+                </RoutesWrapper>
+              </AuthenticationProvider>
+            </ErrorBoundary>
           </NotificationProvider>
         </ConnectionStatusProvider>
       </BrowserRouter>
     </SwitchableThemeProvider>
-</React.StrictMode>
+  </React.StrictMode>
 )
 
 // If you want to start measuring performance in your app, pass a function

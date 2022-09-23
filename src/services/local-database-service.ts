@@ -51,7 +51,7 @@ export default class LocalDatabaseService {
     return localDB.tours.where('status').notEqual(TourStatusType.DELETED).and((tour: Tour) => tour.userId === this.userId).toArray()
   }
 
-  public async create (tour: UpdateOrCreateTour) : Promise<IndexableType> {
+  public async create (tour: UpdateOrCreateTour): Promise<IndexableType> {
     const newTour = this.createLocalTour(tour)
     return this.putTour(newTour)
   }
@@ -65,12 +65,14 @@ export default class LocalDatabaseService {
     return localDB.tours.put(tour)
   }
 
-  public async getOne (id: string | undefined): Promise<Tour|undefined> {
+  public async getOne (id: string | undefined): Promise<Tour | undefined> {
     return localDB.tours.where('userId').equals(this.userId!).and((tour: Tour) => tour.id === id!).first()
   }
 
   public async markTourAsDeleted (id: string | undefined): Promise<void> {
-    if (!id) { return }
+    if (!id) {
+      return
+    }
     const localTour = await localDB.tours.get(id)
     if (localTour) {
       await this.updateTourStatus(localTour, TourStatusType.DELETED)
@@ -81,8 +83,10 @@ export default class LocalDatabaseService {
     await localDB.tours.delete(id!)
   }
 
-  public async update (tourId: string|undefined, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Promise<IndexableType|undefined> {
-    if (!tourId) { return }
+  public async update (tourId: string | undefined, updatedTour: UpdateOrCreateTour, statusType: TourStatusType): Promise<IndexableType | undefined> {
+    if (!tourId) {
+      return
+    }
     const localTour = await localDB.tours.get(tourId)
     if (!localTour) {
       return

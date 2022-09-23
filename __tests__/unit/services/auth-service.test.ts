@@ -65,7 +65,10 @@ describe('AuthService', () => {
     await service.refreshTokens(mockRefreshToken)
 
     expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetchMock.mock.calls[0][1]?.headers).toEqual({ Authorization: `Bearer ${mockRefreshToken}`, 'Content-Type': 'application/json' })
+    expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+      Authorization: `Bearer ${mockRefreshToken}`,
+      'Content-Type': 'application/json'
+    })
     expect(fetchMock.mock.calls[0][1]?.method).toEqual('POST')
   })
 
@@ -115,7 +118,12 @@ describe('AuthService', () => {
     await service.performPasswordReset(mockUser, mockToken, signupMock.password, signupMock.passwordConfirmation)
 
     expect(fetch).toHaveBeenCalledTimes(1)
-    expect(fetchMock.mock.calls[0][1]?.body).toEqual(JSON.stringify({ userId: mockUser, token: mockToken, password: mockPassword, passwordConfirmation: mockPassword }))
+    expect(fetchMock.mock.calls[0][1]?.body).toEqual(JSON.stringify({
+      userId: mockUser,
+      token: mockToken,
+      password: mockPassword,
+      passwordConfirmation: mockPassword
+    }))
     expect(fetchMock.mock.calls[0][1]?.method).toEqual('POST')
   })
 })

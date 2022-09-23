@@ -1,5 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
-import React, { useContext } from 'react'
+import * as React from 'react'
+import { useContext } from 'react'
 import ConnectionStatusContext from '../../../../src/contexts/connection-status-context'
 import { ConnectionStatusProvider } from '../../../../src/components/providers/ConnectionStatusProvider'
 import { MemoryRouter } from 'react-router'
@@ -21,7 +22,15 @@ jest.mock('react-router', () => ({
 }))
 
 const TestingComponent = () => {
-  const { showGoOnlineButton, isOffline, updateConnectionStatus, updateGoOnlineButtonVisibility, isOnlineInfoBannerVisible, updateOnlineInfoBannerVisibility, resetOnlineInfoBanner } = useContext(ConnectionStatusContext)
+  const {
+    showGoOnlineButton,
+    isOffline,
+    updateConnectionStatus,
+    updateGoOnlineButtonVisibility,
+    isOnlineInfoBannerVisible,
+    updateOnlineInfoBannerVisibility,
+    resetOnlineInfoBanner
+  } = useContext(ConnectionStatusContext)
   const updateToOffline = () => updateConnectionStatus(ConnectionStatus.OFFLINE)
   const updateToOnline = () => updateConnectionStatus(ConnectionStatus.ONLINE)
   const updateGoOnlineButtonVisible = () => updateGoOnlineButtonVisibility(true)

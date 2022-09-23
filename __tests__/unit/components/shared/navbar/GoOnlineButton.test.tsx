@@ -13,7 +13,7 @@ const mockConnectionStatusContext: any = {
   showGoOnlineButton: false
 }
 
-const triggerSyncFailedNotification:jest.Mock = jest.fn()
+const triggerSyncFailedNotification: jest.Mock = jest.fn()
 const mockNotificationContext: any = {
   triggerSyncFailedNotification
 }

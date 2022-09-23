@@ -78,7 +78,7 @@ describe('UsersService', () => {
 
   it('calls delete', async () => {
     const service = new UsersService(mockedToken)
-    fetchMock.mockResponseOnce(JSON.stringify({ }))
+    fetchMock.mockResponseOnce(JSON.stringify({}))
 
     const response = await service.delete('1234')
 

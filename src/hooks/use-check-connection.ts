@@ -14,6 +14,7 @@ const useCheckConnection = () => {
         triggerOfflineNotification()
       }
     }
+
     checkConnection()
   }, [])
 }

@@ -29,7 +29,7 @@ const ImageUpload = () => {
       <Typography variant="caption" component="div">
         Only images (jpg, jpeg, png, gif) with a maximum size of 10MB are supported.
       </Typography>
-      <ImageUploadProgress />
+      <ImageUploadProgress/>
       <ImageUploadEntries/>
     </>
   )

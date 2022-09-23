@@ -76,7 +76,8 @@ jest.mock('../../../../src/components/shared/rich-text/Editor', () => () => {
   return ''
 })
 
-jest.mock('../../../../src/components/app/TourCategoryList.tsx', () => jest.fn().mockImplementation(() => <div id="category-list">Tour Categories</div>))
+jest.mock('../../../../src/components/app/TourCategoryList.tsx', () => jest.fn().mockImplementation(() => <div
+  id="category-list">Tour Categories</div>))
 
 const point = {
   type: 'Point',

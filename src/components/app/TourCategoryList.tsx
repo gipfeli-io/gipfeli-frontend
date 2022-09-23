@@ -59,11 +59,11 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
         triggerError(error as Error)
       }
     }
+
     fetchTourCategories()
   }, [])
 
   if (categories.length === 0) {
-    console.log('is 0')
     return (<></>)
   }
 
@@ -82,13 +82,13 @@ const TourCategoryList = ({ tourCategories, handleSetCategories, type, hasError 
   const getEditView = () => (
     <>
       {hasError &&
-        <Grid item xs={12}>
-          <Alert severity={'error'} sx={{ mb: 2 }}>
-            <AlertTitle> Please select at least one category!</AlertTitle>
-          </Alert>
-        </Grid>
+          <Grid item xs={12}>
+              <Alert severity={'error'} sx={{ mb: 2 }}>
+                  <AlertTitle> Please select at least one category!</AlertTitle>
+              </Alert>
+          </Grid>
       }
-      { categories.map((item, index) => (
+      {categories.map((item, index) => (
         <Grid item xs={6} md={2} key={index}>
           <TourCategoryIconChip category={item} clickHandler={handleClick}/>
         </Grid>
