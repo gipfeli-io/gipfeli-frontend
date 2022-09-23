@@ -10,7 +10,7 @@ const useHandleGpxFileUpload = (mediaService: MediaService, record: GpxFileUploa
   const [currentGpxUpload, setCurrentGpxUpload] = useState<CurrentUpload>(null!)
 
   /**
-   * Removes a sucessfully uploaded file from the currently running uploads.
+   * Removes a successfully uploaded file from the currently running uploads.
    */
   const handleSuccess = () => {
     setCurrentGpxUpload(null!)
@@ -41,7 +41,7 @@ const useHandleGpxFileUpload = (mediaService: MediaService, record: GpxFileUploa
         const data = await mediaService.uploadGpxFile(uploadedGpxFile)
 
         if (data.success) {
-          setRecord(data.content!)
+          setRecord(data.content)
           handleSuccess()
         } else {
           const message = data.error?.message
