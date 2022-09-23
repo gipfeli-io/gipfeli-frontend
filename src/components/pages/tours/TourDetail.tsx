@@ -136,7 +136,7 @@ const TourDetail = () => {
                     </Grid>
                 </Grid>
                 <MapWrapper>
-                  <FullScreenControl />
+                    <FullScreenControl/>
                   {!tour.gpxFile &&
                       <WayPointMarkerLayer features={getWayPointMarkerFeatures()}/>
                   }

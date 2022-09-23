@@ -14,25 +14,25 @@ const NotFound = () => {
       }}
     >
       <Container maxWidth="sm">
-        <NotFoundIllustration className="not-found-illustration" />
-          <Typography
-            variant="h1"
-            align="center"
-            gutterBottom
-          >
-            Uh-oh.
-          </Typography>
-          <Typography variant="h5" align="center" color="text.secondary" paragraph>
-            The page you requested could not be found.
-          </Typography>
-          <Stack
-            sx={{ pt: 4 }}
-            direction="row"
-            justifyContent="center"
-          >
-            <Button component={Link} to="/" variant="contained">Back to main</Button>
-          </Stack>
-          <Footer/>
+        <NotFoundIllustration className="not-found-illustration"/>
+        <Typography
+          variant="h1"
+          align="center"
+          gutterBottom
+        >
+          Uh-oh.
+        </Typography>
+        <Typography variant="h5" align="center" color="text.secondary" paragraph>
+          The page you requested could not be found.
+        </Typography>
+        <Stack
+          sx={{ pt: 4 }}
+          direction="row"
+          justifyContent="center"
+        >
+          <Button component={Link} to="/" variant="contained">Back to main</Button>
+        </Stack>
+        <Footer/>
       </Container>
     </Box>
   )

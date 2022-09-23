@@ -54,17 +54,17 @@ const ResponsiveAppBar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-            <Tooltip title="Back to home">
+          <Tooltip title="Back to home">
 
             <IconButton
-                size="large"
-                edge="start"
-                component={Link}
-                to='/'
-              >
-                <LandscapeIcon/>
-              </IconButton>
-            </Tooltip>
+              size="large"
+              edge="start"
+              component={Link}
+              to="/"
+            >
+              <LandscapeIcon/>
+            </IconButton>
+          </Tooltip>
           <Typography variant="h6" component="div">
             gipfeli.io
           </Typography>

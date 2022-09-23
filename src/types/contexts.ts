@@ -64,6 +64,6 @@ export interface GpxFileUploadContextType {
   currentUpload?: CurrentUpload
 }
 
-export interface ErrorBoundaryContextType{
+export interface ErrorBoundaryContextType {
   triggerError: (error: Error, errorInfo?: ErrorInfo) => void
 }

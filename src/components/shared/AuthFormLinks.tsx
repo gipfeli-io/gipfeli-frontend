@@ -13,10 +13,10 @@ const AuthFormLinks = ({ type }: AuthFormLinksProps): JSX.Element | null => {
   return (
     <Grid container>
       <Grid item xs>
-        { type === 'signup' ? loginLink : signUpLink }
+        {type === 'signup' ? loginLink : signUpLink}
       </Grid>
       <Grid item>
-        { type === 'passwordReset' ? loginLink : resetPasswordLink }
+        {type === 'passwordReset' ? loginLink : resetPasswordLink}
       </Grid>
     </Grid>
   )

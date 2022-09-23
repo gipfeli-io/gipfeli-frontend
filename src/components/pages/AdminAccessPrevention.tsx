@@ -13,7 +13,7 @@ const AdminAccessPrevention = () => {
       }}
     >
       <Container maxWidth="sm">
-        <AdminRequiredIllustration className="not-found-illustration" />
+        <AdminRequiredIllustration className="not-found-illustration"/>
         <Typography
           variant="h1"
           align="center"

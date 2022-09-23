@@ -17,7 +17,7 @@ const ServerError = ({ error }: ServerErrorProps) => {
       }}
     >
       <Container maxWidth="sm">
-        <ServerErrorIllustration className="not-found-illustration" />
+        <ServerErrorIllustration className="not-found-illustration"/>
         <Typography
           variant="h1"
           align="center"
@@ -28,7 +28,7 @@ const ServerError = ({ error }: ServerErrorProps) => {
         <Typography variant="h5" align="center" color="text.secondary" paragraph>
           This should not happen. The error has been logged and will be investigated. Please try again later.
         </Typography>
-        { error &&
+        {error &&
             <Typography variant="h6" align="center" color="text.secondary" paragraph>
               {error.name}: {error.message}
             </Typography>

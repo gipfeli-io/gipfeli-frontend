@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router'
 /**
  * This hook allows us to handle errors from within async code and, if they are thrown, still have them caught by an
  * ErrorBoundary. This workaround is needed since React ErrorBoundaries do not catch errors in async hooks.
+ * Important: This does not apply if we use a try-catch block to catch the error. For this please use the hook use-error-handling.ts.
  *
  * If the error is NonCritical, we just trigger a notification and redirect to the tours index.
  *

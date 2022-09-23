@@ -13,7 +13,7 @@ const NavBarUserActions = () => {
     return (
       <Stack spacing={2} direction={'row'}>
         <Tooltip title={'Login'}>
-          <Button color='inherit' variant='outlined' onClick={() => navigate('/login')} id={'login-button'}>
+          <Button color="inherit" variant="outlined" onClick={() => navigate('/login')} id={'login-button'}>
             Login
           </Button>
         </Tooltip>
@@ -25,7 +25,8 @@ const NavBarUserActions = () => {
   return (
     <Stack spacing={2} direction={'row'}>
       <Tooltip title={`Logout ${email}`}>
-        <Button color='inherit' variant='outlined' onClick={() => signOut(() => navigate('/login'))} id={'logout-button'}>
+        <Button color="inherit" variant="outlined" onClick={() => signOut(() => navigate('/login'))}
+                id={'logout-button'}>
           Logout
         </Button>
       </Tooltip>

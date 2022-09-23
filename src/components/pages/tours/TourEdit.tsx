@@ -37,7 +37,7 @@ const EditTour = () => {
   const throwError = useApiError()
   const [images, setImages] = useState<ImageUpload[]>([])
   const { handleImageUpload, currentUploads } = useHandleImageUpload(mediaService, images, setImages)
-  const [gpxFile, setGpxFile] = useState<GpxFileUpload|undefined>(undefined)
+  const [gpxFile, setGpxFile] = useState<GpxFileUpload | undefined>(undefined)
   const { handleGpxFileUpload, currentGpxUpload } = useHandleGpxFileUpload(mediaService, gpxFile, setGpxFile)
   const { isOffline } = useConnectionStatus()
   const { triggerError } = useErrorHandling()
@@ -45,7 +45,17 @@ const EditTour = () => {
   const { setFormErrorContainer, formErrors } = useFormErrors()
 
   const setResult = (fetchedTour: Tour) => {
-    const { description, endLocation, startLocation, name, userId, status, categories, images: imageList, gpxFile } = fetchedTour
+    const {
+      description,
+      endLocation,
+      startLocation,
+      name,
+      userId,
+      status,
+      categories,
+      images: imageList,
+      gpxFile
+    } = fetchedTour
     setTour({ description, endLocation, startLocation, name, userId, status, categories, images: [], gpxFile: undefined })
     if (!isOffline()) {
       setImages(imageList)
@@ -56,7 +66,7 @@ const EditTour = () => {
     }
   }
 
-  const setLocalData = (localTour: Tour|undefined): void => {
+  const setLocalData = (localTour: Tour | undefined): void => {
     if (localTour) {
       setResult(localTour)
     } else {
@@ -86,6 +96,7 @@ const EditTour = () => {
         triggerError(error as Error)
       }
     }
+
     fetchTour()
   }, [])
 
@@ -162,8 +173,9 @@ const EditTour = () => {
       <>
         <Typography variant="h2" gutterBottom component="div" sx={{ mt: 2 }}>
           Edit Tour
-          { tour.status !== TourStatusType.SYNCED &&
-              <span title={'This tour is not synchronized with the database.'}><OfflineBoltOutlined color={'warning'} sx={{ ml: 2 }}/></span>}
+          {tour.status !== TourStatusType.SYNCED &&
+              <span title={'This tour is not synchronized with the database.'}><OfflineBoltOutlined color={'warning'}
+                                                                                                    sx={{ ml: 2 }}/></span>}
         </Typography>
         <ImageUploadContext.Provider value={imageContextProps}>
           <GpxFileUploadContext.Provider value={gpxFileContextProps}>

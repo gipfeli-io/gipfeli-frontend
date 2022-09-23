@@ -31,7 +31,8 @@ const ResetApp = () => {
       <LoadingButton loading={loading} variant="contained" startIcon={<AutoFixHighIcon/>} onClick={() => setOpen(true)}>
         Reset app
       </LoadingButton>
-      <Confirmation title={title} content={content} open={open} onClose={() => onClose()} onAccept={() => onAccept()} acceptTitle={acceptTitle}/>
+      <Confirmation title={title} content={content} open={open} onClose={() => onClose()} onAccept={() => onAccept()}
+                    acceptTitle={acceptTitle}/>
     </>
   )
 }

@@ -16,7 +16,7 @@ const Banner = ({ bannerContent }: BannerProps) => {
         </Box>
       </Paper>
       <Divider sx={{ mb: 3 }}/>
-  </div>
+    </div>
   )
 }
 export default Banner
